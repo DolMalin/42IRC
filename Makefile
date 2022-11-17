@@ -1,7 +1,8 @@
 NAME = ircserv
-INCLUDE_FILES = 
+INCLUDE_FILES =	src/Socket.hpp
 INCLUDE_DIRS = src
-SRC_FILES = main.cpp
+SRC_FILES = main.cpp\
+			Socket.cpp
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
 SRC_DIR = src
 OBJ_DIR = obj
