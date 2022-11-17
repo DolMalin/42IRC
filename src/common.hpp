@@ -21,3 +21,25 @@
 	} }
 	
 #endif
+
+template<class T, class Err = bool>
+struct Opt
+{
+	union
+	{
+		Err err;
+		Err ok;	// If Err is a bool, this is a bit more explicit to use `if (opt.ok)` than `if (opt.err)`
+	};
+	T val;
+
+	Opt (T val, Err err) : err (err), val (val)
+	{}
+};
+
+template<class T, class Err>
+Opt<T, Err> make_opt (T val, Err err)
+{
+	Opt<T, Err> result (val, err);
+
+	return result;
+}

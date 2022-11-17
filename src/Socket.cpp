@@ -21,7 +21,7 @@ Socket Socket::makeServer(uint16_t port)
 	return (server);
 }
 
-Socket Socket::makeClient(uint16_t port, const char *ip)
+Opt<Socket> Socket::makeClient(uint16_t port, const char *ip)
 {
 	Socket	client;
 
@@ -36,18 +36,17 @@ Socket Socket::makeClient(uint16_t port, const char *ip)
     client._addr.sin_port = htons(port);
 
     int pton_res = inet_pton(AF_INET, ip, &client._addr.sin_addr);
-	assert (pton_res >= 0, "inet_pton failed.");
-	// @TODO: Check inet_pton
-
+	if (pton_res < 0)
+		return make_opt (client, false);
 
     int connect_res = connect(client._fd, (struct sockaddr *)&client._addr, sizeof(client._addr));
-	assert (connect_res >= 0, "Could not connect to server (connect returned " << connect_res << ").");
-	// @TODO: Check connect
+	if (connect_res < 0)
+		return make_opt (client, false);
 
 	// @TODO: Remake properly logs
     std::cout << "Successfully connected to server " << std::string (ip) << std::endl;
 
-    return (client);
+    return make_opt (client, true);
 }
 
 Socket::Type Socket::type () const { return _type; }
