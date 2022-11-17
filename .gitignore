@@ -1,5 +1,6 @@
 obj/
 ircserv
+test_client
 
 # Prerequisites
 *.d
