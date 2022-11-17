@@ -17,6 +17,8 @@ Socket Socket::makeServer(uint16_t port)
 	// @TODO: Check bind
 
 	listen(server._fd, MAX_CLIENTS);
+
+	std::cout << "Server is listening on PORT: " << port << std::endl;
 	
 	return (server);
 }
