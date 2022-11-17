@@ -1,5 +1,5 @@
 NAME = ircserv
-INCLUDE_FILES =	src/Socket.hpp
+INCLUDE_FILES =	src/common.hpp src/Socket.hpp
 INCLUDE_DIRS = src
 SRC_FILES = main.cpp\
 			Socket.cpp
