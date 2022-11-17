@@ -11,13 +11,19 @@
 #include "Socket.hpp"
 
 # define PORT 4242
-# define SERVER_IP "127.0.0.1"
+# define SERVER_IP ""
 
 int main ()
 {
-	Socket server = Socket::makeServer(PORT);
-
-	Opt<Socket> result = Socket::makeClient(PORT, SERVER_IP);
+	Opt<Socket> result = Socket::makeServer(PORT);
+	if (!result.ok)
+	{
+		std::cerr << "Could not create server (port was" << PORT << ")" << std::endl;
+		return 1;
+	}
+	Socket server = result.val;
+	
+	result = Socket::makeClient(PORT, SERVER_IP);
 	if (!result.ok)
 	{
 		std::cerr << "Could not create client (port was " << PORT << ", ip was " << SERVER_IP << ")" << std::endl;
@@ -27,6 +33,5 @@ int main ()
 	Socket client = result.val;
 
 	(void)server;
-	(void)client;
-
+	// (void)client;
 }
