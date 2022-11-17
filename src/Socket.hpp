@@ -27,7 +27,7 @@ class Socket {
 		Socket () {}
 
 	public:
-		static Socket makeServer(uint16_t port);
+		static Opt<Socket> makeServer(uint16_t port);
 		static Opt<Socket> makeClient(uint16_t port, const char *ip);
 
 		Type type () const;
