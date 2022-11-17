@@ -19,10 +19,10 @@ $(NAME): $(addprefix $(OBJ_DIR)/,$(OBJ_FILES))
 	$(CXX) $^ -o $@
 
 clean:
-	$(RM) $(OBJ_DIR)
+	$(RM) -r $(OBJ_DIR)
 
 fclean: clean
-	$(RM) $(NAME)
+	$(RM) -r $(NAME)
 
 re: clean all
 
