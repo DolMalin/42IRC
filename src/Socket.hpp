@@ -8,23 +8,27 @@
 
 # define MAX_CLIENTS 5
 
-class Socket {
+class Socket
+{
+public:
+	enum Type
+	{
+		SERVER,
+		CLIENT
+	};
 
-	public:
-		enum Type
-		{
-			SERVER,
-			CLIENT
-		};
+private:
+	int			_fd;
+	int			_confd;
+	sockaddr_in	_addr;
+	Type		_type;
+	char		_buffer[512];
 
-	private:
-		int			_fd;
-		int			_confd;
-		sockaddr_in	_addr;
-		Type		_type;
-		char		_buffer[512];
+	Socket () {}
 
-		Socket () {}
+public:
+	static Opt<Socket> makeServer(uint16_t port);
+	static Opt<Socket> makeClient(uint16_t port, const char *ip);
 
 	public:
 		static Opt<Socket>	makeServer(uint16_t port);
