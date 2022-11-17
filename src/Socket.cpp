@@ -49,3 +49,11 @@ Opt<Socket> Socket::makeClient(uint16_t port, const char *ip)
 }
 
 Socket::Type Socket::type () const { return _type; }
+
+void	Socket::close()
+{
+	if (_fd > 0)
+		::close(_fd);
+	if (_confd > 0)
+		::close(_confd);
+}

@@ -22,6 +22,7 @@ int main ()
 		return 1;
 	}
 	Socket server = result.val;
+	std::cout << "Server is listening on port: " << PORT << std::endl;
 	
 	result = Socket::makeClient(PORT, SERVER_IP);
 	if (!result.ok)
@@ -31,7 +32,8 @@ int main ()
 	}
 
 	Socket client = result.val;
+	// while(true){}
 
-	(void)server;
-	// (void)client;
+	server.close();
+	client.close();
 }
