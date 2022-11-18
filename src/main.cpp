@@ -28,7 +28,7 @@ int main ()
 
 	while (1)
 	{
-		if (server.acceptIncomingConnections ())
+		if (server.acceptIncomingConnection ())
 			std::cout << "Somebody has connected to the server" << std::endl;
 
 		server.pollConnectionEvents (POLL_TIMEOUT * 1000);

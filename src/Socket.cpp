@@ -61,7 +61,7 @@ Opt<Socket> Socket::makeClient(uint16_t port, const char *ip)
 	return make_opt (client, true);
 }
 
-bool Socket::acceptIncomingConnections ()
+bool Socket::acceptIncomingConnection ()
 {
 	if (_connection_count >= MAX_CLIENTS)
 		return false;
