@@ -34,20 +34,22 @@ private:
 	int			_fd;
 	sockaddr_in	_addr;
 	Type		_type;
-	Connection	_connection;
+	Connection	_connections[MAX_CLIENTS];
+	int			_connection_count;
 
-	Socket () {}
+	Socket ();
 
 public:
 	static Opt<Socket> makeServer(uint16_t port);
 	static Opt<Socket> makeClient(uint16_t port, const char *ip);
 
 	bool	acceptIncomingConnections ();
-	bool	sendData (const void *data, size_t len);
+	void	sendDataToAllConnections (const void *data, size_t len);
 	void	close();
 	void	pollConnectionEvents (int timeout);
 
 	int			fd () const;
-	Connection	connection () const;
+	Connection	connection (int index) const;
+	int			connection_count () const;
 	Type		type () const;
 };

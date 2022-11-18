@@ -1,6 +1,10 @@
 #include "Socket.hpp"
 #include <poll.h>
 
+Socket::Socket () :
+	_fd (0), _addr (), _type (), _connections (), _connection_count (0)
+{}
+
 Opt<Socket> Socket::makeServer(uint16_t port)
 {
 	Socket server;
@@ -41,7 +45,6 @@ Opt<Socket> Socket::makeClient(uint16_t port, const char *ip)
 	if (client._fd < 0)
 		return make_opt(client, false);
 
-
 	memset (&client._addr, 0, sizeof (client._addr));
 
 	client._addr.sin_family = AF_INET;
@@ -60,7 +63,8 @@ Opt<Socket> Socket::makeClient(uint16_t port, const char *ip)
 
 bool Socket::acceptIncomingConnections ()
 {
-	// @Todo (stefan): handle multiple connections
+	if (_connection_count >= MAX_CLIENTS)
+		return false;
 
 	sockaddr_in addr;
 	socklen_t len = sizeof (addr);
@@ -69,50 +73,69 @@ bool Socket::acceptIncomingConnections ()
 	if (confd < 0)
 		return false;
 
-	_connection.fd = confd;
-	_connection.addr = addr;
-	_connection.events = 0;
+	Connection *conn = &_connections[_connection_count];
+	conn->fd = confd;
+	conn->addr = addr;
+	conn->events = 0;
+	_connection_count += 1;
 
 	return true;
 }
 
-bool Socket::sendData (const void *data, size_t len)
+void Socket::sendDataToAllConnections (const void *data, size_t len)
 {
-	ssize_t res = send (_connection.fd, data, len, 0);
-
-	return (res >= 0);
+	for (int i = 0; i < _connection_count; i += 1)
+		send (_connections[i].fd, data, len, 0);
 }
 
 void	Socket::close()
 {
 	if (_fd > 0)
 		::close(_fd);
-	if (_connection.fd > 0)
-		::close(_connection.fd);
+	
+	for (int i = 0; i < _connection_count; i += 1)
+		::close(_connections[i].fd);
+	
+	_fd = 0;
+	_connection_count = 0;
 }
 
 void	Socket::pollConnectionEvents (int timeout)
 {
-	// @Todo (stefan): Handle multiple connections
 	// @Todo (stefan): Handle error events
 
-	pollfd pollfd = {};
-	pollfd.fd = _connection.fd;
-	pollfd.events = POLLIN | POLLOUT | POLLRDHUP;
-	
-	int res = poll (&pollfd, 1, timeout);
+	pollfd pollfd[MAX_CLIENTS];
+	for (int i = 0; i < _connection_count; i += 1)
+	{
+		pollfd[i].fd = _connections[i].fd;
+		pollfd[i].events = POLLIN | POLLOUT | POLLRDHUP;
+	}
+
+	int res = poll (pollfd, _connection_count, timeout);
 	if (res < 0)
 		return;
 
-	_connection.events = 0;
-	if (pollfd.revents & POLLIN)
-		_connection.events |= READ_AVAILABLE;
-	if (pollfd.revents & POLLOUT)
-		_connection.events |= SEND_AVAILABLE;
-	if (pollfd.revents & POLLRDHUP)
-		_connection.events |= DISCONNECTED;
+	for (int i = 0; i < _connection_count; i += 1)
+	{
+		_connections[i].events = 0;
+		if (pollfd[i].revents & POLLIN)
+			_connections[i].events |= READ_AVAILABLE;
+		if (pollfd[i].revents & POLLOUT)
+			_connections[i].events |= SEND_AVAILABLE;
+		if (pollfd[i].revents & POLLRDHUP)
+			_connections[i].events |= DISCONNECTED;
+	}
 }
 
 int Socket::fd () const { return _fd; }
-Connection Socket::connection () const { return _connection; }
+
+Connection Socket::connection (int index) const
+{
+	assert (index >= 0 && index < _connection_count, "Invalid connection index (was " << index << ", max is " << _connection_count << ")");
+
+	return _connections[index];
+}
+
+int Socket::connection_count () const { return _connection_count; }
+
 Socket::Type Socket::type () const { return _type; }

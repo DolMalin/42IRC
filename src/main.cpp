@@ -10,7 +10,7 @@
 
 #include "Socket.hpp"
 
-# define PORT 1234
+# define PORT 1222
 # define SERVER_IP ""
 # define POLL_TIMEOUT 5
 
@@ -29,18 +29,23 @@ int main ()
 	while (1)
 	{
 		if (server.acceptIncomingConnections ())
-			std::cout << "Somebody connected to the server" << std::endl;
-	
-		//server.sendData ("Hello Sailor\n", sizeof ("Hello Sailor\n"));
+			std::cout << "Somebody has connected to the server" << std::endl;
 
 		server.pollConnectionEvents (POLL_TIMEOUT * 1000);
 
-		if (server.connection ().events & READ_AVAILABLE)
-			std::cout << "We've got data to read." << std::endl;
-		if (server.connection ().events & SEND_AVAILABLE)
-			std::cout << "We can send data." << std::endl;
-		if (server.connection ().events & DISCONNECTED)
-			std::cout << "Client disconnected." << std::endl;
+		for (int i = 0; i < server.connection_count (); i += 1)
+		{
+			Connection conn = server.connection (i);
+
+			if (conn.events & READ_AVAILABLE)
+				std::cout << "We've got data to read at connection " << i << "." << std::endl;
+			if (conn.events & SEND_AVAILABLE)
+				std::cout << "We can send data to connection " << i << "." << std::endl;
+			if (conn.events & DISCONNECTED)
+				std::cout << "Client " << i << " disconnected." << std::endl;
+		}
+
+		sleep (5);
 	}
 
 	server.close();
