@@ -22,16 +22,13 @@ int main ()
 		return 1;
 	}
 	Socket server = result.val;
-	
-	result = Socket::makeClient(PORT, SERVER_IP);
-	if (!result.ok)
+
+	while (1)
 	{
-		std::cerr << "Could not create client (port was " << PORT << ", ip was " << SERVER_IP << ")" << std::endl;
-		return 1;
+		if (server.acceptIncomingConnections ())
+			std::cout << "Somebody connected to the server" << std::endl;
+		server.sendData ("Hello Sailor\n", sizeof ("Hello Sailor\n"));
 	}
 
-	Socket client = result.val;
-
 	(void)server;
-	// (void)client;
 }

@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cstring>
 #include <stdint.h>
+#include <fcntl.h>
 
 #ifndef debugBreak
 # define debugBreak() asm ("int3")
