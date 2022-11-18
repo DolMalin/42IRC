@@ -8,6 +8,19 @@
 
 # define MAX_CLIENTS 5
 
+#define SEND_AVAILABLE 0x01
+#define READ_AVAILABLE 0x02
+#define DISCONNECTED   0x04
+
+struct Connection
+{
+	typedef int Events;
+
+	int			fd;
+	sockaddr_in	addr;
+	Events		events;
+};
+
 class Socket
 {
 public:
@@ -21,7 +34,7 @@ private:
 	int			_fd;
 	sockaddr_in	_addr;
 	Type		_type;
-	int			_confd;
+	Connection	_connection;
 
 	Socket () {}
 
@@ -32,6 +45,9 @@ public:
 	bool	acceptIncomingConnections ();
 	bool	sendData (const void *data, size_t len);
 	void	close();
+	void	pollConnectionEvents (int timeout);
 
-	Type	type () const;
+	int			fd () const;
+	Connection	connection () const;
+	Type		type () const;
 };
