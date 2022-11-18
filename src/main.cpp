@@ -8,6 +8,7 @@
 #include <cstdio>
 
 #include "Socket.hpp"
+#include "Message.hpp"
 
 # define PORT 4242
 # define SERVER_IP ""
@@ -23,6 +24,14 @@ int main ()
 
 	Socket server = result.val;
 	std::cout << "Server is listening on port: " << PORT << std::endl;
+
+	Opt<Message> msg = Message::parseRequest("JoiN Michel");
+	if (!msg.ok)
+	{
+		std::cerr << "Invalid message request" << std::endl;
+		return 1;
+	}
+	Message message = msg.val;
 
 	while (1)
 	{
