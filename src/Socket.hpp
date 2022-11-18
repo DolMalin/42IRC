@@ -19,10 +19,9 @@ public:
 
 private:
 	int			_fd;
-	int			_confd;
 	sockaddr_in	_addr;
 	Type		_type;
-	char		_buffer[512];
+	int			_confd;
 
 	Socket () {}
 
