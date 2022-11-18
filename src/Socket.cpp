@@ -1,6 +1,10 @@
 #include "Socket.hpp"
 #include <poll.h>
 
+ReadResult::ReadResult () :
+	bytes_read (0), valid (false), complete (false)
+{}
+
 Socket::Socket () :
 	_fd (0), _addr (), _type (), _connections (), _connection_count (0)
 {}
@@ -85,7 +89,26 @@ bool Socket::acceptIncomingConnection ()
 void Socket::sendDataToAllConnections (const void *data, size_t len)
 {
 	for (int i = 0; i < _connection_count; i += 1)
+	{
+		if (!(_connections[i].events & SEND_AVAILABLE))
+			continue;
+
 		send (_connections[i].fd, data, len, 0);
+	}
+}
+
+ReadResult Socket::readData (int connection_index, void *buff, size_t len)
+{
+	if (len == 0)
+		return ReadResult ();
+
+	Connection conn = connection (connection_index);
+	ReadResult result;
+	result.bytes_read = recv (conn.fd, buff, len, MSG_DONTWAIT);
+	result.valid = result.bytes_read >= 0 || errno == EAGAIN || errno == EWOULDBLOCK;
+	result.complete = result.bytes_read >= 0;
+
+	return result;
 }
 
 void	Socket::close()
@@ -109,20 +132,24 @@ void	Socket::pollConnectionEvents (int timeout)
 	{
 		pollfd[i].fd = _connections[i].fd;
 		pollfd[i].events = POLLIN | POLLOUT | POLLRDHUP;
+		pollfd[i].revents = 0;
 	}
 
 	int res = poll (pollfd, _connection_count, timeout);
 	if (res < 0)
+	{
+		std::cerr << "poll error" << std::endl;
 		return;
+	}
 
 	for (int i = 0; i < _connection_count; i += 1)
 	{
 		_connections[i].events = 0;
-		if (pollfd[i].revents & POLLIN)
+		if ((pollfd[i].revents & POLLIN) == POLLIN)
 			_connections[i].events |= READ_AVAILABLE;
-		if (pollfd[i].revents & POLLOUT)
+		if ((pollfd[i].revents & POLLOUT) == POLLOUT)
 			_connections[i].events |= SEND_AVAILABLE;
-		if (pollfd[i].revents & POLLRDHUP)
+		if ((pollfd[i].revents & POLLRDHUP) == POLLRDHUP)
 			_connections[i].events |= DISCONNECTED;
 	}
 }

@@ -38,9 +38,31 @@ int main ()
 			Connection conn = server.connection (i);
 
 			if (conn.events & READ_AVAILABLE)
-				std::cout << "We've got data to read at connection " << i << "." << std::endl;
+			{
+				std::cout << "We've got data to read at connection " << i << ":" << std::endl;
+
+				char buff[1024];
+				while (true)
+				{
+					ReadResult res = server.readData (i, buff, sizeof (buff));
+					if (!res.valid)
+					{
+						std::cout << "Invalid recv" << std::endl;
+						break;
+					}
+					if (res.bytes_read == 0 && res.complete)
+					{
+						std::cout << "EOF" << std::endl;
+						break;
+					}
+
+					std::cout << std::string (buff, res.bytes_read);
+				}
+			}
+
 			if (conn.events & SEND_AVAILABLE)
 				std::cout << "We can send data to connection " << i << "." << std::endl;
+			
 			if (conn.events & DISCONNECTED)
 				std::cout << "Client " << i << " disconnected." << std::endl;
 		}

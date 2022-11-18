@@ -21,6 +21,15 @@ struct Connection
 	Events		events;
 };
 
+struct ReadResult
+{
+	ssize_t	bytes_read;
+	bool	valid;
+	bool	complete;
+
+	ReadResult ();
+};
+
 class Socket
 {
 public:
@@ -45,6 +54,7 @@ public:
 
 	bool	acceptIncomingConnection ();
 	void	sendDataToAllConnections (const void *data, size_t len);
+	ReadResult	readData (int connection_index, void *buff, size_t buff_len);
 	void	close();
 	void	pollConnectionEvents (int timeout);
 
