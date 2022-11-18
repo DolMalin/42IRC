@@ -1,4 +1,3 @@
-
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -21,7 +20,9 @@ int main ()
 		std::cerr << "Could not create server (port was" << PORT << ")" << std::endl;
 		return 1;
 	}
+
 	Socket server = result.val;
+	std::cout << "Server is listening on port: " << PORT << std::endl;
 
 	while (1)
 	{
@@ -30,5 +31,5 @@ int main ()
 		server.sendData ("Hello Sailor\n", sizeof ("Hello Sailor\n"));
 	}
 
-	(void)server;
+	server.close();
 }

@@ -70,3 +70,11 @@ bool Socket::sendData (const void *data, size_t len)
 
 	return (res >= 0);
 }
+
+void	Socket::close()
+{
+	if (_fd > 0)
+		::close(_fd);
+	if (_confd > 0)
+		::close(_confd);
+}

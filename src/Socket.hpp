@@ -30,8 +30,9 @@ public:
 	static Opt<Socket> makeServer(uint16_t port);
 	static Opt<Socket> makeClient(uint16_t port, const char *ip);
 
-	bool acceptIncomingConnections ();
-	bool sendData (const void *data, size_t len);
+	bool	acceptIncomingConnections ();
+	bool	sendData (const void *data, size_t len);
+	void	close();
 
-	Type type () const;
+	Type	type () const;
 };
