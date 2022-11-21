@@ -8,66 +8,30 @@
 #include <cstdio>
 #include <poll.h>
 
-#include "Socket.hpp"
+#include "Server.hpp"
 
 # define PORT 1222
-# define SERVER_IP ""
 # define POLL_TIMEOUT 5
 
 int main ()
 {
-	Opt<Socket> result = Socket::makeServer(PORT);
-	if (!result.ok)
+	Server server (10);
+	if (!server.init (PORT))
 	{
-		std::cerr << "Could not create server (port was " << PORT << ")" << std::endl;
+		std::cerr << "Could not initialize server. Port was " << PORT << "." << std::endl;
 		return 1;
 	}
 
-	Socket server = result.val;
 	std::cout << "Server is listening on port: " << PORT << std::endl;
 
-	while (1)
+	while (server.isRunning ())
 	{
 		if (server.acceptIncomingConnection ())
 			std::cout << "Somebody has connected to the server" << std::endl;
 
-		server.pollConnectionEvents (POLL_TIMEOUT * 1000);
-
-		for (int i = 0; i < server.connection_count (); i += 1)
-		{
-			Connection conn = server.connection (i);
-
-			if (conn.events & READ_AVAILABLE)
-			{
-				std::cout << "We've got data to read at connection " << i << ":" << std::endl;
-
-				char buff[1024];
-				while (true)
-				{
-					ReadResult res = server.readData (i, buff, sizeof (buff));
-					if (!res.valid)
-					{
-						std::cout << "Invalid recv" << std::endl;
-						break;
-					}
-					if (res.bytes_read == 0 && res.complete)
-					{
-						std::cout << "EOF" << std::endl;
-						break;
-					}
-
-					std::cout << std::string (buff, res.bytes_read);
-				}
-			}
-
-			if (conn.events & SEND_AVAILABLE)
-				std::cout << "We can send data to connection " << i << "." << std::endl;
-			
-			if (conn.events & DISCONNECTED)
-				std::cout << "Client " << i << " disconnected." << std::endl;
-		}
-
-		sleep (5);
+		server.pollConnectionEvents (POLL_TIMEOUT);
+		server.receiveDataFromConnections ();
+		server.processReceivedMessages ();
 	}
 
 	server.close();
