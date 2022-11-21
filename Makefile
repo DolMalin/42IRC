@@ -1,7 +1,9 @@
 NAME = ircserv
-INCLUDE_FILES =	src/common.hpp src/Server.hpp
+
+INCLUDE_FILES =	src/common.hpp src/Server.hpp src/Message.hpp
 INCLUDE_DIRS = src
-SRC_FILES = Server.cpp
+SRC_FILES = Server.cpp Message.cpp
+
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
 SRC_DIR = src
 OBJ_DIR = obj
@@ -14,9 +16,9 @@ all: $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(DEPENDENCIES)
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXX_FLAGS) -c $< -o $@
+	$(CXX) $(CXX_FLAGS) -c $< -o $@ 
 
-$(NAME): obj/main.o $(addprefix $(OBJ_DIR)/,$(OBJ_FILES))
+$(NAME): obj/main.o $(addprefix $(OBJ_DIR)/,$(OBJ_FILES)) 
 	$(CXX) $^ -o $@
 
 test_client: obj/test_client.o $(addprefix $(OBJ_DIR)/,$(OBJ_FILES))

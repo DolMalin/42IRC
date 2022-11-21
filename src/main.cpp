@@ -1,5 +1,4 @@
 #include "Server.hpp"
-
 #include <sstream>
 
 # define POLL_TIMEOUT 5
@@ -13,6 +12,7 @@ int main (int argc, char **args)
 	}
 
 	uint16_t port;
+
 
 	std::istringstream iss (args[1]);
 	iss >> port;	// @Todo: error checking
