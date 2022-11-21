@@ -4,9 +4,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <poll.h>
+#include <list>
 
 #include "common.hpp"
-#include <list>
+#include "Message.hpp"
 
 struct Connection
 {
