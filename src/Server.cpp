@@ -161,3 +161,4 @@ Server::ConnectionIt Server::disconnect (ConnectionIt connection)
 
 bool Server::isRunning () const { return _isRunning; }
 int Server::getMaxConnections () const { return _maxConnections; }
+uint16_t Server::getPort () const { return ntohs (_addr.sin_port); }

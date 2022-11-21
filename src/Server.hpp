@@ -49,6 +49,7 @@ public:
 
 	bool isRunning () const;
 	int getMaxConnections () const;
+	uint16_t getPort () const;
 
 private:
 	Server (const Server &);

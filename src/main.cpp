@@ -12,7 +12,7 @@ int main ()
 		return 1;
 	}
 
-	std::cout << "Server is listening on port: " << PORT << std::endl;
+	std::cout << "Server is listening on port: " << server.getPort () << std::endl;
 
 	while (server.isRunning ())
 	{
