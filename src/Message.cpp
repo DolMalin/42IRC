@@ -28,6 +28,47 @@ static Message::Command getCommandId(std::string str)
 		return Message::BLANK;
 }
 
+static std::string getCommandName(Message::Command name)
+{
+	if (name == Message::JOIN)
+		return "JOIN";
+	else if (name == Message::KICK)
+		return "KICK";
+	else if (name == Message::MODE)
+		return "MODE";
+	else if (name == Message::NOTICE)
+		return "NOTICE";
+	else if (name == Message::PART)
+		return "PART";
+	else if (name == Message::PASS)
+		return "PASS";
+	else if (name == Message::PING)
+		return "PING";
+	else if (name == Message::PONG)
+		return "PONG";
+	else if (name == Message::PRIVMSG)
+		return "PRIVMSG";
+	else if (name == Message::QUIT)
+		return "QUIT";
+	else if (name == Message::USER)
+		return "USER";
+	else
+		return "";
+}
+
+static std::string formatShort(unsigned short n)
+{
+	std::string			output;
+	std::stringstream	ss;
+	int 				n_len;
+
+	n_len = int(log10(n) + 1);
+	ss << n;
+	ss >> output;
+	for (int i = 0; i < 3 - n_len; i++)
+		output.insert(0, "0");
+	return output;
+}
 
 Opt<Message> Message::parseRequest(std::string str)
 {
@@ -36,26 +77,25 @@ Opt<Message> Message::parseRequest(std::string str)
 	std::string	token;
 	
 	pos = 0;
-	message._prefix = "";
 	message._command = BLANK;
 	message._argsLen = 0;
 	memset(&message._args, 0, sizeof(message._args));
 	message._isRequest = true;
 	if (str.empty())
 		return make_opt(message, false);
+	str += " ";
 	while ((pos = str.find(" ")) != std::string::npos)
 	{
 		token = str.substr(0, pos);
 		if (message._argsLen >= 15)
 			return make_opt(message, false);
-		else if (!token.empty() && token.at(0) == ':' && message._prefix.empty())
+		else if (!token.empty() && token.at(0) == ':' && message._prefix.empty() && message._command == BLANK)
 			message._prefix = token.substr(1);
 		else if (message._command == BLANK)
 			message._command = getCommandId(token);
 		else if (token.at(0) == ':')
 		{
-			message._args[message._argsLen] = str.substr(1);
-			message._argsLen++;
+			message._suffix = str.substr(1);
 			break;
 		}
 		else
@@ -70,26 +110,57 @@ Opt<Message> Message::parseRequest(std::string str)
 	return make_opt(message, true);
 }
 
-Opt<Message> Message::makeReply(std::string prefix, unsigned short replyCode, std::string target, std::string messageContent)
+Opt<Message> Message::makeReply(std::string prefix, unsigned short replyCode, std::string suffix)
 {
 	Message message;
 
 	message._isRequest = false;
+	message._argsLen = 0;
+	memset(&message._args, 0, sizeof(message._args));
 	if (prefix.length() < 3 || prefix.at(0) != ':')
 		return make_opt(message, false);
 	message._prefix = prefix;
-	if (replyCode > 399)
+	if (replyCode > 502)
 		return make_opt(message, false);
 	message._replyCode = replyCode;
 	if (prefix.empty())
 		return make_opt(message, false);
 	message._prefix = prefix;
-	if(target.empty())
+	if (suffix.empty())
 		return make_opt(message, false);
-	message._args[0] = target;
-	if (messageContent.empty())
-		return make_opt(message, false);
-	message._args[1] = messageContent;
-	message._argsLen = 2;
+	message._suffix = suffix;
 	return make_opt(message, true);
+}
+
+std::string Message::stringify(void)
+{
+	std::string	output;
+
+	if (this->_isRequest)
+	{
+		if (!this->_prefix.empty())
+			output = output + ":" + this->_prefix + " ";
+		output = output + getCommandName(this->_command);
+		for (int i = 0; i < this->_argsLen; i++)
+			output = output + " " + this->_args[i] ;
+		if (!this->_suffix.empty())
+			output = output + " " + ":" + this->_suffix;
+	}
+	else
+	{
+		output = this->_prefix + " ";
+		output += formatShort(this->_replyCode);
+		for (int i = 0; i < this->_argsLen; i++)
+			output = output + " " + this->_args[i] ;
+		output = output + " :" + this->_suffix;
+	}
+	return output;
+}
+
+void	Message::pushArg(std::string arg)
+{
+	if (arg.empty() || this->_argsLen >= 15)
+		return ;
+	this->_args[this->_argsLen] = arg;
+	this->_argsLen++;
 }

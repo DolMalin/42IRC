@@ -2,6 +2,8 @@
 
 #include <string>
 #include <cstring>
+#include <cmath>
+#include <sstream>
 #include "common.hpp"
 
 
@@ -26,16 +28,21 @@ public:
 
 
 private:
-	std::string	_prefix;
-	Command 	_command;
-	std::string	_args[15];
-	int			_argsLen;
-	bool		_isRequest;
-	unsigned short		_replyCode;
+	std::string		_prefix;
+	Command 		_command;
+	std::string		_args[15];
+	std::string		_suffix;
+	int				_argsLen;
+	bool			_isRequest;
+	unsigned short	_replyCode;
 
 	Message () {}
 
 public:
 	static Opt<Message> parseRequest(std::string str);
-	static Opt<Message> makeReply(std::string prefix, unsigned short replyCode, std::string target, std::string messageContent);
+	static Opt<Message> makeReply(std::string prefix, unsigned short replyCode, std::string suffix);
+	
+	std::string	stringify(void);
+	void		pushArg(std::string arg);
+	// @TODO: Push arg function to add elem in args
 };
