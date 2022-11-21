@@ -1,12 +1,15 @@
 NAME = ircserv
-INCLUDE_FILES =	src/common.hpp src/Socket.hpp src/Message.hpp
+
+INCLUDE_FILES =	src/common.hpp src/Server.hpp src/Message.hpp
 INCLUDE_DIRS = src
-SRC_FILES = Socket.cpp Message.cpp
+SRC_FILES = Server.cpp Message.cpp
+
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
 SRC_DIR = src
 OBJ_DIR = obj
 CXX = c++
 CXX_FLAGS = -Wall -Wextra -Werror -std=c++98 -I$(INCLUDE_DIRS)
+CXX_FLAGS += -g3
 DEPENDENCIES = $(INCLUDE_FILES) Makefile
 
 all: $(NAME)

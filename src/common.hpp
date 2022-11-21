@@ -7,6 +7,7 @@
 #include <cstring>
 #include <stdint.h>
 #include <fcntl.h>
+#include <errno.h>
 
 #ifndef debugBreak
 # define debugBreak() asm ("int3")

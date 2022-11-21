@@ -1,49 +1,39 @@
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <string.h>
-#include <iostream>
-#include <time.h>
-#include <unistd.h>
-#include <cstdio>
+#include "Server.hpp"
+#include <sstream>
 
-#include "Socket.hpp"
-#include "Message.hpp"
+# define POLL_TIMEOUT 5
 
-# define PORT 5252
-# define SERVER_IP ""
-
-int main ()
+int main (int argc, char **args)
 {
-	Opt<Socket> result = Socket::makeServer(PORT);
-	if (!result.ok)
+	if (argc < 2)
 	{
-		std::cerr << "Could not create server (port was" << PORT << ")" << std::endl;
+		std::cerr << "Usage: ./ircserv <port>" << std::endl;
 		return 1;
 	}
 
-	Socket server = result.val;
-	std::cout << "Server is listening on port: " << PORT << std::endl;
+	uint16_t port;
 
-	Opt<Message> request = Message::parseRequest("JOIN Michel");
-	if (!request.ok)
+
+	std::istringstream iss (args[1]);
+	iss >> port;	// @Todo: error checking
+
+	Server server (port);
+	if (!server.init (port))
 	{
-		std::cerr << "Invalid message request" << std::endl;
+		std::cerr << "Could not initialize server. Port was " << port << "." << std::endl;
 		return 1;
 	}
 
-	Opt<Message> reply = Message::makeReply(":irc.example.com", 202, "michel", "Hello coquinou !");
-	if (!reply.ok)
-	{
-		std::cerr << "Invalid message reply" << std::endl;
-		return 1;
-	}
+	std::cout << "Server is listening on port: " << server.getPort () << std::endl;
 
-	while (1)
+	while (server.isRunning ())
 	{
-		if (server.acceptIncomingConnections ())
-			std::cout << "Somebody connected to the server" << std::endl;
-		server.sendData ("Hello Sailor\n", sizeof ("Hello Sailor\n"));
+		if (server.acceptIncomingConnection ())
+			std::cout << "Somebody has connected to the server" << std::endl;
+
+		server.pollConnectionEvents (POLL_TIMEOUT);
+		server.receiveDataFromConnections ();
+		server.processReceivedMessages ();
 	}
 
 	server.close();
