@@ -1,13 +1,3 @@
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <string.h>
-#include <iostream>
-#include <time.h>
-#include <unistd.h>
-#include <cstdio>
-#include <poll.h>
-
 #include "Server.hpp"
 
 # define PORT 1222
