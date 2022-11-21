@@ -1,14 +1,26 @@
 #include "Server.hpp"
 
-# define PORT 1222
+#include <sstream>
+
 # define POLL_TIMEOUT 5
 
-int main ()
+int main (int argc, char **args)
 {
-	Server server (10);
-	if (!server.init (PORT))
+	if (argc < 2)
 	{
-		std::cerr << "Could not initialize server. Port was " << PORT << "." << std::endl;
+		std::cerr << "Usage: ./ircserv <port>" << std::endl;
+		return 1;
+	}
+
+	uint16_t port;
+
+	std::istringstream iss (args[1]);
+	iss >> port;	// @Todo: error checking
+
+	Server server (port);
+	if (!server.init (port))
+	{
+		std::cerr << "Could not initialize server. Port was " << port << "." << std::endl;
 		return 1;
 	}
 
