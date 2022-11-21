@@ -29,10 +29,6 @@ static Message::Command getCommandId(std::string str)
 }
 
 
-/*
-@TODO:	- Handle multi-targets
-		- Put first arg after targetted commands in target
-*/
 Opt<Message> Message::parseRequest(std::string str)
 {
 	Message		message;
@@ -44,7 +40,7 @@ Opt<Message> Message::parseRequest(std::string str)
 	message._command = BLANK;
 	message._argsLen = 0;
 	memset(&message._args, 0, sizeof(message._args));
-	message._isMessage = true;
+	message._isRequest = true;
 	if (str.empty())
 		return make_opt(message, false);
 	while ((pos = str.find(" ")) != std::string::npos)
@@ -74,9 +70,26 @@ Opt<Message> Message::parseRequest(std::string str)
 	return make_opt(message, true);
 }
 
+Opt<Message> Message::makeReply(std::string prefix, unsigned short replyCode, std::string target, std::string messageContent)
+{
+	Message message;
 
-
-	// std::cout << "Prefix: " << message._prefix << std::endl;
-	// std::cout << "Command: " << message._command << std::endl;
-	// for (int i = 0; i < message._argsLen; i++)
-	// 	std::cout << "Args[" << i << "]: " << message._args[i] << std::endl;
+	message._isRequest = false;
+	if (prefix.length() < 3 || prefix.at(0) != ':')
+		return make_opt(message, false);
+	message._prefix = prefix;
+	if (replyCode > 399)
+		return make_opt(message, false);
+	message._replyCode = replyCode;
+	if (prefix.empty())
+		return make_opt(message, false);
+	message._prefix = prefix;
+	if(target.empty())
+		return make_opt(message, false);
+	message._args[0] = target;
+	if (messageContent.empty())
+		return make_opt(message, false);
+	message._args[1] = messageContent;
+	message._argsLen = 2;
+	return make_opt(message, true);
+}

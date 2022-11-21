@@ -10,7 +10,7 @@
 #include "Socket.hpp"
 #include "Message.hpp"
 
-# define PORT 4242
+# define PORT 5252
 # define SERVER_IP ""
 
 int main ()
@@ -25,13 +25,19 @@ int main ()
 	Socket server = result.val;
 	std::cout << "Server is listening on port: " << PORT << std::endl;
 
-	Opt<Message> msg = Message::parseRequest("JoiN Michel");
-	if (!msg.ok)
+	Opt<Message> request = Message::parseRequest("JOIN Michel");
+	if (!request.ok)
 	{
 		std::cerr << "Invalid message request" << std::endl;
 		return 1;
 	}
-	Message message = msg.val;
+
+	Opt<Message> reply = Message::makeReply(":irc.example.com", 202, "michel", "Hello coquinou !");
+	if (!reply.ok)
+	{
+		std::cerr << "Invalid message reply" << std::endl;
+		return 1;
+	}
 
 	while (1)
 	{
