@@ -3,8 +3,10 @@
 #define END_OF_MESSAGE_STRING "\r\n"
 
 Server::Server (int maxUsers) :
-	_socketFd (-1), _addr (), _maxUsers (maxUsers), _users (), _isRunning (true)
-{}
+	_socketFd (-1), _addr (), _maxUsers (maxUsers), _users (), _isRunning (true), _commands ()
+{
+	_commands["USER"] = &Server::user;
+}
 
 Server::Server (const Server &) {}
 Server &Server::operator= (const Server &) { return *this; }
