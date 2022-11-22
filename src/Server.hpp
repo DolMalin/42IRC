@@ -5,10 +5,13 @@
 #include <arpa/inet.h>
 #include <poll.h>
 #include <list>
+#include <map>
 
 #include "common.hpp"
 #include "Message.hpp"
 #include <list>
+
+struct User {};	// Dummy
 
 struct Connection
 {
@@ -28,12 +31,17 @@ struct Connection
 
 class Server
 {
+public:
+	typedef void (Server::* CommandProc) (User &, const Message &);
+
 private:
 	int _socketFd;
 	sockaddr_in _addr;
 	int _maxConnections;
 	std::list<Connection> _connections;
 	bool _isRunning;
+
+	std::map<std::string, CommandProc> _commands;
 
 public:
 	typedef typename std::list<Connection>::iterator ConnectionIt;
@@ -49,10 +57,15 @@ public:
 	void receiveDataFromConnections ();
 	void processReceivedMessages ();
 	ConnectionIt disconnect (ConnectionIt connection);
+	void executeCommand (User &user, const Message &msg);
 
 	bool isRunning () const;
 	int getMaxConnections () const;
 	uint16_t getPort () const;
+
+	// Commands
+
+	void user (User &u, const Message &msg);
 
 private:
 	Server (const Server &);
