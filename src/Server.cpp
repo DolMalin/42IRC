@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-#define END_OF_MESSAGE_STRING "\n"
+#define END_OF_MESSAGE_STRING "\r\n"
 
 Connection::Connection () :
 	fd (0), addr (), isReadable (false), isWritable (false), lastReceivedBytes (), lastReceivedLine ()
