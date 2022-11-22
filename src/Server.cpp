@@ -32,7 +32,7 @@ ssize_t Connection::receiveBytes ()
 		{
 			lastReceivedLine.assign (lastReceivedBytes, 0, endOfLine);
 			lastReceivedBytes.erase (0, endOfLine + (sizeof (END_OF_MESSAGE_STRING) - 1));
-		
+
 			//std::cout << "received line: " << lastReceivedLine << std::endl;
 		}
 
@@ -40,6 +40,13 @@ ssize_t Connection::receiveBytes ()
 	}
 
 	return totalReceivedBytes;
+}
+
+std::string Connection::getAddressAsString () const
+{
+	char *s = inet_ntoa (addr.sin_addr);
+	
+	return std::string (s);
 }
 
 Server::Server (int maxConnections) :
@@ -67,6 +74,9 @@ bool Server::init (uint16_t port)
 	
 	::listen (_socketFd, _maxConnections);
 
+	int opt_val = 1;
+	::setsockopt (_socketFd, SOL_SOCKET, SO_REUSEPORT, &opt_val, sizeof (opt_val));
+
 	_isRunning = true;
 
 	return true;
@@ -91,8 +101,11 @@ Connection *Server::acceptIncomingConnection ()
 		return NULL;
 
 	_connections.push_back (Connection (fd, addr));
+	Connection *conn = &_connections.back ();
 
-	return &_connections.back ();
+	std::cout << conn->getAddressAsString () << " has connected to the server." << std::endl;
+
+	return conn;
 }
 
 void Server::pollConnectionEvents (int timeout)
@@ -163,13 +176,13 @@ Server::ConnectionIt Server::disconnect (ConnectionIt connection)
 {
 	if (connection->lastReceivedBytes.length () != 0)
 	{
-		std::cout << "Connection still has pending data when disconnecting." << std::endl;
+		std::cout << "Connection " << connection->getAddressAsString () << " still has pending data when disconnecting." << std::endl;
 		std::cout << "data was: " << connection->lastReceivedBytes << std::endl;
 	}
 
-	assert (connection->lastReceivedLine.length () == 0, "Connection still has unprocessed message.");
+	assert (connection->lastReceivedLine.length () == 0, "Connection " << connection->getAddressAsString () << " still has unprocessed message.");
 
-	std::cout << "A client has disconnected." << std::endl;
+	std::cout << "Client " << connection->getAddressAsString () << " has disconnected." << std::endl;
 
 	::close (connection->fd);
 
