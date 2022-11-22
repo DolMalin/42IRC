@@ -13,7 +13,7 @@
 
 #define END_OF_MESSAGE_STRING "\r\n"
 
-struct User
+class User
 {
 public:
 	typedef typename std::list<User>::iterator UserIt;
@@ -25,9 +25,12 @@ public:
 	std::string lastReceivedBytes;
 	std::string lastReceivedLine;
 
+public:
 	User ();
 	User (int fd, sockaddr_in addr);
 
 	ssize_t receiveBytes ();
+
 	std::string getAddressAsString () const;
+
 };

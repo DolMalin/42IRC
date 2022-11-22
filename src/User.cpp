@@ -4,9 +4,11 @@ User::User () :
 	fd (0), addr (), isReadable (false), isWritable (false), lastReceivedBytes (), lastReceivedLine ()
 {}
 
+
 User::User (int fd, sockaddr_in addr) :
 	fd (fd), addr (addr), isReadable (false), isWritable (false), lastReceivedBytes (), lastReceivedLine ()
 {}
+
 
 ssize_t User::receiveBytes ()
 {
