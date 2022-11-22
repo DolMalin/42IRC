@@ -139,7 +139,14 @@ void Server::receiveDataFromConnections ()
 void Server::processReceivedMessages ()
 {
 	for (ConnectionIt it = _connections.begin (); it != _connections.end (); it++)
+	{
+		Opt<Message> request = Message::parseRequest(it->lastReceivedLine);
+		if (!request.ok)
+			continue ;
+		Message val = request.val;
+		std::cout << val.stringify() << std::endl;
 		it->lastReceivedLine.clear ();
+	}
 }
 
 Server::ConnectionIt Server::disconnect (ConnectionIt connection)

@@ -6,6 +6,7 @@
 #include <poll.h>
 
 #include "common.hpp"
+#include "Message.hpp"
 #include <list>
 
 struct Connection
