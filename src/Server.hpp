@@ -43,6 +43,7 @@ public:
 
 	// Commands
 
+	void nick (User &u, const Message &msg);
 	void user (User &u, const Message &msg);
 
 private:
