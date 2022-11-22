@@ -11,4 +11,6 @@ namespace Reply
 	Message	errNickCollision (const std::string &nick, const std::string &user, const std::string &host);
 	Message errUnavailResource (const std::string &nick_or_channel);
 	Message	errRestricted ();
+	Message	errNeedMoreParams (const std::string &command);
+	Message	errAlreadyRegistered ();
 }

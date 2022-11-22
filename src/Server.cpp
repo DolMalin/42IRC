@@ -177,11 +177,20 @@ User *Server::findUserByNickname (const std::string &nick)
 	return NULL;
 }
 
+static bool isValidNickname (const std::string &nick)
+{
+	for (size_t i = 0; i < nick.length (); i += 1)
+	{
+		if (!isalpha (nick[i]) && !isdigit (nick[i]) && nick[i] != '_')
+			return false;
+	}
+
+	return true;
+}
+
 void Server::nick (User &u, const Message &msg)
 {
-	// @Todo: reply ERR_NONICKNAMEGIVEN
 	// @Todo: reply ERR_ERRONEUSNICKNAME
-	// @Todo: reply ERR_NICKNAMEINUSE
 	// @Todo: reply ERR_NICKCOLLISION
 	// @Todo: reply ERR_UNAVAILRESOURCE
 	// @Todo: reply ERR_RESTRICTED
@@ -193,38 +202,38 @@ void Server::nick (User &u, const Message &msg)
 	}
 
 	const std::string &nick = msg.arg (0);
+	if (!isValidNickname (nick))
+	{
+		reply (u, Reply::errErroneousNickname (nick));
+		return;
+	}
+
 	if (findUserByNickname (nick))
 	{
 		reply (u, Reply::errNicknameInUse (nick));
 		return;
 	}
 
-	std::cout << "Changing user " << u.nickname << " to " << nick << std::endl;
 	u.nickname = nick;
 }
 
 void Server::user (User &u, const Message &msg)
 {
-	std::cout << "Executed USER command" << std::endl;
-
-	// @Todo: ERR_NEEDMOREPARAMS
-	// @Todo: ERR_ALREADYREGISTRED
-	if (msg.argsCount () < 3)	// @Todo: handle suffix (refactor suffix to make it a normal arg)
+	if (msg.argsCount () < 4)
 	{
-		std::cerr << "Need more params" << std::endl;
+		reply (u, Reply::errNeedMoreParams (msg.command ()));
 		return;
 	}
 
 	if (u.isRegistered)
 	{
-		std::cerr << "User " << u.username << " is already registered." << std::endl;
+		reply (u, Reply::errAlreadyRegistered ());
 		return;
 	}
 
 	u.username = msg.arg (0);
 	// @Todo: handle mode
 	u.isRegistered = true;
-	std::cout << "Register user " << u.nickname << " to " << msg.arg (0) << std::endl;
 }
 
 bool Server::isRunning () const { return _isRunning; }

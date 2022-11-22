@@ -36,4 +36,14 @@ namespace Reply
 	{
 		return Message ().setReplyCode (484).pushSuffix ("Your connection is restricted!");
 	}
+
+	Message	errNeedMoreParams (const std::string &command)
+	{
+		return Message ().setReplyCode (461).pushArg (command).pushSuffix ("Not enough parameters");
+	}
+
+	Message	errAlreadyRegistered ()
+	{
+		return Message ().setReplyCode (462).pushSuffix ("Unauthorized command (already registered)");
+	}
 }
