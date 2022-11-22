@@ -20,10 +20,15 @@ public:
 
 	int fd;
 	sockaddr_in addr;
-	bool isReadable;
-	bool isWritable;
+
+	bool	isReadable;
+	bool	isWritable;
+	bool	isValid;
+	
 	std::string lastReceivedBytes;
 	std::string lastReceivedLine;
+	std::string	nickname;
+	std::string	username;
 
 public:
 	User ();
