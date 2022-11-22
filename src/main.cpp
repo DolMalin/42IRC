@@ -28,9 +28,7 @@ int main (int argc, char **args)
 
 	while (server.isRunning ())
 	{
-		if (server.acceptIncomingConnection ())
-			std::cout << "Somebody has connected to the server" << std::endl;
-
+		server.acceptIncomingConnection ();
 		server.pollConnectionEvents (POLL_TIMEOUT);
 		server.receiveDataFromConnections ();
 		server.processReceivedMessages ();

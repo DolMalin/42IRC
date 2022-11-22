@@ -23,6 +23,7 @@ struct Connection
 	Connection (int fd, sockaddr_in addr);
 
 	ssize_t receiveBytes ();
+	std::string getAddressAsString () const;
 };
 
 class Server
