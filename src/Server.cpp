@@ -1,8 +1,12 @@
 #include "Server.hpp"
 
+#define END_OF_MESSAGE_STRING "\r\n"
+
 Server::Server (int maxUsers) :
-	_socketFd (-1), _addr (), _maxUsers (maxUsers), _users (), _isRunning (true)
-{}
+	_socketFd (-1), _addr (), _maxUsers (maxUsers), _users (), _isRunning (true), _commands ()
+{
+	_commands["USER"] = &Server::user;
+}
 
 Server::Server (const Server &) {}
 Server &Server::operator= (const Server &) { return *this; }
@@ -117,9 +121,12 @@ void Server::processReceivedMessages ()
 		}
 
 		Message msg = msgOpt.val;
-		it->lastReceivedLine.clear ();
+		std::cout << "Received: " << msg.stringify () << std::endl;
 
-		std::cout << msg.stringify () << std::endl;
+		User dummy;
+		executeCommand (dummy, msg);
+
+		it->lastReceivedLine.clear ();
 	}
 }
 
@@ -138,6 +145,28 @@ User::UserIt Server::disconnect (User::UserIt user)
 	::close (user->fd);
 
 	return _users.erase (user);
+}
+
+void Server::executeCommand (User &user, const Message &msg)
+{
+	std::map<std::string, CommandProc>::iterator it = _commands.find (msg.command ());
+	if (it == _commands.end ())
+	{
+		// @Todo: send reply
+		std::cerr << "Invalid command " << msg.command () << std::endl;
+		return;
+	}
+
+	CommandProc proc = it->second;
+	(this->*proc) (user, msg);
+}
+
+void Server::user (User &u, const Message &msg)
+{
+	(void)u;
+	(void)msg;
+
+	std::cout << "Executed USER command" << std::endl;
 }
 
 bool Server::isRunning () const { return _isRunning; }

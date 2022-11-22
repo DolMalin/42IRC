@@ -4,6 +4,7 @@
 #include <netinet/in.h>
 #include <poll.h>
 #include <list>
+#include <map>
 
 #include "common.hpp"
 #include "Message.hpp"
@@ -11,12 +12,17 @@
 
 class Server
 {
+public:
+	typedef void (Server::* CommandProc) (User &, const Message &);
+
 private:
 	int _socketFd;
 	sockaddr_in _addr;
 	int _maxUsers;
 	std::list<User> _users;
 	bool _isRunning;
+
+	std::map<std::string, CommandProc> _commands;
 
 public:
 	explicit Server (int maxUsers);
@@ -29,10 +35,15 @@ public:
 	void receiveDataFromUsers ();
 	void processReceivedMessages ();
 	User::UserIt disconnect (User::UserIt user);
+	void executeCommand (User &user, const Message &msg);
 
 	bool isRunning () const;
 	int getMaxConnections () const;
 	uint16_t getPort () const;
+
+	// Commands
+
+	void user (User &u, const Message &msg);
 
 private:
 	Server (const Server &);
