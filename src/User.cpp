@@ -27,13 +27,21 @@ ssize_t User::receiveBytes ()
 			break;
 
 		lastReceivedBytes.append (buffer, (size_t)bytesRead);
-		size_t endOfLine = lastReceivedBytes.find (END_OF_MESSAGE_STRING);
+
+		size_t endOfLine = lastReceivedBytes.find ("\r\n");
 		if (endOfLine != std::string::npos)
 		{
 			lastReceivedLine.assign (lastReceivedBytes, 0, endOfLine);
-			lastReceivedBytes.erase (0, endOfLine + (sizeof (END_OF_MESSAGE_STRING) - 1));
-
-			//std::cout << "received line: " << lastReceivedLine << std::endl;
+			lastReceivedBytes.erase (0, endOfLine + 2);
+		}
+		else
+		{
+			endOfLine = lastReceivedBytes.find ("\n");
+			if (endOfLine != std::string::npos)
+			{
+				lastReceivedLine.assign (lastReceivedBytes, 0, endOfLine);
+				lastReceivedBytes.erase (0, endOfLine + 1);
+			}
 		}
 
 		totalReceivedBytes += bytesRead;
