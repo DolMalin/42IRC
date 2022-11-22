@@ -24,7 +24,10 @@ public:
 	static Opt<Message> makeReply(const std::string &prefix, uint16_t replyCode);
 	
 	std::string	stringify(void);
-	void		pushArg(const std::string &arg);
+
+	Message		&setPrefix(const std::string &prefix);
+	Message		&pushArg(const std::string &arg);
+	Message		&setReplyCode(uint16_t replyCode);
 
 	const std::string	&prefix () const;
 	const std::string	&command () const;

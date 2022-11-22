@@ -66,25 +66,41 @@ Opt<Message> Message::parseRequest(const std::string &str)
 	return make_opt(message, true);
 }
 
-Opt<Message> Message::makeReply(const std::string &prefix, uint16_t replyCode)
-{
-	Message message;
+// Opt<Message> Message::makeReply(const std::string &prefix, uint16_t replyCode)
+// {
+// 	Message message;
 
-	message._isRequest = false;
-	message._argsCount = 0;
-	memset(&message._args, 0, sizeof(message._args));
-	if (prefix.length() < 3 || prefix.at(0) != ':')
-		return make_opt(message, false);
-	message._prefix = prefix;
-	if (replyCode > 502)
-		return make_opt(message, false);
-	message._replyCode = replyCode;
-	if (prefix.empty())
-		return make_opt(message, false);
-	message._prefix = prefix;
-	if (!message._hasPrefix)
-		return make_opt(message, false);
-	return make_opt(message, true);
+// 	message._isRequest = false;
+// 	message._argsCount = 0;
+// 	memset(&message._args, 0, sizeof(message._args));
+// 	if (prefix.length() < 3 || prefix.at(0) != ':')
+// 		return make_opt(message, false);
+// 	message._prefix = prefix;
+// 	if (replyCode > 502)
+// 		return make_opt(message, false);
+// 	message._replyCode = replyCode;
+// 	if (prefix.empty())
+// 		return make_opt(message, false);
+// 	message._prefix = prefix;
+// 	if (!message._hasPrefix)
+// 		return make_opt(message, false);
+// 	return make_opt(message, true);
+// }
+
+Message	&Message::setPrefix(const std::string &prefix)
+{
+	assert (prefix.length() >= 3 || prefix.at(0) == ':')
+	this->_prefix = prefix;
+
+	return *this;
+}
+
+Message &Message::setReplyCode(uint16_t replyCode)
+{
+	assert (replyCode <= 502);
+
+	this->_replyCode = replyCode;
+	return *this;
 }
 
 Message::Message () :
@@ -122,7 +138,7 @@ std::string Message::stringify(void)
 	return output;
 }
 
-void	Message::pushArg(const std::string &arg)
+Message	&Message::pushArg(const std::string &arg)
 {
 	assert (_argsCount < 15, "Message cannot have more than 15 arguments.");
 
@@ -130,6 +146,8 @@ void	Message::pushArg(const std::string &arg)
 		return ;
 	this->_args[this->_argsCount] = arg;
 	this->_argsCount++;
+
+	return *this;
 }
 
 const std::string &Message::prefix () const { return _prefix; }
