@@ -67,6 +67,9 @@ bool Server::init (uint16_t port)
 	
 	::listen (_socketFd, _maxConnections);
 
+	int opt_val = 1;
+	::setsockopt (_socketFd, SOL_SOCKET, SO_REUSEPORT, &opt_val, sizeof (opt_val));
+
 	_isRunning = true;
 
 	return true;
