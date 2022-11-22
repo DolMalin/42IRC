@@ -13,9 +13,14 @@ int main (int argc, char **args)
 
 	uint16_t port;
 
-
 	std::istringstream iss (args[1]);
-	iss >> port;	// @Todo: error checking
+	iss >> port;
+	if (iss.fail() || iss.tellg() != -1 || size_t(log10(port) + 1) != strlen(args[1]))
+	{
+		std::cout << "Port (" << args[1] << ") is invalid." << std::endl;
+		iss.clear();
+		return 1;
+	}
 
 	Server server (port);
 	if (!server.init (port))
