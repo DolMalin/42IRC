@@ -23,7 +23,8 @@ public:
 		PONG,
 		PRIVMSG,
 		QUIT,
-		USER
+		USER,
+		NICK
 	};
 
 
@@ -44,7 +45,4 @@ public:
 	
 	std::string	stringify(void);
 	void		pushArg(const std::string &arg);
-	// @TODO: Replace str with const &str
-	// 	if the string is modified create a copy of it
-	// - Abort when multiple spaces in str message
 };

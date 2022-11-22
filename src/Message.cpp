@@ -24,6 +24,8 @@ static Message::Command getCommandId(const std::string &str)
 		return Message::QUIT;
 	else if (str == "USER")
 		return Message::USER;
+	else if (str == "NICK")
+		return Message::NICK;
 	else
 		return Message::BLANK;
 }
@@ -52,6 +54,8 @@ static std::string getCommandName(Message::Command name)
 		return "QUIT";
 	else if (name == Message::USER)
 		return "USER";
+	else if (name == Message::NICK)
+		return "NICK";
 	else
 		return "";
 }
