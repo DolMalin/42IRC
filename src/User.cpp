@@ -1,12 +1,12 @@
 #include "User.hpp"
 
 User::User () :
-	fd (0), addr (), isReadable (false), isWritable (false), isRegistered(false), lastReceivedBytes (), lastReceivedLine (), nickname (), username ()
+	fd (0), addr (), isReadable (false), isWritable (false), isRegistered(false), bytesToSend (), lastReceivedBytes (), lastReceivedLine (), nickname (), username ()
 {}
 
 
 User::User (int fd, sockaddr_in addr) :
-	fd (fd), addr (addr), isReadable (false), isWritable (false), isRegistered(false), lastReceivedBytes (), lastReceivedLine (), nickname (), username ()
+	fd (fd), addr (addr), isReadable (false), isWritable (false), isRegistered(false), bytesToSend (), lastReceivedBytes (), lastReceivedLine (), nickname (), username ()
 {}
 
 
@@ -44,6 +44,9 @@ ssize_t User::receiveBytes ()
 
 bool User::sendBytes (const void *buff, size_t len)
 {
+	if (len == 0)
+		return false;
+
 	if (isWritable)
 	{
 		if (!bytesToSend.empty ())

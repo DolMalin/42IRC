@@ -93,8 +93,6 @@ void Server::receiveDataFromUsers ()
 {
 	for (std::list<User>::iterator it = _users.begin (); it != _users.end (); it++)
 	{
-		it->flush ();
-
 		if (it->isReadable)
 		{
 			ssize_t bytesRead = it->receiveBytes ();
@@ -104,8 +102,6 @@ void Server::receiveDataFromUsers ()
 	}
 }
 
-// For now this just clears the line we received, but later on we'll parse the
-// line and execute commands
 void Server::processReceivedMessages ()
 {
 	for (User::UserIt it = _users.begin (); it != _users.end (); it++)
@@ -125,8 +121,7 @@ void Server::processReceivedMessages ()
 		Message msg = msgOpt.val;
 		std::cout << "Received: " << msg.stringify () << std::endl;
 
-		User dummy;
-		executeCommand (dummy, msg);
+		executeCommand (*it, msg);
 
 		it->lastReceivedLine.clear ();
 	}
