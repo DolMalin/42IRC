@@ -11,8 +11,6 @@
 #include "Message.hpp"
 #include "User.hpp"
 
-#define END_OF_MESSAGE_STRING "\n"
-
 class User
 {
 public:
