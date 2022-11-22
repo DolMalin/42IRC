@@ -24,7 +24,7 @@ public:
 	bool	isReadable;
 	bool	isWritable;
 	bool	isValid;
-	
+
 	std::string lastReceivedBytes;
 	std::string lastReceivedLine;
 	std::string	nickname;
