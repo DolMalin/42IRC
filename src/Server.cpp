@@ -163,7 +163,7 @@ void Server::reply (User &user, const Message &msg)
 	std::string str = msg.stringify ();
 
 	std::cout << "Replying: " << str << std::endl;
-	user.sendBytes (str);
+	user.sendBytes (str + "\r\n");
 }
 
 User *Server::findUserByNickname (const std::string &nick)
