@@ -1,6 +1,6 @@
 #include "Message.hpp"
 
-static Message::Command getCommandId(std::string str)
+static Message::Command getCommandId(const std::string &str)
 {
 	if (str == "JOIN")
 		return Message::JOIN;
@@ -70,32 +70,39 @@ static std::string formatShort(unsigned short n)
 	return output;
 }
 
-Opt<Message> Message::parseRequest(std::string str)
+Opt<Message> Message::parseRequest(const std::string &str)
 {
 	Message		message;
 	size_t		pos;
 	std::string	token;
+	std::string	output;
 	
 	pos = 0;
 	message._command = BLANK;
 	message._argsLen = 0;
 	memset(&message._args, 0, sizeof(message._args));
 	message._isRequest = true;
-	if (str.empty())
+	output = str;
+	if (output.empty())
 		return make_opt(message, false);
-	str += " ";
-	while ((pos = str.find(" ")) != std::string::npos)
+	output += " ";
+	while ((pos = output.find(" ")) != std::string::npos)
 	{
-		token = str.substr(0, pos);
+		token = output.substr(0, pos);
+		if (token.empty())
+		{
+			output.erase(0, pos + 1);
+			continue;
+		}
 		if (message._argsLen >= 15)
 			return make_opt(message, false);
-		else if (!token.empty() && token.at(0) == ':' && message._prefix.empty() && message._command == BLANK)
+		else if (token.at(0) == ':' && message._prefix.empty() && message._command == BLANK)
 			message._prefix = token.substr(1);
 		else if (message._command == BLANK)
 			message._command = getCommandId(token);
 		else if (token.at(0) == ':')
 		{
-			message._suffix = str.substr(1);
+			message._suffix = output.substr(1);
 			break;
 		}
 		else
@@ -103,14 +110,14 @@ Opt<Message> Message::parseRequest(std::string str)
 			message._args[message._argsLen] = token;
 			message._argsLen++;
 		}
-		str.erase(0, pos + 1);
+		output.erase(0, pos + 1);
 	}
 	if (message._command == BLANK)
 		return make_opt(message, false);
 	return make_opt(message, true);
 }
 
-Opt<Message> Message::makeReply(std::string prefix, unsigned short replyCode, std::string suffix)
+Opt<Message> Message::makeReply(const std::string &prefix, unsigned short replyCode, const std::string &suffix)
 {
 	Message message;
 
@@ -157,7 +164,7 @@ std::string Message::stringify(void)
 	return output;
 }
 
-void	Message::pushArg(std::string arg)
+void	Message::pushArg(const std::string &arg)
 {
 	if (arg.empty() || this->_argsLen >= 15)
 		return ;

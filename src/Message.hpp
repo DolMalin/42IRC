@@ -39,10 +39,12 @@ private:
 	Message () {}
 
 public:
-	static Opt<Message> parseRequest(std::string str);
-	static Opt<Message> makeReply(std::string prefix, unsigned short replyCode, std::string suffix);
+	static Opt<Message> parseRequest(const std::string &str);
+	static Opt<Message> makeReply(const std::string &prefix, unsigned short replyCode, const std::string &suffix);
 	
 	std::string	stringify(void);
-	void		pushArg(std::string arg);
-	// @TODO: Push arg function to add elem in args
+	void		pushArg(const std::string &arg);
+	// @TODO: Replace str with const &str
+	// 	if the string is modified create a copy of it
+	// - Abort when multiple spaces in str message
 };
