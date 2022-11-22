@@ -150,8 +150,7 @@ void Server::executeCommand (User &user, const Message &msg)
 	std::map<std::string, CommandProc>::iterator it = _commands.find (msg.command ());
 	if (it == _commands.end ())
 	{
-		// @Todo: send reply
-		std::cerr << "Invalid command " << msg.command () << std::endl;
+		reply (user, Reply::errUnknownCommand (msg.command ()));
 		return;
 	}
 
