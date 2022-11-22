@@ -18,7 +18,7 @@ Opt<Message> Message::parseRequest(const std::string &str)
 {
 	Message	message;
 	message._isRequest = true;
-
+	message._hasPrefix = false;
 	std::string output = str;
 	if (output.empty())
 		return make_opt(message, false);
@@ -51,8 +51,8 @@ Opt<Message> Message::parseRequest(const std::string &str)
 		}
 		else if (token.at(0) == ':')
 		{
-			message._suffix = output.substr(1);
-
+			message.pushArg (output.substr(1));
+			message._hasPrefix = true;
 			break;
 		}
 		else
@@ -66,7 +66,7 @@ Opt<Message> Message::parseRequest(const std::string &str)
 	return make_opt(message, true);
 }
 
-Opt<Message> Message::makeReply(const std::string &prefix, uint16_t replyCode, const std::string &suffix)
+Opt<Message> Message::makeReply(const std::string &prefix, uint16_t replyCode)
 {
 	Message message;
 
@@ -82,14 +82,13 @@ Opt<Message> Message::makeReply(const std::string &prefix, uint16_t replyCode, c
 	if (prefix.empty())
 		return make_opt(message, false);
 	message._prefix = prefix;
-	if (suffix.empty())
+	if (!message._hasPrefix)
 		return make_opt(message, false);
-	message._suffix = suffix;
 	return make_opt(message, true);
 }
 
 Message::Message () :
-	_prefix (), _command (), _args (), _argsCount (), _suffix (), _isRequest (), _replyCode ()
+	_prefix (), _command (), _args (), _argsCount (), _isRequest (), _replyCode ()
 {}
 
 std::string Message::stringify(void)
@@ -106,8 +105,8 @@ std::string Message::stringify(void)
 		for (size_t i = 0; i < this->_argsCount; i++)
 			output = output + " " + this->_args[i] ;
 		
-		if (!this->_suffix.empty())
-			output = output + " " + ":" + this->_suffix;
+		if (this->_hasPrefix)
+			output = output + " " + ":" + this->_args[this->_argsCount];
 	}
 	else
 	{
@@ -117,7 +116,7 @@ std::string Message::stringify(void)
 		for (size_t i = 0; i < this->_argsCount; i++)
 			output = output + " " + this->_args[i] ;
 
-		output = output + " :" + this->_suffix;
+		output = output + " :" + this->_args[this->_argsCount];
 	}
 
 	return output;
@@ -137,6 +136,5 @@ const std::string &Message::prefix () const { return _prefix; }
 const std::string &Message::command () const { return _command; }
 const std::string &Message::arg (size_t index) const { assert (index < _argsCount); return _args[index]; }
 size_t Message::argsCount () const { return _argsCount; }
-const std::string &Message::suffix () const { return _suffix; }
 bool Message::isRequest () const { return _isRequest; }
 uint16_t Message::replyCode () const { return _replyCode; }

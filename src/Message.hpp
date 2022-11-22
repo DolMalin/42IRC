@@ -13,15 +13,15 @@ private:
 	std::string	_command;
 	std::string	_args[15];
 	size_t		_argsCount;
-	std::string	_suffix;
 	bool		_isRequest;
+	bool		_hasPrefix;
 	uint16_t	_replyCode;
 
 	Message ();
 
 public:
 	static Opt<Message> parseRequest(const std::string &str);
-	static Opt<Message> makeReply(const std::string &prefix, uint16_t replyCode, const std::string &suffix);
+	static Opt<Message> makeReply(const std::string &prefix, uint16_t replyCode);
 	
 	std::string	stringify(void);
 	void		pushArg(const std::string &arg);
