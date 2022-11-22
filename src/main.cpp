@@ -33,9 +33,9 @@ int main (int argc, char **args)
 
 	while (server.isRunning ())
 	{
-		server.acceptIncomingConnection ();
-		server.pollConnectionEvents (POLL_TIMEOUT);
-		server.receiveDataFromConnections ();
+		server.acceptIncomingUser ();
+		server.pollUserEvents (POLL_TIMEOUT);
+		server.receiveDataFromUsers ();
 		server.processReceivedMessages ();
 	}
 

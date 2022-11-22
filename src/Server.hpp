@@ -2,32 +2,13 @@
 
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <poll.h>
 #include <list>
 #include <map>
 
 #include "common.hpp"
 #include "Message.hpp"
-#include <list>
-
-struct User {};	// Dummy
-
-struct Connection
-{
-	int fd;
-	sockaddr_in addr;
-	bool isReadable;
-	bool isWritable;
-	std::string lastReceivedBytes;
-	std::string lastReceivedLine;
-
-	Connection ();
-	Connection (int fd, sockaddr_in addr);
-
-	ssize_t receiveBytes ();
-	std::string getAddressAsString () const;
-};
+#include "User.hpp"
 
 class Server
 {
@@ -37,26 +18,23 @@ public:
 private:
 	int _socketFd;
 	sockaddr_in _addr;
-	int _maxConnections;
-	std::list<Connection> _connections;
+	int _maxUsers;
+	std::list<User> _users;
 	bool _isRunning;
 
 	std::map<std::string, CommandProc> _commands;
 
 public:
-	typedef typename std::list<Connection>::iterator ConnectionIt;
-
-public:
-	explicit Server (int maxConnections);
+	explicit Server (int maxUsers);
 
 	bool init (uint16_t port);
 	void close ();
 
-	Connection *acceptIncomingConnection ();
-	void pollConnectionEvents (int timeout);
-	void receiveDataFromConnections ();
+	User *acceptIncomingUser ();
+	void pollUserEvents (int timeout);
+	void receiveDataFromUsers ();
 	void processReceivedMessages ();
-	ConnectionIt disconnect (ConnectionIt connection);
+	User::UserIt disconnect (User::UserIt user);
 	void executeCommand (User &user, const Message &msg);
 
 	bool isRunning () const;
