@@ -17,13 +17,11 @@ private:
 	bool		_hasSuffix;
 	uint16_t	_replyCode;
 
-	Message ();
 
 public:
-	static Opt<Message> parseRequest(const std::string &str);
-	static Opt<Message> makeReply(const std::string &prefix, uint16_t replyCode);
+	Message ();
 
-	std::string	stringify(void);
+	std::string	stringify(void) const;
 
 	Message		&setPrefix(const std::string &prefix);
 	Message		&pushArg(const std::string &arg);
@@ -37,4 +35,6 @@ public:
 	const std::string	&suffix () const;
 	bool				isRequest () const;
 	uint16_t			replyCode () const;
+
+	static Opt<Message> parseRequest(const std::string &str);
 };

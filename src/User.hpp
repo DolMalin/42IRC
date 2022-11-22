@@ -25,6 +25,7 @@ public:
 	bool	isWritable;
 	bool	isRegistered;
 	
+	std::string bytesToSend;
 	std::string lastReceivedBytes;
 	std::string lastReceivedLine;
 	std::string	nickname;
@@ -35,6 +36,9 @@ public:
 	User (int fd, sockaddr_in addr);
 
 	ssize_t receiveBytes ();
+	bool sendBytes (const void *buff, size_t len);
+	bool sendBytes (const std::string &str);
+	bool flush ();
 
 	std::string getAddressAsString () const;
 

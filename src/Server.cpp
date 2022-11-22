@@ -1,6 +1,5 @@
 #include "Server.hpp"
-
-#define END_OF_MESSAGE_STRING "\r\n"
+#include "Reply.hpp"
 
 Server::Server (int maxUsers) :
 	_socketFd (-1), _addr (), _maxUsers (maxUsers), _users (), _isRunning (true), _commands ()
@@ -94,6 +93,8 @@ void Server::receiveDataFromUsers ()
 {
 	for (std::list<User>::iterator it = _users.begin (); it != _users.end (); it++)
 	{
+		it->flush ();
+
 		if (it->isReadable)
 		{
 			ssize_t bytesRead = it->receiveBytes ();
@@ -143,6 +144,7 @@ User::UserIt Server::disconnect (User::UserIt user)
 
 	std::cout << "Client " << user->getAddressAsString () << " has disconnected." << std::endl;
 
+	user->flush ();
 	::close (user->fd);
 
 	return _users.erase (user);
@@ -162,6 +164,25 @@ void Server::executeCommand (User &user, const Message &msg)
 	(this->*proc) (user, msg);
 }
 
+void Server::reply (User &user, const Message &msg)
+{
+	std::string str = msg.stringify ();
+
+	std::cout << "Replying: " << str << std::endl;
+	user.sendBytes (str);
+}
+
+User *Server::findUserByNickname (const std::string &nick)
+{
+	for (User::UserIt it = _users.begin (); it != _users.end (); it++)
+	{
+		if (it->nickname == nick)
+			return &(*it);
+	}
+
+	return NULL;
+}
+
 void Server::nick (User &u, const Message &msg)
 {
 	// @Todo: reply ERR_NONICKNAMEGIVEN
@@ -173,12 +194,19 @@ void Server::nick (User &u, const Message &msg)
 
 	if (msg.argsCount () < 1)
 	{
-		std::cerr << "Need more params" << std::endl;
+		reply (u, Reply::errNoNicknameGiven ());
 		return;
 	}
 
-	std::cout << "Changing user " << u.nickname << " to " << msg.arg (0) << std::endl;
-	u.nickname = msg.arg (0);
+	const std::string &nick = msg.arg (0);
+	if (findUserByNickname (nick))
+	{
+		reply (u, Reply::errNicknameInUse (nick));
+		return;
+	}
+
+	std::cout << "Changing user " << u.nickname << " to " << nick << std::endl;
+	u.nickname = nick;
 }
 
 void Server::user (User &u, const Message &msg)

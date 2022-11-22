@@ -36,6 +36,9 @@ public:
 	void processReceivedMessages ();
 	User::UserIt disconnect (User::UserIt user);
 	void executeCommand (User &user, const Message &msg);
+	void reply (User &user, const Message &msg);
+
+	User *findUserByNickname (const std::string &nick);
 
 	bool isRunning () const;
 	int getMaxConnections () const;

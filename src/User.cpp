@@ -42,6 +42,50 @@ ssize_t User::receiveBytes ()
 	return totalReceivedBytes;
 }
 
+bool User::sendBytes (const void *buff, size_t len)
+{
+	if (isWritable)
+	{
+		if (!bytesToSend.empty ())
+		{
+			bytesToSend.append ((const char *)buff, len);
+			flush ();
+		}
+		else
+		{
+			::send (fd, buff, len, MSG_DONTWAIT);
+			// @Todo: error checking
+		}
+
+		return true;
+	}
+	else
+	{
+		bytesToSend.append ((const char *)buff, len);
+
+		return false;
+	}
+}
+
+bool User::sendBytes (const std::string &str)
+{
+	return sendBytes (str.data (), str.length ());
+}
+
+bool User::flush ()
+{
+	if (isWritable && !bytesToSend.empty ())
+	{
+		::send (fd, bytesToSend.data (), bytesToSend.length (), MSG_DONTWAIT);
+		// @Todo: error checking
+		bytesToSend.clear ();
+
+		return true;
+	}
+
+	return false;
+}
+
 std::string User::getAddressAsString () const
 {
 	char *s = inet_ntoa (addr.sin_addr);

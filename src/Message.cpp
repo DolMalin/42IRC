@@ -66,32 +66,11 @@ Opt<Message> Message::parseRequest(const std::string &str)
 	return make_opt(message, true);
 }
 
-// Opt<Message> Message::makeReply(const std::string &prefix, uint16_t replyCode)
-// {
-// 	Message message;
-
-// 	message._isRequest = false;
-// 	message._argsCount = 0;
-// 	memset(&message._args, 0, sizeof(message._args));
-// 	if (prefix.length() < 3 || prefix.at(0) != ':')
-// 		return make_opt(message, false);
-// 	message._prefix = prefix;
-// 	if (replyCode > 502)
-// 		return make_opt(message, false);
-// 	message._replyCode = replyCode;
-// 	if (prefix.empty())
-// 		return make_opt(message, false);
-// 	message._prefix = prefix;
-// 	if (!message._hasSuffix)
-// 		return make_opt(message, false);
-// 	return make_opt(message, true);
-// }
-
 Message::Message () :
-	_prefix (), _command (), _args (), _argsCount (), _isRequest (), _replyCode ()
+	_prefix (), _command (), _args (), _argsCount (), _isRequest (), _hasSuffix (), _replyCode ()
 {}
 
-std::string Message::stringify(void)
+std::string Message::stringify(void) const
 {
 	std::string	output;
 
@@ -140,10 +119,9 @@ Message &Message::setReplyCode(uint16_t replyCode)
 
 Message	&Message::pushArg(const std::string &arg)
 {
+	assert (!arg.empty (), "Argument is empty.");
 	assert (_argsCount < 15, "Message cannot have more than 15 arguments.");
 
-	if (arg.empty() || this->_argsCount >= 15)
-		return *this;
 	this->_args[this->_argsCount] = arg;
 	this->_argsCount++;
 
