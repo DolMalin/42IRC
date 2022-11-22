@@ -5,6 +5,7 @@
 Server::Server (int maxUsers) :
 	_socketFd (-1), _addr (), _maxUsers (maxUsers), _users (), _isRunning (true), _commands ()
 {
+	_commands["NICK"] = &Server::nick;
 	_commands["USER"] = &Server::user;
 }
 
@@ -161,12 +162,47 @@ void Server::executeCommand (User &user, const Message &msg)
 	(this->*proc) (user, msg);
 }
 
+void Server::nick (User &u, const Message &msg)
+{
+	// @Todo: reply ERR_NONICKNAMEGIVEN
+	// @Todo: reply ERR_ERRONEUSNICKNAME
+	// @Todo: reply ERR_NICKNAMEINUSE
+	// @Todo: reply ERR_NICKCOLLISION
+	// @Todo: reply ERR_UNAVAILRESOURCE
+	// @Todo: reply ERR_RESTRICTED
+
+	if (msg.argsCount () < 1)
+	{
+		std::cerr << "Need more params" << std::endl;
+		return;
+	}
+
+	std::cout << "Changing user " << u.nickname << " to " << msg.arg (0) << std::endl;
+	u.nickname = msg.arg (0);
+}
+
 void Server::user (User &u, const Message &msg)
 {
-	(void)u;
-	(void)msg;
-
 	std::cout << "Executed USER command" << std::endl;
+
+	// @Todo: ERR_NEEDMOREPARAMS
+	// @Todo: ERR_ALREADYREGISTRED
+	if (msg.argsCount () < 3)	// @Todo: handle suffix (refactor suffix to make it a normal arg)
+	{
+		std::cerr << "Need more params" << std::endl;
+		return;
+	}
+
+	if (u.isRegistered)
+	{
+		std::cerr << "User " << u.username << " is already registered." << std::endl;
+		return;
+	}
+
+	u.username = msg.arg (0);
+	// @Todo: handle mode
+	u.isRegistered = true;
+	std::cout << "Register user " << u.nickname << " to " << msg.arg (0) << std::endl;
 }
 
 bool Server::isRunning () const { return _isRunning; }
