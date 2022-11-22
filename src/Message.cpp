@@ -74,28 +74,20 @@ std::string Message::stringify(void) const
 {
 	std::string	output;
 
-	if (this->_isRequest)
-	{
-		if (!this->_prefix.empty())
-			output = output + ":" + this->_prefix + " ";
-		
-		output = output + this->_command;
+	if (!this->_prefix.empty())
+		output += ":" + this->_prefix + " ";
 
-		for (size_t i = 0; i < this->_argsCount; i++)
-			output = output + " " + this->_args[i] ;
-		
-		if (this->_hasSuffix)
-			output = output + " " + ":" + this->_args[this->_argsCount];
-	}
+	if (this->_isRequest)
+		output += this->_command;
 	else
-	{
-		output = this->_prefix + " ";
 		output += formatShort(this->_replyCode);
 
-		for (size_t i = 0; i < this->_argsCount; i++)
-			output = output + " " + this->_args[i] ;
-
-		output = output + " :" + this->_args[this->_argsCount];
+	for (size_t i = 0; _argsCount > 0 && i < this->_argsCount; i++)
+	{
+		if (i == _argsCount - 1 && this->_hasSuffix)
+			output += " :" + this->_args[i];
+		else
+			output += " " + this->_args[i] ;
 	}
 
 	return output;
