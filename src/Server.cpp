@@ -33,7 +33,7 @@ ssize_t Connection::receiveBytes ()
 			lastReceivedLine.assign (lastReceivedBytes, 0, endOfLine);
 			lastReceivedBytes.erase (0, endOfLine + (sizeof (END_OF_MESSAGE_STRING) - 1));
 		
-			std::cout << "received line: " << lastReceivedLine << std::endl;
+			//std::cout << "received line: " << lastReceivedLine << std::endl;
 		}
 
 		totalReceivedBytes += bytesRead;
@@ -140,12 +140,22 @@ void Server::processReceivedMessages ()
 {
 	for (ConnectionIt it = _connections.begin (); it != _connections.end (); it++)
 	{
-		Opt<Message> request = Message::parseRequest(it->lastReceivedLine);
-		if (!request.ok)
-			continue ;
-		Message val = request.val;
-		std::cout << val.stringify() << std::endl;
+		if (it->lastReceivedLine.empty ())
+			continue;
+
+		Opt<Message> msgOpt = Message::parseRequest (it->lastReceivedLine);
+		if (!msgOpt.ok)
+		{
+			std::cerr << "Invalid message (" << it->lastReceivedLine << ")" << std::endl;
+			it->lastReceivedLine.clear ();
+			
+			continue;
+		}
+
+		Message msg = msgOpt.val;
 		it->lastReceivedLine.clear ();
+
+		std::cout << msg.stringify () << std::endl;
 	}
 }
 
