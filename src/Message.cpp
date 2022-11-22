@@ -87,7 +87,7 @@ std::string Message::stringify(void) const
 		if (i == _argsCount - 1 && this->_hasSuffix)
 			output += " :" + this->_args[i];
 		else
-			output += " " + this->_args[i] ;
+			output += " " + this->_args[i];
 	}
 
 	return output;
