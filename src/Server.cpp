@@ -1,56 +1,7 @@
 #include "Server.hpp"
 
-#define END_OF_MESSAGE_STRING "\r\n"
-
-Connection::Connection () :
-	fd (0), addr (), isReadable (false), isWritable (false), lastReceivedBytes (), lastReceivedLine ()
-{}
-
-Connection::Connection (int fd, sockaddr_in addr) :
-	fd (fd), addr (addr), isReadable (false), isWritable (false), lastReceivedBytes (), lastReceivedLine ()
-{}
-
-ssize_t Connection::receiveBytes ()
-{
-	char buffer[1024];
-
-	ssize_t totalReceivedBytes = 0;
-	while (true)
-	{
-		ssize_t bytesRead = ::recv (fd, buffer, sizeof (buffer), MSG_DONTWAIT);
-
-		// If we can't read because the read would block, try again next time
-		if (bytesRead < 0 && (errno == EWOULDBLOCK || errno == EAGAIN))
-			break;
-
-		if (bytesRead <= 0)	// @Todo: this might be an error if bytesRead < 0
-			break;
-
-		lastReceivedBytes.append (buffer, (size_t)bytesRead);
-		size_t endOfLine = lastReceivedBytes.find (END_OF_MESSAGE_STRING);
-		if (endOfLine != std::string::npos)
-		{
-			lastReceivedLine.assign (lastReceivedBytes, 0, endOfLine);
-			lastReceivedBytes.erase (0, endOfLine + (sizeof (END_OF_MESSAGE_STRING) - 1));
-
-			//std::cout << "received line: " << lastReceivedLine << std::endl;
-		}
-
-		totalReceivedBytes += bytesRead;
-	}
-
-	return totalReceivedBytes;
-}
-
-std::string Connection::getAddressAsString () const
-{
-	char *s = inet_ntoa (addr.sin_addr);
-	
-	return std::string (s);
-}
-
-Server::Server (int maxConnections) :
-	_socketFd (-1), _addr (), _maxConnections (maxConnections), _connections (), _isRunning (true)
+Server::Server (int maxUsers) :
+	_socketFd (-1), _addr (), _maxUsers (maxUsers), _users (), _isRunning (true)
 {}
 
 Server::Server (const Server &) {}
@@ -72,7 +23,7 @@ bool Server::init (uint16_t port)
 	if (::fcntl (_socketFd, F_SETFL, O_NONBLOCK) < 0)
 		return false;
 	
-	::listen (_socketFd, _maxConnections);
+	::listen (_socketFd, _maxUsers);
 
 	int opt_val = 1;
 	::setsockopt (_socketFd, SOL_SOCKET, SO_REUSEPORT, &opt_val, sizeof (opt_val));
@@ -87,11 +38,11 @@ void Server::close ()
 	::close (_socketFd);
 	_socketFd = -1;
 
-	for (ConnectionIt it = _connections.begin (); it != _connections.end (); it++)
+	for (User::UserIt it = _users.begin (); it != _users.end (); it++)
 		it = disconnect (it);
 }
 
-Connection *Server::acceptIncomingConnection ()
+User *Server::acceptIncomingUser ()
 {
 	sockaddr_in addr;
 	socklen_t len = sizeof (addr);
@@ -100,32 +51,32 @@ Connection *Server::acceptIncomingConnection ()
 	if (fd < 0)
 		return NULL;
 
-	_connections.push_back (Connection (fd, addr));
-	Connection *conn = &_connections.back ();
+	_users.push_back (User (fd, addr));
+	User *conn = &_users.back ();
 
 	std::cout << conn->getAddressAsString () << " has connected to the server." << std::endl;
 
 	return conn;
 }
 
-void Server::pollConnectionEvents (int timeout)
+void Server::pollUserEvents (int timeout)
 {
-	pollfd *pollfds = new pollfd[_connections.size ()];
+	pollfd *pollfds = new pollfd[_users.size ()];
 
 	int i = 0;
-	for (std::list<Connection>::iterator it = _connections.begin (); it != _connections.end (); it++, i++)
+	for (std::list<User>::iterator it = _users.begin (); it != _users.end (); it++, i++)
 	{
 		pollfds[i].fd = it->fd;
 		pollfds[i].events = POLLIN | POLLOUT;
 		pollfds[i].revents = 0;
 	}
 
-	int res = poll (pollfds, _connections.size (), timeout);
+	int res = poll (pollfds, _users.size (), timeout);
 	if (res < 0)
 		return;
 
 	i = 0;
-	for (std::list<Connection>::iterator it = _connections.begin (); it != _connections.end (); it++, i++)
+	for (std::list<User>::iterator it = _users.begin (); it != _users.end (); it++, i++)
 	{
 		it->isReadable = (pollfds[i].revents & POLLIN) == POLLIN;
 		it->isWritable = (pollfds[i].revents & POLLOUT) == POLLOUT;
@@ -134,9 +85,9 @@ void Server::pollConnectionEvents (int timeout)
 	delete[] pollfds;
 }
 
-void Server::receiveDataFromConnections ()
+void Server::receiveDataFromUsers ()
 {
-	for (std::list<Connection>::iterator it = _connections.begin (); it != _connections.end (); it++)
+	for (std::list<User>::iterator it = _users.begin (); it != _users.end (); it++)
 	{
 		if (it->isReadable)
 		{
@@ -151,7 +102,7 @@ void Server::receiveDataFromConnections ()
 // line and execute commands
 void Server::processReceivedMessages ()
 {
-	for (ConnectionIt it = _connections.begin (); it != _connections.end (); it++)
+	for (User::UserIt it = _users.begin (); it != _users.end (); it++)
 	{
 		if (it->lastReceivedLine.empty ())
 			continue;
@@ -172,23 +123,23 @@ void Server::processReceivedMessages ()
 	}
 }
 
-Server::ConnectionIt Server::disconnect (ConnectionIt connection)
+User::UserIt Server::disconnect (User::UserIt user)
 {
-	if (connection->lastReceivedBytes.length () != 0)
+	if (user->lastReceivedBytes.length () != 0)
 	{
-		std::cout << "Connection " << connection->getAddressAsString () << " still has pending data when disconnecting." << std::endl;
-		std::cout << "data was: " << connection->lastReceivedBytes << std::endl;
+		std::cout << "User " << user->getAddressAsString () << " still has pending data when disconnecting." << std::endl;
+		std::cout << "data was: " << user->lastReceivedBytes << std::endl;
 	}
 
-	assert (connection->lastReceivedLine.length () == 0, "Connection " << connection->getAddressAsString () << " still has unprocessed message.");
+	assert (user->lastReceivedLine.length () == 0, "User " << user->getAddressAsString () << " still has unprocessed message.");
 
-	std::cout << "Client " << connection->getAddressAsString () << " has disconnected." << std::endl;
+	std::cout << "Client " << user->getAddressAsString () << " has disconnected." << std::endl;
 
-	::close (connection->fd);
+	::close (user->fd);
 
-	return _connections.erase (connection);
+	return _users.erase (user);
 }
 
 bool Server::isRunning () const { return _isRunning; }
-int Server::getMaxConnections () const { return _maxConnections; }
+int Server::getMaxConnections () const { return _maxUsers; }
 uint16_t Server::getPort () const { return ntohs (_addr.sin_port); }
