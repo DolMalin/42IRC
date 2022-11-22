@@ -23,7 +23,7 @@ public:
 
 	bool	isReadable;
 	bool	isWritable;
-	bool	isValid;
+	bool	isRegistered;
 	
 	std::string lastReceivedBytes;
 	std::string lastReceivedLine;
