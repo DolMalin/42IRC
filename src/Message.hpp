@@ -14,7 +14,7 @@ private:
 	std::string	_args[15];
 	size_t		_argsCount;
 	bool		_isRequest;
-	bool		_hasPrefix;
+	bool		_hasSuffix;
 	uint16_t	_replyCode;
 
 	Message ();
@@ -22,11 +22,12 @@ private:
 public:
 	static Opt<Message> parseRequest(const std::string &str);
 	static Opt<Message> makeReply(const std::string &prefix, uint16_t replyCode);
-	
+
 	std::string	stringify(void);
 
 	Message		&setPrefix(const std::string &prefix);
 	Message		&pushArg(const std::string &arg);
+	Message		&pushSuffix(const std::string &arg);
 	Message		&setReplyCode(uint16_t replyCode);
 
 	const std::string	&prefix () const;

@@ -18,7 +18,7 @@ Opt<Message> Message::parseRequest(const std::string &str)
 {
 	Message	message;
 	message._isRequest = true;
-	message._hasPrefix = false;
+	message._hasSuffix = false;
 	std::string output = str;
 	if (output.empty())
 		return make_opt(message, false);
@@ -52,7 +52,7 @@ Opt<Message> Message::parseRequest(const std::string &str)
 		else if (token.at(0) == ':')
 		{
 			message.pushArg (output.substr(1));
-			message._hasPrefix = true;
+			message._hasSuffix = true;
 			break;
 		}
 		else
@@ -82,26 +82,10 @@ Opt<Message> Message::parseRequest(const std::string &str)
 // 	if (prefix.empty())
 // 		return make_opt(message, false);
 // 	message._prefix = prefix;
-// 	if (!message._hasPrefix)
+// 	if (!message._hasSuffix)
 // 		return make_opt(message, false);
 // 	return make_opt(message, true);
 // }
-
-Message	&Message::setPrefix(const std::string &prefix)
-{
-	assert (prefix.length() >= 3 || prefix.at(0) == ':')
-	this->_prefix = prefix;
-
-	return *this;
-}
-
-Message &Message::setReplyCode(uint16_t replyCode)
-{
-	assert (replyCode <= 502);
-
-	this->_replyCode = replyCode;
-	return *this;
-}
 
 Message::Message () :
 	_prefix (), _command (), _args (), _argsCount (), _isRequest (), _replyCode ()
@@ -121,7 +105,7 @@ std::string Message::stringify(void)
 		for (size_t i = 0; i < this->_argsCount; i++)
 			output = output + " " + this->_args[i] ;
 		
-		if (this->_hasPrefix)
+		if (this->_hasSuffix)
 			output = output + " " + ":" + this->_args[this->_argsCount];
 	}
 	else
@@ -138,15 +122,41 @@ std::string Message::stringify(void)
 	return output;
 }
 
+Message	&Message::setPrefix(const std::string &prefix)
+{
+	assert (prefix.length() >= 3 || prefix.at(0) == ':')
+	this->_prefix = prefix;
+
+	return *this;
+}
+
+Message &Message::setReplyCode(uint16_t replyCode)
+{
+	assert (replyCode <= 502);
+
+	this->_replyCode = replyCode;
+	return *this;
+}
+
 Message	&Message::pushArg(const std::string &arg)
 {
 	assert (_argsCount < 15, "Message cannot have more than 15 arguments.");
 
 	if (arg.empty() || this->_argsCount >= 15)
-		return ;
+		return *this;
 	this->_args[this->_argsCount] = arg;
 	this->_argsCount++;
 
+	return *this;
+}
+
+Message	&Message::pushSuffix(const std::string &arg)
+{
+	assert (!_hasSuffix, "Message already has a suffix.");
+
+	pushArg (arg);
+	_hasSuffix = true;
+	
 	return *this;
 }
 
@@ -154,5 +164,6 @@ const std::string &Message::prefix () const { return _prefix; }
 const std::string &Message::command () const { return _command; }
 const std::string &Message::arg (size_t index) const { assert (index < _argsCount); return _args[index]; }
 size_t Message::argsCount () const { return _argsCount; }
+const std::string &Message::suffix () const { assert (_hasSuffix && _argsCount > 0); return _args[_argsCount - 1]; }
 bool Message::isRequest () const { return _isRequest; }
 uint16_t Message::replyCode () const { return _replyCode; }
