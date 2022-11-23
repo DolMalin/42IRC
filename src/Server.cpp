@@ -6,7 +6,7 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isR
 	_commands["NICK"] = &Server::nick;
 	_commands["USER"] = &Server::user;
 	_commands["QUIT"] = &Server::quit;
-	_commands["CAP"] = &Server::cap;
+	_commands["CAP"] = NULL;
 	_commands["JOIN"] = &Server::join;
 	_commands["PING"] = &Server::ping;
 }
@@ -186,7 +186,8 @@ void Server::executeCommand(User &user, const Message &msg)
 	}
 
 	CommandProc proc = it->second;
-	(this->*proc)(user, msg);
+	if (proc)
+		(this->*proc)(user, msg);
 }
 
 void Server::reply(User &user, const Message &msg)
@@ -311,8 +312,6 @@ void Server::quit(User &u, const Message &msg)
 	reply(u, Reply::error(""));
 	disconnect (u);
 }
-
-void Server::cap(User &, const Message &) {}
 
 void Server::ping(User &u, const Message &msg)
 {

@@ -58,7 +58,6 @@ public:
 	void nick (User &u, const Message &msg);
 	void user (User &u, const Message &msg);
 	void quit (User &u, const Message &msg);
-	void cap  (User &, const Message &);
 	void join (User &u, const Message &msg);
 	void ping (User &u, const Message &msg);
 
