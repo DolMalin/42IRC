@@ -22,7 +22,7 @@ int main (int argc, char **args)
 		return 1;
 	}
 
-	Server server (port);
+	Server server (SOMAXCONN);
 	if (!server.init (port))
 	{
 		std::cerr << "Could not initialize server. Port was " << port << "." << std::endl;
