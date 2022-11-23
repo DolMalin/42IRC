@@ -8,7 +8,7 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isR
 	_commands["QUIT"] = &Server::quit;
 	_commands["CAP"] = &Server::cap;
 	_commands["JOIN"] = &Server::join;
-	// _commands["ERROR"] = &Server::error;
+	_commands["PING"] = &Server::ping;
 }
 
 Server::Server(const Server &) {}
@@ -288,6 +288,7 @@ void Server::user(User &u, const Message &msg)
 		return;
 	}
 
+	// @TODO : check nick is not empty
 	u.username = msg.arg(3);
 	// @Todo: handle mode
 	u.isRegistered = true;
@@ -304,10 +305,15 @@ void Server::quit(User &u, const Message &msg)
 
 void Server::cap(User &, const Message &) {}
 
-// void Server::error (User &u, const Message &msg)
-// {
-// 	reply (u, Reply::error())
-// }
+void Server::ping(User &u, const Message &msg)
+{
+	if(msg.argsCount() < 1)
+	{
+		reply(u, Reply::errNoOrigin());
+		return ;
+	}
+	reply(u, Reply::pong("42IRC"));
+}
 
 void Server::join (User &u, const Message &msg)
 {
