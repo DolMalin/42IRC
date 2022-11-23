@@ -25,6 +25,11 @@ namespace Reply
 		return Message ().setIsRequest(true).setCommand("PONG").pushArg(server);
 	}
 
+	Message topic (const std::string &channel_name, const std::string &topic)
+	{
+		return Message ().setReplyCode (332).pushArg (channel_name).pushSuffix (topic);
+	}
+
 	Message errUnknownCommand (const std::string &command)
 	{
 		return Message ().setReplyCode (421).pushArg (command).pushSuffix ("Unknown command");
@@ -73,5 +78,10 @@ namespace Reply
 	Message errNoOrigin()
 	{
 		return Message ().setReplyCode(409).pushSuffix ("No origin specified");
+	}
+
+	Message errNoSuchChannel (const std::string &channel_name)
+	{
+		return Message ().setReplyCode (403).pushArg (channel_name).pushSuffix ("No such channel");
 	}
 }

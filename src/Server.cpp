@@ -1,12 +1,13 @@
 #include "Server.hpp"
 #include "Reply.hpp"
 
-Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _users(), _isRunning(true), _commands()
+Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isRunning(true), _users(), _channels (), _commands()
 {
 	_commands["NICK"] = &Server::nick;
 	_commands["USER"] = &Server::user;
 	_commands["QUIT"] = &Server::quit;
-	_commands["CAP"] = &Server::cap;
+	_commands["CAP"] = NULL;
+	_commands["JOIN"] = &Server::join;
 	_commands["PING"] = &Server::ping;
 	_commands["PONG"] = &Server::pong;
 	// _commands["ERROR"] = &Server::error;
@@ -187,7 +188,8 @@ void Server::executeCommand(User &user, const Message &msg)
 	}
 
 	CommandProc proc = it->second;
-	(this->*proc)(user, msg);
+	if (proc)
+		(this->*proc)(user, msg);
 }
 
 void Server::reply(User &user, const Message &msg)
@@ -200,6 +202,11 @@ void Server::reply(User &user, const Message &msg)
 
 void Server::removeDisconnectedUsers ()
 {
+	for (ChannelIt it = _channels.begin (); it != _channels.end (); it++)
+	{
+		it->removeDisconnectedUsers ();
+	}
+
 	for (UserIt it = _users.begin (); it != _users.end (); it++)
 	{
 		if (it->isDisconnected)
@@ -207,6 +214,26 @@ void Server::removeDisconnectedUsers ()
 			it = _users.erase (it);
 		}
 	}
+}
+
+Channel *Server::addChannel (const std::string &name, const std::string &topic)
+{
+	assert (findChannelByName (name) == NULL, "Channel already exists.");
+
+	_channels.push_back (Channel (name, topic));
+
+	return &_channels.back ();
+}
+
+Channel *Server::findChannelByName (const std::string &name)
+{
+	for (ChannelIt it = _channels.begin(); it != _channels.end(); it++)
+	{
+		if (it->name == name)
+			return &(*it);
+	}
+
+	return NULL;
 }
 
 User *Server::findUserByNickname(const std::string &nick)
@@ -312,8 +339,6 @@ void Server::quit(User &u, const Message &msg)
 	disconnect (u);
 }
 
-void Server::cap(User &, const Message &) {}
-
 void Server::ping(User &u, const Message &msg)
 {
 	if (msg.argsCount() < 1)
@@ -345,6 +370,34 @@ void Server::pong(User &u, const Message &msg)
 		return ;
 	}
 	u.updateLastPong();
+}
+
+void Server::join (User &u, const Message &msg)
+{
+	// @Todo: proper JOIN argument parsing
+	if (msg.argsCount () < 1)
+	{
+		reply (u, Reply::errNeedMoreParams (msg.command ()));
+		return;
+	}
+
+	const std::string &name = msg.arg (0);
+	if (name[0] != '#')
+	{
+		reply (u, Reply::errNoSuchChannel (name));
+		return;
+	}
+
+	Channel *chan = findChannelByName (name);
+
+	// Create channel if it does not exist
+	// @Todo: make this user the chanop on creation
+	if (!chan)
+		chan = addChannel (name, "Newly created channel");
+
+	chan->addUser (&u);
+
+	reply (u, Reply::topic (name, chan->topic));
 }
 
 bool Server::isRunning() const { return _isRunning; }
