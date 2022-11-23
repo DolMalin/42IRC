@@ -107,26 +107,45 @@ void Server::receiveDataFromUsers ()
 
 void Server::processReceivedMessages ()
 {
+	std::string line;
 	for (User::UserIt it = _users.begin (); it != _users.end (); it++)
 	{
-		if (it->lastReceivedLine.empty ())
-			continue;
-
-		Opt<Message> msgOpt = Message::parseRequest (it->lastReceivedLine);
-		if (!msgOpt.ok)
+		while (true)
 		{
-			std::cerr << "Invalid message (" << it->lastReceivedLine << ")" << std::endl;
-			it->lastReceivedLine.clear ();
-			
-			continue;
+			line.clear ();
+
+			size_t endOfLine = it->lastReceivedBytes.find ("\r\n");
+			if (endOfLine != std::string::npos)
+			{
+				line.assign (it->lastReceivedBytes, 0, endOfLine);
+				it->lastReceivedBytes.erase (0, endOfLine + 2);
+			}
+			else
+			{
+				endOfLine = it->lastReceivedBytes.find ("\n");
+				if (endOfLine != std::string::npos)
+				{
+					line.assign (it->lastReceivedBytes, 0, endOfLine);
+					it->lastReceivedBytes.erase (0, endOfLine + 1);
+				}
+			}
+
+			if (line.empty ())
+				break;
+
+			Opt<Message> msgOpt = Message::parseRequest (line);
+			if (!msgOpt.ok)
+			{
+				std::cerr << "Invalid message (" << line << ")" << std::endl;
+
+				continue;
+			}
+
+			Message msg = msgOpt.val;
+			std::cout << "Received: " << msg.stringify () << std::endl;
+
+			executeCommand (*it, msg);
 		}
-
-		Message msg = msgOpt.val;
-		std::cout << "Received: " << msg.stringify () << std::endl;
-
-		executeCommand (*it, msg);
-
-		it->lastReceivedLine.clear ();
 	}
 }
 
@@ -137,8 +156,6 @@ User::UserIt Server::disconnect (User::UserIt user)
 		std::cout << "User " << user->getAddressAsString () << " still has pending data when disconnecting." << std::endl;
 		std::cout << "data was: " << user->lastReceivedBytes << std::endl;
 	}
-
-	assert (user->lastReceivedLine.length () == 0, "User " << user->getAddressAsString () << " still has unprocessed message.");
 
 	std::cout << "Client " << user->getAddressAsString () << " has disconnected." << std::endl;
 
