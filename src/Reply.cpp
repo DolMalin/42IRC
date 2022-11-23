@@ -12,7 +12,12 @@ namespace Reply
 		if (!msg.empty())
 			return Message ().setIsRequest(true).setCommand("ERROR").pushSuffix(msg);
 		else 
-		return Message ().setIsRequest(true).setCommand("ERROR");
+			return Message ().setIsRequest(true).setCommand("ERROR");
+	}
+
+	Message pong(const std::string &server)
+	{
+		return Message ().setIsRequest(true).setCommand("PONG").pushArg(server);
 	}
 
 	Message errUnknownCommand (const std::string &command)
@@ -58,5 +63,10 @@ namespace Reply
 	Message	errAlreadyRegistered ()
 	{
 		return Message ().setReplyCode (462).pushSuffix ("Unauthorized command (already registered)");
+	}
+
+	Message errNoOrigin()
+	{
+		return Message ().setReplyCode(409).pushSuffix ("No origin specified");
 	}
 }
