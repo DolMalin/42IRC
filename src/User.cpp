@@ -1,12 +1,14 @@
 #include "User.hpp"
 
 User::User () :
-	fd (0), addr (), isReadable (false), isWritable (false), isRegistered(false), bytesToSend (), lastReceivedBytes (), nickname (), username ()
+	fd (0), addr (), isReadable (false), isWritable (false), isRegistered(false), isDisconnected (false),
+	bytesToSend (), lastReceivedBytes (), nickname (), username ()
 {}
 
 
 User::User (int fd, sockaddr_in addr) :
-	fd (fd), addr (addr), isReadable (false), isWritable (false), isRegistered(false), bytesToSend (), lastReceivedBytes (), nickname (), username ()
+	fd (fd), addr (addr), isReadable (false), isWritable (false), isRegistered(false), isDisconnected (false),
+	bytesToSend (), lastReceivedBytes (), nickname (), username ()
 {}
 
 

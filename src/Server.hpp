@@ -14,6 +14,7 @@ class Server
 {
 public:
 	typedef void (Server::* CommandProc) (User &, const Message &);
+	typedef std::list<User>::iterator UserIt;
 
 private:
 	int _socketFd;
@@ -34,9 +35,10 @@ public:
 	void pollUserEvents (int timeout);
 	void receiveDataFromUsers ();
 	void processReceivedMessages ();
-	User::UserIt disconnect (User::UserIt user);
+	void disconnect (User &user);
 	void executeCommand (User &user, const Message &msg);
 	void reply (User &user, const Message &msg);
+	void removeDisconnectedUsers ();
 
 	User *findUserByNickname (const std::string &nick);
 

@@ -44,8 +44,11 @@ void Server::close()
 	::close(_socketFd);
 	_socketFd = -1;
 
-	for (User::UserIt it = _users.begin(); it != _users.end(); it++)
-		it = disconnect(it);
+	for (UserIt it = _users.begin(); it != _users.end(); it++)
+	{
+		disconnect (*it);
+		it = _users.erase (it);
+	}
 }
 
 User *Server::acceptIncomingUser()
@@ -70,7 +73,7 @@ void Server::pollUserEvents(int timeout)
 	pollfd *pollfds = new pollfd[_users.size()];
 
 	int i = 0;
-	for (std::list<User>::iterator it = _users.begin(); it != _users.end(); it++, i++)
+	for (UserIt it = _users.begin(); it != _users.end(); it++, i++)
 	{
 		pollfds[i].fd = it->fd;
 		pollfds[i].events = POLLIN | POLLOUT;
@@ -82,7 +85,7 @@ void Server::pollUserEvents(int timeout)
 		return;
 
 	i = 0;
-	for (std::list<User>::iterator it = _users.begin(); it != _users.end(); it++, i++)
+	for (UserIt it = _users.begin(); it != _users.end(); it++, i++)
 	{
 		it->isReadable = (pollfds[i].revents & POLLIN) == POLLIN;
 		it->isWritable = (pollfds[i].revents & POLLOUT) == POLLOUT;
@@ -93,13 +96,16 @@ void Server::pollUserEvents(int timeout)
 
 void Server::receiveDataFromUsers()
 {
-	for (std::list<User>::iterator it = _users.begin(); it != _users.end(); it++)
+	for (UserIt it = _users.begin(); it != _users.end(); it++)
 	{
+		if (it->isDisconnected)
+			continue;
+
 		if (it->isReadable)
 		{
 			ssize_t bytesRead = it->receiveBytes();
 			if (bytesRead == 0)
-				it = disconnect(it);
+				disconnect (*it);
 		}
 	}
 }
@@ -107,8 +113,11 @@ void Server::receiveDataFromUsers()
 void Server::processReceivedMessages()
 {
 	std::string line;
-	for (User::UserIt it = _users.begin(); it != _users.end(); it++)
+	for (UserIt it = _users.begin(); it != _users.end(); it++)
 	{
+		if (it->isDisconnected)
+			continue;
+
 		while (true)
 		{
 			line.clear();
@@ -148,20 +157,22 @@ void Server::processReceivedMessages()
 	}
 }
 
-User::UserIt Server::disconnect(User::UserIt user)
+void Server::disconnect(User &user)
 {
-	if (user->lastReceivedBytes.length() != 0)
+	assert (!user.isDisconnected, "User has already been disconnected");
+
+	if (user.lastReceivedBytes.length() != 0)
 	{
-		std::cout << "User " << user->getAddressAsString() << " still has pending data when disconnecting." << std::endl;
-		std::cout << "data was: " << user->lastReceivedBytes << std::endl;
+		std::cout << "User " << user.getAddressAsString() << " still has pending data when disconnecting." << std::endl;
+		std::cout << "data was: " << user.lastReceivedBytes << std::endl;
 	}
 
-	std::cout << "Client " << user->getAddressAsString() << " has disconnected." << std::endl;
+	std::cout << "Client " << user.getAddressAsString() << " has disconnected." << std::endl;
 
-	user->flush();
-	::close(user->fd);
-
-	return _users.erase(user);
+	user.flush();
+	::close(user.fd);
+	user.fd = -1;
+	user.isDisconnected = true;
 }
 
 void Server::executeCommand(User &user, const Message &msg)
@@ -185,9 +196,20 @@ void Server::reply(User &user, const Message &msg)
 	user.sendBytes(str + "\r\n");
 }
 
+void Server::removeDisconnectedUsers ()
+{
+	for (UserIt it = _users.begin (); it != _users.end (); it++)
+	{
+		if (it->isDisconnected)
+		{
+			it = _users.erase (it);
+		}
+	}
+}
+
 User *Server::findUserByNickname(const std::string &nick)
 {
-	for (User::UserIt it = _users.begin(); it != _users.end(); it++)
+	for (UserIt it = _users.begin(); it != _users.end(); it++)
 	{
 		if (it->nickname == nick)
 			return &(*it);
@@ -258,10 +280,9 @@ void Server::user(User &u, const Message &msg)
 
 void Server::quit(User &u, const Message &msg)
 {
-	::close(u.fd);
-	if (msg.hasSuffix())
-		std::cout << msg.suffix() << std::endl;
+	(void)msg;
 	reply(u, Reply::error(""));
+	disconnect (u);
 }
 
 void Server::cap(User &, const Message &) {}
