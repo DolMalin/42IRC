@@ -190,7 +190,6 @@ static bool isValidNickname (const std::string &nick)
 
 void Server::nick (User &u, const Message &msg)
 {
-	// @Todo: reply ERR_ERRONEUSNICKNAME
 	// @Todo: reply ERR_NICKCOLLISION
 	// @Todo: reply ERR_UNAVAILRESOURCE
 	// @Todo: reply ERR_RESTRICTED
@@ -231,9 +230,11 @@ void Server::user (User &u, const Message &msg)
 		return;
 	}
 
-	u.username = msg.arg (0);
+	u.username = msg.arg (3);
 	// @Todo: handle mode
 	u.isRegistered = true;
+
+	reply (u, Reply::welcome (u.nickname, u.username, u.getAddressAsString ()));
 }
 
 bool Server::isRunning () const { return _isRunning; }
