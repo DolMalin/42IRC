@@ -34,6 +34,7 @@ public:
 	size_t				argsCount () const;
 	const std::string	&suffix () const;
 	bool				isRequest () const;
+	bool				hasSuffix () const;
 	uint16_t			replyCode () const;
 
 	static Opt<Message> parseRequest(const std::string &str);

@@ -6,6 +6,7 @@ Server::Server (int maxUsers) :
 {
 	_commands["NICK"] = &Server::nick;
 	_commands["USER"] = &Server::user;
+	_commands["QUIT"] = &Server::quit;
 }
 
 Server::Server (const Server &) {}
@@ -234,6 +235,13 @@ void Server::user (User &u, const Message &msg)
 	u.username = msg.arg (0);
 	// @Todo: handle mode
 	u.isRegistered = true;
+}
+
+void Server::quit (User &u, const Message &msg)
+{
+	::close(u.fd);
+	if (msg.hasSuffix())
+		std::cout << " " << msg.suffix() << std::endl;
 }
 
 bool Server::isRunning () const { return _isRunning; }

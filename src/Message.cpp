@@ -32,18 +32,12 @@ Opt<Message> Message::parseRequest(const std::string &str)
 		std::string token = output.substr(0, pos);
 
 		if (token.empty())
-		{
 			output.erase(0, pos + 1);
 			continue;
-		}
 		if (message._argsCount >= 15)
-		{
 			return make_opt(message, false);
-		}
 		else if (token.at(0) == ':' && message._prefix.empty() && !commandSet)
-		{
 			message._prefix = token.substr(1);
-		}
 		else if (!commandSet)
 		{
 			message._command = token;
@@ -56,9 +50,7 @@ Opt<Message> Message::parseRequest(const std::string &str)
 			break;
 		}
 		else
-		{
 			message.pushArg (token);
-		}
 		
 		output.erase(0, pos + 1);
 	}
@@ -136,4 +128,5 @@ const std::string &Message::arg (size_t index) const { assert (index < _argsCoun
 size_t Message::argsCount () const { return _argsCount; }
 const std::string &Message::suffix () const { assert (_hasSuffix && _argsCount > 0); return _args[_argsCount - 1]; }
 bool Message::isRequest () const { return _isRequest; }
+bool Message::hasSuffix () const {return _hasSuffix; }
 uint16_t Message::replyCode () const { return _replyCode; }
