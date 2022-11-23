@@ -6,6 +6,7 @@
 #include <list>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <ctime>
 
 #include "common.hpp"
 #include "Message.hpp"
@@ -26,6 +27,8 @@ public:
 	std::string lastReceivedBytes;
 	std::string	nickname;
 	std::string	username;
+	std::time_t	lastPing;
+	std::time_t lastPong;
 
 public:
 	User ();
@@ -35,7 +38,8 @@ public:
 	bool sendBytes (const void *buff, size_t len);
 	bool sendBytes (const std::string &str);
 	bool flush ();
-
+	void updateLastPing();
+	void updateLastPong();
 	std::string getAddressAsString () const;
 
 };

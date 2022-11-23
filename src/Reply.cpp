@@ -15,6 +15,11 @@ namespace Reply
 			return Message ().setIsRequest(true).setCommand("ERROR");
 	}
 
+	Message ping(const std::string &server)
+	{
+		return Message ().setIsRequest(true).setCommand("PING").pushArg(server);
+	}
+
 	Message pong(const std::string &server)
 	{
 		return Message ().setIsRequest(true).setCommand("PONG").pushArg(server);

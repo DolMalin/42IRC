@@ -10,6 +10,9 @@
 #include "Message.hpp"
 #include "User.hpp"
 
+#define SENDPING_T 60
+#define PONG_DELAY 20
+
 class Server
 {
 public:
@@ -39,6 +42,7 @@ public:
 	void executeCommand (User &user, const Message &msg);
 	void reply (User &user, const Message &msg);
 	void removeDisconnectedUsers ();
+	void testPings();
 
 	User *findUserByNickname (const std::string &nick);
 
@@ -47,12 +51,12 @@ public:
 	uint16_t getPort () const;
 
 	// Commands
-
 	void nick (User &u, const Message &msg);
 	void user (User &u, const Message &msg);
 	void quit (User &u, const Message &msg);
 	void cap  (User &, const Message &);
 	void ping (User &u, const Message &msg);
+	void pong (User &u, const Message &msg);
 
 private:
 	Server (const Server &);

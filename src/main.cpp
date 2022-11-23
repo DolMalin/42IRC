@@ -38,6 +38,7 @@ int main (int argc, char **args)
 		server.receiveDataFromUsers ();
 		server.processReceivedMessages ();
 		server.removeDisconnectedUsers ();
+		server.testPings();
 	}
 
 	server.close();

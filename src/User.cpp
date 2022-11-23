@@ -2,14 +2,20 @@
 
 User::User () :
 	fd (0), addr (), isReadable (false), isWritable (false), isRegistered(false), isDisconnected (false),
-	bytesToSend (), lastReceivedBytes (), nickname (), username ()
-{}
+	bytesToSend (), lastReceivedBytes (), nickname (), username (), lastPing ()
+{
+	this->updateLastPing();
+	this->updateLastPong();
+}
 
 
 User::User (int fd, sockaddr_in addr) :
 	fd (fd), addr (addr), isReadable (false), isWritable (false), isRegistered(false), isDisconnected (false),
-	bytesToSend (), lastReceivedBytes (), nickname (), username ()
-{}
+	bytesToSend (), lastReceivedBytes (), nickname (), username (), lastPing ()
+{
+	this->updateLastPing();
+	this->updateLastPong();
+}
 
 
 ssize_t User::receiveBytes ()
@@ -87,4 +93,14 @@ std::string User::getAddressAsString () const
 	char *s = inet_ntoa (addr.sin_addr);
 	
 	return std::string (s);
+}
+
+void	User::updateLastPing(void)
+{
+	lastPing = std::time(NULL);
+}
+
+void	User::updateLastPong(void)
+{
+	lastPong = std::time(NULL);
 }

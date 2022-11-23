@@ -8,6 +8,7 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _use
 	_commands["QUIT"] = &Server::quit;
 	_commands["CAP"] = &Server::cap;
 	_commands["PING"] = &Server::ping;
+	_commands["PONG"] = &Server::pong;
 	// _commands["ERROR"] = &Server::error;
 }
 
@@ -230,6 +231,28 @@ static bool isValidNickname(const std::string &nick)
 	return true;
 }
 
+void	Server::testPings()
+{
+	time_t now = std::time(NULL);
+
+	for (UserIt it = _users.begin(); it != _users.end(); it++)
+	{
+		if (now - it->lastPing > SENDPING_T)
+		{
+			reply(*it, Reply::ping("42IRC"));
+			it->updateLastPing();
+		}
+
+		if (it->lastPong < it->lastPing && now - it->lastPing > PONG_DELAY)
+		{
+			//@TODO: Reply kill
+			disconnect(*it);
+		}
+	}
+
+}
+
+/* ================ ~ COMMANDS ~ ===============*/
 void Server::nick(User &u, const Message &msg)
 {
 	// @Todo: reply ERR_NICKCOLLISION
@@ -282,8 +305,10 @@ void Server::user(User &u, const Message &msg)
 
 void Server::quit(User &u, const Message &msg)
 {
-	(void)msg;
-	reply(u, Reply::error(""));
+	if (msg.hasSuffix())
+		reply(u, Reply::error(msg.suffix()));
+	else
+		reply(u, Reply::error(""));
 	disconnect (u);
 }
 
@@ -291,12 +316,35 @@ void Server::cap(User &, const Message &) {}
 
 void Server::ping(User &u, const Message &msg)
 {
-	if(msg.argsCount() < 1)
+	if (msg.argsCount() < 1)
 	{
 		reply(u, Reply::errNoOrigin());
 		return ;
 	}
+
+	if (msg.arg(0).empty())
+	{
+		reply(u, Reply::errNoOrigin());
+		return ;
+	}
+
 	reply(u, Reply::pong("42IRC"));
+}
+
+void Server::pong(User &u, const Message &msg)
+{
+	if (msg.argsCount() < 1)
+	{
+		reply(u, Reply::errNoOrigin());
+		return ;
+	}
+
+	if (msg.arg(0).empty())
+	{
+		reply(u, Reply::errNoOrigin());
+		return ;
+	}
+	u.updateLastPong();
 }
 
 bool Server::isRunning() const { return _isRunning; }
