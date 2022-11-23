@@ -10,9 +10,9 @@ namespace Reply
 	Message error(const std::string &msg)
 	{
 		if (!msg.empty())
-			return Message ().setCommand("ERROR").pushSuffix(msg);
+			return Message ().setIsRequest(true).setCommand("ERROR").pushSuffix(msg);
 		else 
-		return Message ().setCommand("ERROR");
+		return Message ().setIsRequest(true).setCommand("ERROR");
 	}
 
 	Message errUnknownCommand (const std::string &command)

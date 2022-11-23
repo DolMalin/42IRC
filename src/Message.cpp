@@ -132,6 +132,12 @@ Message	&Message::setCommand(const std::string &command)
 	return *this;
 }
 
+Message &Message::setIsRequest(bool isRequest)
+{
+	this->_isRequest = isRequest;
+	return *this;
+}
+
 const std::string &Message::prefix () const { return _prefix; }
 const std::string &Message::command () const { return _command; }
 const std::string &Message::arg (size_t index) const { assert (index < _argsCount); return _args[index]; }
