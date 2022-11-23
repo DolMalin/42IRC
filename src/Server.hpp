@@ -44,12 +44,10 @@ public:
 	void reply (User &user, const Message &msg);
 	void removeDisconnectedUsers ();
 
+	Channel *addChannel (const std::string &name, const std::string &topic);
 	Channel *findChannelByName (const std::string &name);
 
 	User *findUserByNickname (const std::string &nick);
-
-	Channel *addChannel (const std::string &name, const std::string &topic);
-	Channel *findChannel (const std::string &name);
 
 	bool isRunning () const;
 	int getMaxConnections () const;

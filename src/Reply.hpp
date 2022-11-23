@@ -7,6 +7,7 @@ namespace Reply
 	Message welcome (const std::string &nick, const std::string &user, const std::string &host);
 	Message error (const std::string &msg);
 	Message pong (const std::string &server);
+	Message topic (const std::string &channel_name, const std::string &topic);
 
 	Message errUnknownCommand (const std::string &command);
 	Message	errNoNicknameGiven ();
@@ -18,4 +19,6 @@ namespace Reply
 	Message	errNeedMoreParams (const std::string &command);
 	Message	errAlreadyRegistered ();
 	Message errNoOrigin ();
+
+	Message errNoSuchChannel (const std::string &channel_name);
 }

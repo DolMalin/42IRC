@@ -213,6 +213,15 @@ void Server::removeDisconnectedUsers ()
 	}
 }
 
+Channel *Server::addChannel (const std::string &name, const std::string &topic)
+{
+	assert (findChannelByName (name) == NULL, "Channel already exists.");
+
+	_channels.push_back (Channel (name, topic));
+
+	return &_channels.back ();
+}
+
 Channel *Server::findChannelByName (const std::string &name)
 {
 	for (ChannelIt it = _channels.begin(); it != _channels.end(); it++)
@@ -317,8 +326,30 @@ void Server::ping(User &u, const Message &msg)
 
 void Server::join (User &u, const Message &msg)
 {
-	(void)u;
-	(void)msg;
+	// @Todo: proper JOIN argument parsing
+	if (msg.argsCount () < 1)
+	{
+		reply (u, Reply::errNeedMoreParams (msg.command ()));
+		return;
+	}
+
+	const std::string &name = msg.arg (0);
+	if (name[0] != '#')
+	{
+		reply (u, Reply::errNoSuchChannel (name));
+		return;
+	}
+
+	Channel *chan = findChannelByName (name);
+
+	// Create channel if it does not exist
+	// @Todo: make this user the chanop on creation
+	if (!chan)
+		chan = addChannel (name, "Newly created channel");
+
+	chan->addUser (&u);
+
+	reply (u, Reply::topic (name, chan->topic));
 }
 
 bool Server::isRunning() const { return _isRunning; }
