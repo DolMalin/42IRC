@@ -14,14 +14,13 @@
 class User
 {
 public:
-	typedef typename std::list<User>::iterator UserIt;
-
 	int fd;
 	sockaddr_in addr;
 
 	bool	isReadable;
 	bool	isWritable;
 	bool	isRegistered;
+	bool	isDisconnected;
 	
 	std::string bytesToSend;
 	std::string lastReceivedBytes;
