@@ -1,12 +1,13 @@
 #include "Server.hpp"
 #include "Reply.hpp"
 
-Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _users(), _isRunning(true), _commands()
+Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isRunning(true), _users(), _channels (), _commands()
 {
 	_commands["NICK"] = &Server::nick;
 	_commands["USER"] = &Server::user;
 	_commands["QUIT"] = &Server::quit;
 	_commands["CAP"] = &Server::cap;
+	_commands["JOIN"] = &Server::join;
 	// _commands["ERROR"] = &Server::error;
 }
 
@@ -198,6 +199,11 @@ void Server::reply(User &user, const Message &msg)
 
 void Server::removeDisconnectedUsers ()
 {
+	for (ChannelIt it = _channels.begin (); it != _channels.end (); it++)
+	{
+		it->removeDisconnectedUsers ();
+	}
+
 	for (UserIt it = _users.begin (); it != _users.end (); it++)
 	{
 		if (it->isDisconnected)
@@ -205,6 +211,17 @@ void Server::removeDisconnectedUsers ()
 			it = _users.erase (it);
 		}
 	}
+}
+
+Channel *Server::findChannelByName (const std::string &name)
+{
+	for (ChannelIt it = _channels.begin(); it != _channels.end(); it++)
+	{
+		if (it->name == name)
+			return &(*it);
+	}
+
+	return NULL;
 }
 
 User *Server::findUserByNickname(const std::string &nick)
@@ -291,6 +308,12 @@ void Server::cap(User &, const Message &) {}
 // {
 // 	reply (u, Reply::error())
 // }
+
+void Server::join (User &u, const Message &msg)
+{
+	(void)u;
+	(void)msg;
+}
 
 bool Server::isRunning() const { return _isRunning; }
 int Server::getMaxConnections() const { return _maxUsers; }
