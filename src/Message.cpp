@@ -32,8 +32,10 @@ Opt<Message> Message::parseRequest(const std::string &str)
 		std::string token = output.substr(0, pos);
 
 		if (token.empty())
+		{
 			output.erase(0, pos + 1);
 			continue;
+		}
 		if (message._argsCount >= 15)
 			return make_opt(message, false);
 		else if (token.at(0) == ':' && message._prefix.empty() && !commandSet)
@@ -119,6 +121,14 @@ Message	&Message::pushSuffix(const std::string &arg)
 	pushArg (arg);
 	_hasSuffix = true;
 	
+	return *this;
+}
+
+Message	&Message::setCommand(const std::string &command)
+{
+	assert (!this->_command.empty() || !command.empty());
+
+	this->_command = command;
 	return *this;
 }
 

@@ -7,6 +7,14 @@ namespace Reply
 		return Message ().setReplyCode (1).pushSuffix (std::string ("Welcome to the Internet Relay Network ") + nick + "!" + user + "@" + host);
 	}
 
+	Message error(const std::string &msg)
+	{
+		if (!msg.empty())
+			return Message ().setCommand("ERROR").pushSuffix(msg);
+		else 
+		return Message ().setCommand("ERROR");
+	}
+
 	Message errUnknownCommand (const std::string &command)
 	{
 		return Message ().setReplyCode (421).pushArg (command).pushSuffix ("Unknown command");

@@ -49,6 +49,7 @@ public:
 	void nick (User &u, const Message &msg);
 	void user (User &u, const Message &msg);
 	void quit (User &u, const Message &msg);
+	void cap  (User &, const Message &);
 
 private:
 	Server (const Server &);

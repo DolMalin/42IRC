@@ -7,6 +7,8 @@ Server::Server (int maxUsers) :
 	_commands["NICK"] = &Server::nick;
 	_commands["USER"] = &Server::user;
 	_commands["QUIT"] = &Server::quit;
+	_commands["CAP"] = &Server::cap;
+	// _commands["ERROR"] = &Server::error;
 }
 
 Server::Server (const Server &) {}
@@ -242,8 +244,16 @@ void Server::quit (User &u, const Message &msg)
 {
 	::close(u.fd);
 	if (msg.hasSuffix())
-		std::cout << " " << msg.suffix() << std::endl;
+		std::cout << msg.suffix() << std::endl;
+	reply (u, Reply::error(""));
 }
+
+void Server::cap (User &, const Message &) {}
+
+// void Server::error (User &u, const Message &msg)
+// {
+// 	reply (u, Reply::error())
+// }
 
 bool Server::isRunning () const { return _isRunning; }
 int Server::getMaxConnections () const { return _maxUsers; }

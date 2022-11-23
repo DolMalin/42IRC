@@ -5,6 +5,7 @@
 namespace Reply
 {
 	Message welcome (const std::string &nick, const std::string &user, const std::string &host);
+	Message error (const std::string &msg);
 
 	Message errUnknownCommand (const std::string &command);
 	Message	errNoNicknameGiven ();

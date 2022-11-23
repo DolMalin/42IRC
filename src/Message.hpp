@@ -27,6 +27,7 @@ public:
 	Message		&pushArg(const std::string &arg);
 	Message		&pushSuffix(const std::string &arg);
 	Message		&setReplyCode(uint16_t replyCode);
+	Message		&setCommand(const std::string &command);
 
 	const std::string	&prefix () const;
 	const std::string	&command () const;
