@@ -25,7 +25,6 @@ public:
 	
 	std::string bytesToSend;
 	std::string lastReceivedBytes;
-	std::string lastReceivedLine;
 	std::string	nickname;
 	std::string	username;
 
