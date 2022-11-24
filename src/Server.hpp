@@ -52,6 +52,7 @@ public:
 	Channel *findChannelByName (const std::string &name);
 
 	User *findUserByNickname (const std::string &nick);
+	User *findUserByUsername (const std::string &name);
 
 	bool isRunning () const;
 	int getMaxConnections () const;

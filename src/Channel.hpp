@@ -17,6 +17,7 @@ public:
 	
 	UserIt findUser (User *user);
 	User *findUserByNickname (const std::string &name);
+	User *findUserByUsername (const std::string &name);
 
 	void addUser (User *user);
 	void removeUser (User *user);
