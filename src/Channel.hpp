@@ -6,11 +6,52 @@
 class Channel
 {
 public:
-	std::string name;
-	std::string topic;
-	std::list<User *> joinedUsers;
+	struct UserFlags
+	{
+		bool isOperator : 1;	// o // @Todo
+		bool hasVoicePriviledge : 1;	// v // @Todo
+	
+		UserFlags ();
+	
+		bool fromString (const std::string &str);	// @Todo
+		std::string toString () const;	// @Todo
+	};
 
-	typedef std::list<User *>::iterator UserIt;
+	struct UserEntry
+	{
+		User *user;
+		UserFlags flags;
+	
+		UserEntry (User *user);
+	};
+
+	struct Modes
+	{
+		//bool isAnonymous : 1;	// Not handled for # channels
+		bool isInviteOnly : 1;	// i // @Todo
+		bool isModerated : 1;	// m // @Todo
+		bool acceptMessagesFromOutside : 1;	// n // @Todo
+		bool isQuiet : 1;	// q // @Todo
+		bool isPrivate : 1;	// p // @Todo
+		bool isSecret : 1;	// s // @Todo
+		bool hasTopic : 1;	// t // @Todo
+
+		Modes ();
+
+		bool fromString (const std::string &str);	// @Todo
+		std::string toString () const;	// @Todo
+	};
+
+public:
+	std::string name;	// 50 characters long, prefixed with #, does not contain spaces, commas or ASCII 7 characters
+	std::string topic;	// 
+	std::string key;	// Set with the k mode
+	int userLimit;	// Set with the l flag
+	Modes modes;
+
+	std::list<UserEntry> joinedUsers;
+
+	typedef std::list<UserEntry>::iterator UserIt;
 
 public:
 	explicit Channel (const std::string &name = "", const std::string &topic = "");

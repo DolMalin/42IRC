@@ -1,20 +1,38 @@
 #include "Channel.hpp"
 #include <algorithm>
 
+Channel::UserFlags::UserFlags () :
+	isOperator (false), hasVoicePriviledge (false)
+{}
+
+Channel::UserEntry::UserEntry (User *user) :
+	user (user), flags ()
+{}
+
+Channel::Modes::Modes () :
+	isInviteOnly (), isModerated (), acceptMessagesFromOutside (), isQuiet (), isPrivate (), isSecret (), hasTopic ()
+{}
+
 Channel::Channel (const std::string &name, const std::string &topic) : name (name), topic (topic), joinedUsers  ()
 {}
 
 Channel::UserIt Channel::findUser (User *user)
 {
-	return std::find (joinedUsers.begin (), joinedUsers.end (), user);
+	for (UserIt it = joinedUsers.begin (); it != joinedUsers.end (); it++)
+	{
+		if (it->user == user)
+			return it;
+	}
+
+	return joinedUsers.end ();
 }
 
 User *Channel::findUserByNickname (const std::string &nick)
 {
 	for (UserIt it = joinedUsers.begin (); it != joinedUsers.end (); it++)
 	{
-		if ((*it)->nickname == nick)
-			return *it;
+		if (it->user->nickname == nick)
+			return it->user;
 	}
 
 	return NULL;
@@ -24,8 +42,8 @@ User *Channel::findUserByUsername (const std::string &name)
 {
 	for (UserIt it = joinedUsers.begin (); it != joinedUsers.end (); it++)
 	{
-		if ((*it)->username == name)
-			return *it;
+		if (it->user->username == name)
+			return it->user;
 	}
 
 	return NULL;
@@ -37,8 +55,8 @@ void Channel::addUser (User *user)
 
 	if (findUser (user) != joinedUsers.end ())
 		return;
-	
-	joinedUsers.push_back (user);
+
+	joinedUsers.push_back (UserEntry (user));
 }
 
 void Channel::removeUser (User *user)
@@ -52,9 +70,7 @@ void Channel::removeDisconnectedUsers ()
 {
 	for (UserIt it = joinedUsers.begin (); it != joinedUsers.end (); it++)
 	{
-		User *u = *it;
-
-		if (u->isDisconnected)
+		if (it->user->isDisconnected)
 			it = joinedUsers.erase (it);
 	}
 }
