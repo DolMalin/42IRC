@@ -448,6 +448,19 @@ void Server::kill(User &u, const Message &msg)
 	disconnect(u);
 }
 
+void Server::password(User &u, const Message &msg)
+{
+	if (msg.argsCount() < 1)
+	{
+		reply(u, Reply::errNeedMoreParams(msg.command()));
+		return;
+	}
+	if ()
+	{
+
+	}
+}
+
 bool Server::isRunning() const { return _isRunning; }
 int Server::getMaxConnections() const { return _maxUsers; }
 uint16_t Server::getPort() const { return ntohs(_addr.sin_port); }
