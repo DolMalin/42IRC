@@ -32,21 +32,24 @@ private:
 
 	std::map<std::string, CommandProc> _commands;
 
+	std::string	_password;
+
 public:
 	explicit Server (int maxUsers);
 
-	bool init (uint16_t port);
+	bool init (uint16_t port, std::string password);
 	void close ();
 
-	User *acceptIncomingUser ();
-	void pollUserEvents (int timeout);
-	void receiveDataFromUsers ();
-	void processReceivedMessages ();
-	void disconnect (User &user);
-	void executeCommand (User &user, const Message &msg);
-	void reply (User &user, const Message &msg);
-	void removeDisconnectedUsers ();
-	void testPings();
+	User		*acceptIncomingUser ();
+	void		pollUserEvents (int timeout);
+	void		receiveDataFromUsers ();
+	void		processReceivedMessages ();
+	void		disconnect (User &user);
+	void		executeCommand (User &user, const Message &msg);
+	void		reply (User &user, const Message &msg);
+	void		removeDisconnectedUsers ();
+	void		testPings();
+	std::string	getPassword();
 
 	Channel *addChannel (const std::string &name, const std::string &topic);
 	Channel *findChannelByName (const std::string &name);
@@ -65,6 +68,8 @@ public:
 	void join (User &u, const Message &msg);
 	void ping (User &u, const Message &msg);
 	void pong (User &u, const Message &msg);
+	void kill (User &u, const Message &msg);
+	void pass(User &u, const Message &msg);
 
 private:
 	Server (const Server &);

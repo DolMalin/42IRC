@@ -5,9 +5,9 @@
 
 int main (int argc, char **args)
 {
-	if (argc < 2)
+	if (argc < 3)
 	{
-		std::cerr << "Usage: ./ircserv <port>" << std::endl;
+		std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;
 		return 1;
 	}
 
@@ -23,7 +23,7 @@ int main (int argc, char **args)
 	}
 
 	Server server (SOMAXCONN);
-	if (!server.init (port))
+	if (!server.init (port, args[2]))
 	{
 		std::cerr << "Could not initialize server. Port was " << port << "." << std::endl;
 		return 1;
