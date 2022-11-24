@@ -250,6 +250,17 @@ User *Server::findUserByNickname(const std::string &nick)
 	return NULL;
 }
 
+User *Server::findUserByUsername(const std::string &name)
+{
+	for (UserIt it = _users.begin(); it != _users.end(); it++)
+	{
+		if (it->username == name)
+			return &(*it);
+	}
+
+	return NULL;
+}
+
 static bool isValidNickname(const std::string &nick)
 {
 	for (size_t i = 0; i < nick.length(); i += 1)
@@ -325,9 +336,9 @@ void Server::user(User &u, const Message &msg)
 		return;
 	}
 
-	// @TODO : check nick is not empty
-	u.username = msg.arg(3);
+	u.username = msg.arg (0);
 	// @Todo: handle mode
+	u.realname = msg.arg (3);
 	u.isRegistered = true;
 
 	reply(u, Reply::welcome(u.nickname, u.username, u.getAddressAsString()));

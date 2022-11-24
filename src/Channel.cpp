@@ -20,6 +20,17 @@ User *Channel::findUserByNickname (const std::string &nick)
 	return NULL;
 }
 
+User *Channel::findUserByUsername (const std::string &name)
+{
+	for (UserIt it = joinedUsers.begin (); it != joinedUsers.end (); it++)
+	{
+		if ((*it)->username == name)
+			return *it;
+	}
+
+	return NULL;
+}
+
 void Channel::addUser (User *user)
 {
 	assert (user != NULL);

@@ -2,7 +2,7 @@
 
 User::User () :
 	fd (0), addr (), isReadable (false), isWritable (false), isRegistered(false), isDisconnected (false),
-	bytesToSend (), lastReceivedBytes (), nickname (), username (), lastPing (), password()
+	bytesToSend (), lastReceivedBytes (), nickname (), username (), realname (), lastPing (), password()
 {
 	this->updateLastPing();
 	this->updateLastPong();
@@ -11,7 +11,7 @@ User::User () :
 
 User::User (int fd, sockaddr_in addr) :
 	fd (fd), addr (addr), isReadable (false), isWritable (false), isRegistered(false), isDisconnected (false),
-	bytesToSend (), lastReceivedBytes (), nickname (), username (), lastPing (), password ()
+	bytesToSend (), lastReceivedBytes (), nickname (), username (), realname (), lastPing (), password ()
 {
 	this->updateLastPing();
 	this->updateLastPong();

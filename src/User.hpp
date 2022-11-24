@@ -27,6 +27,7 @@ public:
 	std::string lastReceivedBytes;
 	std::string	nickname;
 	std::string	username;
+	std::string	realname;
 	std::time_t	lastPing;
 	std::time_t lastPong;
 	std::string	password;
