@@ -8,7 +8,7 @@ namespace Reply
 	Message error (const std::string &msg);
 	Message ping (const std::string &server);
 	Message pong (const std::string &server);
-	Message topic (const std::string &channel_name, const std::string &topic);
+	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic);
 
 	Message errUnknownCommand (const std::string &command);
 	Message	errNoNicknameGiven ();

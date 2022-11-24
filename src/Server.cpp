@@ -1,6 +1,8 @@
 #include "Server.hpp"
 #include "Reply.hpp"
 
+#include <vector>
+
 Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isRunning(true), _users(), _channels (), _commands()
 {
 	_commands["NICK"] = &Server::nick;
@@ -372,32 +374,58 @@ void Server::pong(User &u, const Message &msg)
 	u.updateLastPong();
 }
 
+static std::vector<std::string> splitString (const std::string &str, const std::string &delim)
+{
+	std::vector<std::string> result;
+
+	size_t last_pos = 0;
+	while (true)
+	{
+		size_t pos = str.find (delim, last_pos);
+		if (pos == std::string::npos)
+			break;
+
+		if (pos - last_pos > 0)
+			result.push_back (str.substr (last_pos, pos - last_pos));
+
+		last_pos = pos + 1;
+	}
+
+	if (last_pos < str.length ())
+		result.push_back (str.substr (last_pos, str.length () - last_pos));
+
+	return result;
+}
+
 void Server::join (User &u, const Message &msg)
 {
-	// @Todo: proper JOIN argument parsing
 	if (msg.argsCount () < 1)
 	{
 		reply (u, Reply::errNeedMoreParams (msg.command ()));
 		return;
 	}
 
-	const std::string &name = msg.arg (0);
-	if (name[0] != '#')
+	std::vector<std::string> channels = splitString (msg.arg (0), ",");
+
+	for (std::vector<std::string>::iterator it = channels.begin (); it != channels.end (); it++)
 	{
-		reply (u, Reply::errNoSuchChannel (name));
-		return;
+		const std::string &name = *it;
+		std::cout << name << std::endl;
+
+		// @Todo: handle secret and private channels
+		if (name[0] != '#')
+			reply (u, Reply::errNoSuchChannel (name));
+
+		Channel *chan = findChannelByName (name);
+
+		// Create channel if it does not exist
+		// @Todo: make this user the chanop on creation
+		if (!chan)
+			chan = addChannel (name, "Newly created channel");
+
+		chan->addUser (&u);
+		reply (u, Reply::topic (u.nickname, name, chan->topic));
 	}
-
-	Channel *chan = findChannelByName (name);
-
-	// Create channel if it does not exist
-	// @Todo: make this user the chanop on creation
-	if (!chan)
-		chan = addChannel (name, "Newly created channel");
-
-	chan->addUser (&u);
-
-	reply (u, Reply::topic (name, chan->topic));
 }
 
 void Server::kill(User &u, const Message &msg)
