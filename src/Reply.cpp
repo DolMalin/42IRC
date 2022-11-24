@@ -50,6 +50,10 @@ namespace Reply
 		return Message ().setReplyCode (433).pushArg (nick).pushSuffix ("Nickname is already in use");
 	}
 
+	Message	errNoSuchNick (const std::string &nick)
+	{
+		return Message ().setReplyCode(401).pushArg(nick).pushSuffix("No such nick/channel");
+	}
 	Message	errNickCollision (const std::string &nick, const std::string &user, const std::string &host)
 	{
 		return Message ().setReplyCode (436).pushArg (nick).pushSuffix (std::string ("Nickname collision KILL from ") + user + "@" + host);

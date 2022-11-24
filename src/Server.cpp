@@ -9,6 +9,7 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isR
 	_commands["CAP"] = NULL;
 	_commands["JOIN"] = &Server::join;
 	_commands["PING"] = &Server::ping;
+	_commands["KILL"] = &Server::kill;
 	_commands["PONG"] = &Server::pong;
 	// _commands["ERROR"] = &Server::error;
 }
@@ -346,7 +347,6 @@ void Server::ping(User &u, const Message &msg)
 		reply(u, Reply::errNoOrigin());
 		return ;
 	}
-
 	if (msg.arg(0).empty())
 	{
 		reply(u, Reply::errNoOrigin());
@@ -398,6 +398,26 @@ void Server::join (User &u, const Message &msg)
 	chan->addUser (&u);
 
 	reply (u, Reply::topic (name, chan->topic));
+}
+
+void Server::kill(User &u, const Message &msg)
+{
+	if (msg.argsCount() < 1)
+	{
+		reply(u, Reply::errNeedMoreParams(msg.command()));
+		return;
+	}
+	if (!findUserByNickname(msg.arg(0)))
+	{
+		reply(u, Reply::errNoSuchNick(msg.arg(0)));
+		return ;
+	}
+	/*
+		@Todo:	- NO PRIVILEGE
+				- CANT KILL SERVER
+				- Add Killed nickname in list of unavailable nickname
+	*/
+	disconnect(u);
 }
 
 bool Server::isRunning() const { return _isRunning; }

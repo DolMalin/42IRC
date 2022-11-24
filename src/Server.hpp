@@ -64,6 +64,7 @@ public:
 	void join (User &u, const Message &msg);
 	void ping (User &u, const Message &msg);
 	void pong (User &u, const Message &msg);
+	void kill (User &u, const Message &msg);
 
 private:
 	Server (const Server &);

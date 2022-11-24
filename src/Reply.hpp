@@ -14,6 +14,7 @@ namespace Reply
 	Message	errNoNicknameGiven ();
 	Message	errErroneousNickname (const std::string &nick);
 	Message	errNicknameInUse (const std::string &nick);
+	Message	errNoSuchNick (const std::string &nick);
 	Message	errNickCollision (const std::string &nick, const std::string &user, const std::string &host);
 	Message errUnavailResource (const std::string &nick_or_channel);
 	Message	errRestricted ();
