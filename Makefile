@@ -2,7 +2,9 @@ NAME = ircserv
 
 INCLUDE_FILES = src/common.hpp src/Server.hpp src/Message.hpp src/User.hpp src/Channel.hpp src/Reply.hpp
 INCLUDE_DIRS = src
-SRC_FILES = Server.cpp Message.cpp User.cpp Channel.cpp Reply.cpp
+SRC_FILES = Server.cpp Message.cpp User.cpp Channel.cpp Reply.cpp\
+	commands/pass.cpp commands/nick.cpp commands/user.cpp\
+	commands/join.cpp commands/ping_pong.cpp commands/quit.cpp commands/kill.cpp
 
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
 SRC_DIR = src
