@@ -25,9 +25,9 @@ namespace Reply
 		return Message ().setIsRequest(true).setCommand("PONG").pushArg(server);
 	}
 
-	Message topic (const std::string &channel_name, const std::string &topic)
+	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic)
 	{
-		return Message ().setReplyCode (332).pushArg (channel_name).pushSuffix (topic);
+		return Message ().setReplyCode (332).pushArg (nick).pushArg (channel_name).pushSuffix (topic);
 	}
 
 	Message errUnknownCommand (const std::string &command)
