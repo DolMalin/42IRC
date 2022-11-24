@@ -13,13 +13,14 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isR
 	_commands["PING"] = &Server::ping;
 	_commands["KILL"] = &Server::kill;
 	_commands["PONG"] = &Server::pong;
+	_commands["PASS"] = &Server::pass;
 	// _commands["ERROR"] = &Server::error;
 }
 
 Server::Server(const Server &) {}
 Server &Server::operator=(const Server &) { return *this; }
 
-bool Server::init(uint16_t port)
+bool Server::init(uint16_t port, std::string password)
 {
 	_socketFd = ::socket(AF_INET, SOCK_STREAM, 0);
 	if (_socketFd < 0)
@@ -41,6 +42,8 @@ bool Server::init(uint16_t port)
 	::setsockopt(_socketFd, SOL_SOCKET, SO_REUSEPORT, &opt_val, sizeof(opt_val));
 
 	_isRunning = true;
+
+	_password = password;
 
 	return true;
 }
@@ -293,6 +296,11 @@ void	Server::testPings()
 
 }
 
+std::string	Server::getPassword()
+{
+	return _password;
+}
+
 /* ================ ~ COMMANDS ~ ===============*/
 void Server::nick(User &u, const Message &msg)
 {
@@ -459,16 +467,22 @@ void Server::kill(User &u, const Message &msg)
 	disconnect(u);
 }
 
-void Server::password(User &u, const Message &msg)
+void Server::pass(User &u, const Message &msg)
 {
 	if (msg.argsCount() < 1)
 	{
 		reply(u, Reply::errNeedMoreParams(msg.command()));
 		return;
 	}
-	if ()
+	if (u.isRegistered)
 	{
-
+		reply(u, Reply::errAlreadyRegistered());
+		return ;
+	}
+	if (getPassword() != msg.arg(0))
+	{
+		reply(u, Reply::kill("Wrong password"));
+		disconnect(u);
 	}
 }
 
