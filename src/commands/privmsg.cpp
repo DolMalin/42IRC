@@ -16,7 +16,6 @@ void Server::privmsg (User &u, const Message &msg)
 	}
 
 	const std::string &target = msg.arg (0);
-	const std::string &text = msg.arg (1);
 
 	if (target[0] == '#')	// Send to channel
 	{
@@ -46,7 +45,7 @@ void Server::privmsg (User &u, const Message &msg)
 			return;
 		}
 
-		forwardChannel (u.prefix (), *chan, msg);
+		forwardToChannel (u, *chan, msg, false);
 	}
 	else	// Send to user
 	{
@@ -58,6 +57,6 @@ void Server::privmsg (User &u, const Message &msg)
 		}
 
 		// @Todo: handle AWAY
-		forward (u.prefix (), *user, msg);
+		forward (u, *user, msg, false);
 	}
 }

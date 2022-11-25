@@ -27,4 +27,7 @@ void Server::user(User &u, const Message &msg)
 
 	if (u.isRegistered ())
 		reply(u, Reply::welcome(u.nickname, u.username, u.getAddressAsString()));
+
+	// Don't forward, since this might be a security issue
+	// (I don't think other users should know about other users' username)
 }

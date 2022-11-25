@@ -42,6 +42,9 @@ void Server::nick(User &u, const Message &msg)
 		return;
 	}
 
+	if (wasRegistered)
+		forwardToAllUsers (u, msg);
+
 	u.nickname = nick;
 	if (!wasRegistered && u.isRegistered ())
 		reply (u, Reply::welcome (u.nickname, u.username, u.getAddressAsString ()));

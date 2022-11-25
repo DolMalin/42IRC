@@ -36,4 +36,5 @@ namespace Reply
 	Message errNotOnChannel (const std::string &channel_name);
 	Message errNoRecipient (const std::string &command);
 	Message errNoTextToSend ();
+	Message errCannotSendToChan (const std::string &channel);
 }

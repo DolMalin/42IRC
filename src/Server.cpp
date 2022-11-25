@@ -17,6 +17,7 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isR
 	_commands["LIST"] = &Server::list;
 	_commands["NAMES"] = &Server::names;
 	_commands["PART"] = &Server::part;
+	_commands["PRIVMSG"] = &Server::privmsg;
 	// _commands["ERROR"] = &Server::error;
 }
 
@@ -219,15 +220,24 @@ void Server::reply(User &user, const Message &msg, const std::string &prefix)
 	user.sendBytes (str);
 }
 
-void Server::forward(const std::string &originPrefix, User &target, const Message &msg)
+void Server::forward(const User &origin, User &target, const Message &msg, bool toSelf)
 {
-	reply(target, msg, originPrefix);
+	if (!toSelf && (&target == &origin))
+		return;
+
+	reply(target, msg, origin.prefix ());
 }
 
-void Server::forwardChannel(const std::string &originPrefix, Channel &channel, const Message &msg)
+void Server::forwardToChannel(const User &origin, Channel &channel, const Message &msg, bool toSelf)
 {
 	for (Channel::UserIt it = channel.joinedUsers.begin (); it != channel.joinedUsers.end (); it++)
-		reply(*(it->user), msg, originPrefix);
+		forward (origin, *(it->user), msg, toSelf);
+}
+
+void Server::forwardToAllUsers(const User &origin, const Message &msg, bool toSelf)
+{
+	for (UserIt it = _users.begin (); it != _users.end (); it++)
+		forward (origin, *it, msg, toSelf);
 }
 
 void Server::removeDisconnectedUsers ()
