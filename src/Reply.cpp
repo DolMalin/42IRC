@@ -167,4 +167,9 @@ namespace Reply
 	{
 		return Message ().setReplyCode (412).pushSuffix ("No text to send");
 	}
+
+	Message errCannotSendToChan (const std::string &channel)
+	{
+		return Message ().setReplyCode (404).pushArg (channel).pushSuffix ("Cannot send to channel");
+	}
 }

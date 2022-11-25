@@ -51,8 +51,8 @@ public:
 	void		testPings();
 	std::string	getPassword();
 
-	void		forward(const std::string &originPrefix, User &target, const Message &msg);
-	void 		forwardChannel(const std::string &originPrefix, Channel &channel, const Message &msg);
+	void		forward(const User &origin, User &target, const Message &msg, bool toSelf = true);
+	void 		forwardChannel(const User &origin, Channel &channel, const Message &msg, bool toSelf = true);
 
 	Channel *addChannel (const std::string &name, const std::string &topic);
 	Channel *findChannelByName (const std::string &name);
