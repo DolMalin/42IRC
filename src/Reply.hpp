@@ -2,6 +2,8 @@
 
 #include "Message.hpp"
 
+class Channel;
+
 namespace Reply
 {
 	Message welcome (const std::string &nick, const std::string &user, const std::string &host);
@@ -10,6 +12,8 @@ namespace Reply
 	Message pong (const std::string &server);
 	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic);
 	Message kill(const std::string &msg);
+	Message namReply (const Channel &channel);
+	Message endOfNames (const std::string &nick, const std::string &channel);
 
 	Message rplList(const std::string &name, const std::string &topic);
 	Message rplListEnd();

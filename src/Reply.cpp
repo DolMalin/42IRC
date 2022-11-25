@@ -37,6 +37,37 @@ namespace Reply
 		return Message ().setReplyCode (332).pushArg (nick).pushArg (channel_name).pushSuffix (topic);
 	}
 
+	Message namReply (const Channel &chan)
+	{
+		std::string spec;
+		if (chan.modes.isPrivate)
+			spec.assign ("*");
+		else if (chan.modes.isSecret)
+			spec.assign ("@");
+		else
+			spec.assign ("=");
+
+		std::string names;
+		for (std::list<Channel::UserEntry>::const_iterator it = chan.joinedUsers.begin (); it != chan.joinedUsers.end (); it++)
+		{
+			if (it != chan.joinedUsers.begin ())
+				names.append (" ");
+
+			if (it->flags.isOperator)
+				names.append ("@ ");
+			else
+				names.append ("+ ");
+			
+			names.append (it->user->nickname);
+		}
+
+		return Message ().setReplyCode (353).pushArg (spec).pushArg (chan.name).pushSuffix (names);
+	}
+
+	Message endOfNames (const std::string &nick, const std::string &channel)
+	{
+		return Message ().setReplyCode (366).pushArg (nick).pushArg (channel).pushSuffix ("End of NAMES list");
+	}
 
 	Message rplList(const std::string &name, const std::string &topic)
 	{
