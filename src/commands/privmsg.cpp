@@ -46,7 +46,7 @@ void Server::privmsg (User &u, const Message &msg)
 			return;
 		}
 
-		// @Todo: Forward message to all users in the channel
+		forwardChannel (u.prefix (), *chan, msg);
 	}
 	else	// Send to user
 	{
@@ -58,6 +58,6 @@ void Server::privmsg (User &u, const Message &msg)
 		}
 
 		// @Todo: handle AWAY
-		// @Todo: Forward message to user
+		forward (u.prefix (), *user, msg);
 	}
 }

@@ -156,13 +156,13 @@ void Server::processReceivedMessages()
 			Opt<Message> msgOpt = Message::parseRequest(line);
 			if (!msgOpt.ok)
 			{
-				std::cerr << "Invalid message (" << line << ")" << std::endl;
+				std::cerr << "Invalid message '" << line << "'" << std::endl;
 
 				continue;
 			}
 
 			Message msg = msgOpt.val;
-			std::cout << "Received: " << msg.stringify() << std::endl;
+			std::cout << "Received '" << msg.stringify() << "'" << std::endl;
 
 			executeCommand(*it, msg);
 		}
@@ -201,30 +201,33 @@ void Server::executeCommand(User &user, const Message &msg)
 		(this->*proc)(user, msg);
 }
 
-void Server::reply(User &user, const Message &msg)
+void Server::reply(User &user, const Message &msg, const std::string &prefix)
 {
-	std::string str = msg.stringify();
+	std::string str = ":";
+	if (prefix.empty ())
+		str.append (user.prefix ());
+	else
+		str.append (prefix);
 
-	std::cout << "Replying: " << str << std::endl;
-	user.sendBytes(str + "\r\n");
+	str.append (" ");
+	str.append (msg.stringify());
+
+	std::cout << "Replying to " << user.nickname << " '" << str << "'" << std::endl;
+	
+	str.append ("\r\n");
+
+	user.sendBytes (str);
 }
 
 void Server::forward(const std::string &originPrefix, User &target, const Message &msg)
 {
-	Message newMsg;
-
-	newMsg = msg;
-	reply(target, newMsg.setPrefix(originPrefix));
+	reply(target, msg, originPrefix);
 }
 
 void Server::forwardChannel(const std::string &originPrefix, Channel &channel, const Message &msg)
 {
-	Message newMsg;
-
-	newMsg = msg;
-	newMsg.setPrefix(originPrefix);
 	for (Channel::UserIt it = channel.joinedUsers.begin (); it != channel.joinedUsers.end (); it++)
-		reply(*(it->user), newMsg);
+		reply(*(it->user), msg, originPrefix);
 }
 
 void Server::removeDisconnectedUsers ()

@@ -46,7 +46,7 @@ public:
 	void		processReceivedMessages ();
 	void		disconnect (User &user);
 	void		executeCommand (User &user, const Message &msg);
-	void		reply (User &user, const Message &msg);
+	void		reply (User &user, const Message &msg, const std::string &prefix = "");
 	void		removeDisconnectedUsers ();
 	void		testPings();
 	std::string	getPassword();
