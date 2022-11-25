@@ -6,7 +6,7 @@
 * NICK [X]
 * USER [X]
 * JOIN [X]
-* PART
+* PART [X]
 * QUIT [X]
 * PRIVMSG
 * KICK
