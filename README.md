@@ -2,6 +2,7 @@
 # 42IRC
 
 A C++98 implementation of a basic IRC server.
+
 [![Unlicense](https://img.shields.io/badge/license-UNLICENSE-green)](https://unlicense.org/)
 
 ## Authors
