@@ -3,6 +3,9 @@
 
 static bool isValidNickname(const std::string &nick)
 {
+	if (nick == "anonymous")
+		return false;
+
 	for (size_t i = 0; i < nick.length(); i += 1)
 	{
 		if (!isalpha(nick[i]) && !isdigit(nick[i]) && nick[i] != '_')
