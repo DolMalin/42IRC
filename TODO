@@ -17,12 +17,12 @@
 * NOTICE [X]
 * LIST [X]
 * NAMES [X]
+* INVITE [X]
 
 * KICK
 * OPER
 * MODE
 * WHO
 * WHOIS
-* INVITE
 * WHOWAS
 * AWAY
