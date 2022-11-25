@@ -2,25 +2,25 @@
 * Check that the name is correct: max length of 50, cannot contain spaces, cannot contain commas, cannot contain ASCII 7
 
 # Commands:
-* PASS
-* NICK
-* USER
-* JOIN
+* PASS [X]
+* NICK [X]
+* USER [X]
+* JOIN [X]
 * PART
-* QUIT
+* QUIT [X]
 * PRIVMSG
 * KICK
-* KILL
+* KILL [X]
 * OPER
 * MODE
-* PING
-* PONG
+* PING [X]
+* PONG [X]
 * WHO
-* WHOIS
+* WHOIS 
 * WHOWAS
-* TOPIC
+* TOPIC [X]
 * NOTICE
-* LIST
+* LIST [X]
 * INVITE
 * NAMES
 * AWAY

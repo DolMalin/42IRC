@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <vector>
 
 #ifndef debugBreak
 # define debugBreak() asm ("int3")
@@ -45,3 +46,6 @@ Opt<T, Err> make_opt (T val, Err err)
 
 	return result;
 }
+
+
+std::vector<std::string> splitString (const std::string &str, const std::string &delim);
