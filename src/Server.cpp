@@ -344,6 +344,11 @@ void Server::user(User &u, const Message &msg)
 		return;
 	}
 
+	if (u.givenPassword != _password)
+	{
+		reply(u, Reply::errPassWdMissMatch(u.nickname));
+		return ;
+	}
 	u.username = msg.arg (0);
 	// @Todo: handle mode
 	u.realname = msg.arg (3);
@@ -479,11 +484,7 @@ void Server::pass(User &u, const Message &msg)
 		reply(u, Reply::errAlreadyRegistered());
 		return ;
 	}
-	if (getPassword() != msg.arg(0))
-	{
-		reply(u, Reply::kill("Wrong password"));
-		disconnect(u);
-	}
+	u.givenPassword = msg.arg(0);
 }
 
 bool Server::isRunning() const { return _isRunning; }

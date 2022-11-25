@@ -95,4 +95,10 @@ namespace Reply
 	{
 		return Message ().setReplyCode (403).pushArg (channel_name).pushSuffix ("No such channel");
 	}
+
+	Message errPassWdMissMatch (const std::string &nickname)
+	{
+		return Message ().setReplyCode(464).pushArg(nickname).pushSuffix("Password incorrect");
+	}
 }
+
