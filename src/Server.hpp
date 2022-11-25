@@ -72,6 +72,7 @@ public:
 	void pass(User &u, const Message &msg);
 	void list(User &u, const Message &msg);
 	void part (User &u, const Message &msg);
+	void names(User &u, const Message &msg);
 
 private:
 	Server (const Server &);
