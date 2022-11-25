@@ -55,9 +55,7 @@ namespace Reply
 
 			if (it->flags.isOperator)
 				names.append ("@ ");
-			else
-				names.append ("+ ");
-			
+
 			names.append (it->user->nickname);
 		}
 
