@@ -13,9 +13,5 @@ void Server::pass(User &u, const Message &msg)
 		reply(u, Reply::errAlreadyRegistered());
 		return ;
 	}
-	if (getPassword() != msg.arg(0))
-	{
-		reply(u, Reply::kill("Wrong password"));
-		disconnect(u);
-	}
+	u.givenPassword = msg.arg(0);
 }
