@@ -46,7 +46,7 @@ public:
 
 public:
 	std::string name;	// 50 characters long, prefixed with #, does not contain spaces, commas or ASCII 7 characters
-	std::string topic;	// 
+	std::string topic;	// Set with the t mode
 	std::string key;	// Set with the k mode
 	int userLimit;	// Set with the l flag
 	Modes modes;
@@ -62,7 +62,7 @@ public:
 	User *findUserByNickname (const std::string &name);
 	User *findUserByUsername (const std::string &name);
 
-	void addUser (User *user);
+	UserEntry *addUser (User *user);
 	bool removeUser (User *user);
 	void removeDisconnectedUsers ();
 };

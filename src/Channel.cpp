@@ -50,14 +50,17 @@ User *Channel::findUserByUsername (const std::string &name)
 	return NULL;
 }
 
-void Channel::addUser (User *user)
+Channel::UserEntry *Channel::addUser (User *user)
 {
 	assert (user != NULL);
 
-	if (findUser (user) != joinedUsers.end ())
-		return;
+	UserIt it = findUser (user);
+	if (it != joinedUsers.end ())
+		return &(*it);
 
 	joinedUsers.push_back (UserEntry (user));
+
+	return &joinedUsers.back ();
 }
 
 bool Channel::removeUser (User *user)

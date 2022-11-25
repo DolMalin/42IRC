@@ -77,15 +77,20 @@ void Server::join (User &u, const Message &msg)
 		}
 
 		// Create channel if it does not exist
-		// @Todo: make this user the chanop on creation
 		if (!chan)
 		{
 			chan = addChannel (name, "Newly created channel");
 			if (i < keys.size ())
 				chan->key = keys[i];
+	
+			Channel::UserEntry *entry = chan->addUser (&u);
+			entry->flags.isOperator = true;
+		}
+		else
+		{
+			chan->addUser (&u);	// This won't add the user if it already exists
 		}
 
-		chan->addUser (&u);	// This won't add the user if it already exists
 		forwardToChannel (u, *chan, msg);
 		reply (u, Reply::topic (u.nickname, name, chan->topic));
 		reply (u, Reply::namReply (*chan));
