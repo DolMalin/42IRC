@@ -104,3 +104,11 @@ void	User::updateLastPong(void)
 {
 	lastPong = std::time(NULL);
 }
+
+std::string User::prefix() const
+{
+	std::string prefix;
+
+	prefix = nickname + '!'+ username + "@" + getAddressAsString();
+	return prefix;
+}
