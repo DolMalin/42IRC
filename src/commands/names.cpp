@@ -3,15 +3,17 @@
 
 void Server::names(User &u, const Message &msg)
 {
-	if (msg.argsCount() < 1)
+	if (msg.argsCount() == 0)
 	{
 		std::string result;
 		for (ChannelIt it = _channels.begin(); it != _channels.end(); it++)
 		{
 			reply(u, Reply::namReply(*it));
-			result = result.append((*it).name).append(",");
+			if (it != _channels.begin())
+				result = result.append(",").append((*it).name);
+			else
+				result = result.append((*it).name);
 		}
-			// reply(u, Reply::rplList((*it).name, (*it).topic));
 		reply(u, Reply::endOfNames(u.nickname, result));
 		return ;
 	}
@@ -23,7 +25,15 @@ void Server::names(User &u, const Message &msg)
 		if (!c)
 			reply(u, Reply::errNoSuchChannel(*it));
 		else
-			reply(u, Reply::rplList(c->name, c->topic));
+		{
+			std::string result;
+
+			reply(u, Reply::namReply(*c));
+			if (it != channels.begin())
+				result = result.append(",").append((*c).name);
+			else
+				result = result.append((*c).name);
+			reply(u, Reply::endOfNames(u.nickname, result));
+		}
 	}
-	reply(u, Reply::rplListEnd());
 }

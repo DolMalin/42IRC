@@ -69,12 +69,12 @@ namespace Reply
 		return Message ().setReplyCode (366).pushArg (nick).pushArg (channel).pushSuffix ("End of NAMES list");
 	}
 
-	Message rplList(const std::string &name, const std::string &topic)
+	Message list(const std::string &name, const std::string &topic)
 	{
 		return Message ().setReplyCode(322).pushArg("dolmalin").pushArg(name).pushSuffix(topic);
 	}
 
-	Message rplListEnd()
+	Message listEnd()
 	{
 		return Message ().setReplyCode(323).pushArg("dolmalin").pushSuffix("End of LIST");
 	}
