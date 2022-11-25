@@ -2,6 +2,24 @@
 #include "Reply.hpp"
 #include "../common.hpp"
 
+static bool isValidChannelName (const std::string &name)
+{
+	if (name.empty ())
+		return false;
+	if (name.length () > 50)
+		return false;
+	if (name[0] != '#')
+		return false;
+	
+	for (size_t i = 0; i < name.length (); i++)
+	{
+		if (::isspace (name[i]) || name[i] == ',' || ::iscntrl (name[i]))
+			return false;
+	}
+
+	return true;
+}
+
 void Server::join (User &u, const Message &msg)
 {
 	// @Todo: handle invite only channels
@@ -23,7 +41,7 @@ void Server::join (User &u, const Message &msg)
 	{
 		const std::string &name = channels[i];
 
-		if (name[0] != '#')
+		if (!isValidChannelName (name))
 		{
 			reply (u, Reply::errNoSuchChannel (name));
 			continue;
