@@ -111,5 +111,14 @@ namespace Reply
 	{
 		return Message ().setReplyCode(464).pushArg(nickname).pushSuffix("Password incorrect");
 	}
-}
 
+	Message errBadChannelKey (const std::string &channel_name)
+	{
+		return Message ().setReplyCode (475).pushArg (channel_name).pushSuffix ("Cannot join channel (+k)");
+	}
+
+	Message errChannelIsFull (const std::string &channel_name)
+	{
+		return Message ().setReplyCode (471).pushArg (channel_name).pushSuffix ("Cannot join channel (+l)");
+	}
+}

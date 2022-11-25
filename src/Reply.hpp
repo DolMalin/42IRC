@@ -28,4 +28,6 @@ namespace Reply
 	Message errPassWdMissMatch (const std::string &nickname);
 
 	Message errNoSuchChannel (const std::string &channel_name);
+	Message errBadChannelKey (const std::string &channel_name);
+	Message errChannelIsFull (const std::string &channel_name);
 }
