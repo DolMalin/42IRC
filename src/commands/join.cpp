@@ -5,6 +5,7 @@
 void Server::join (User &u, const Message &msg)
 {
 	// @Todo: handle invite only channels
+	// @Todo: handle "0" argument
 
 	if (msg.argsCount () < 1)
 	{

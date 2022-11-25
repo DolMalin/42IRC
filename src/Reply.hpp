@@ -33,4 +33,5 @@ namespace Reply
 	Message errNoSuchChannel (const std::string &channel_name);
 	Message errBadChannelKey (const std::string &channel_name);
 	Message errChannelIsFull (const std::string &channel_name);
+	Message errNotOnChannel (const std::string &channel_name);
 }

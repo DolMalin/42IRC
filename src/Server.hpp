@@ -56,6 +56,7 @@ public:
 
 	Channel *addChannel (const std::string &name, const std::string &topic);
 	Channel *findChannelByName (const std::string &name);
+	void removeEmptyChannels ();
 
 	User *findUserByNickname (const std::string &nick);
 	User *findUserByUsername (const std::string &name);
@@ -74,6 +75,7 @@ public:
 	void kill (User &u, const Message &msg);
 	void pass(User &u, const Message &msg);
 	void list(User &u, const Message &msg);
+	void part (User &u, const Message &msg);
 	void names(User &u, const Message &msg);
 
 private:

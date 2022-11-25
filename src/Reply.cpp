@@ -152,4 +152,9 @@ namespace Reply
 	{
 		return Message ().setReplyCode (471).pushArg (channel_name).pushSuffix ("Cannot join channel (+l)");
 	}
+
+	Message errNotOnChannel (const std::string &channel_name)
+	{
+		return Message ().setReplyCode (442).pushArg (channel_name).pushSuffix ("You're not on that channel");
+	}
 }
