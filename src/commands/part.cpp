@@ -25,7 +25,11 @@ void Server::part (User &u, const Message &msg)
 			continue;
 		}
 
-		if (!chan->removeUser (&u))
+		if (chan->removeUser (&u))
+		{
+			forwardToAllUsers (u, msg);
+		}
+		else
 		{
 			reply (u, Reply::errNotOnChannel (channels[i]));
 		}
