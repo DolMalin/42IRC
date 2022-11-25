@@ -54,9 +54,9 @@ namespace Reply
 				names.append (" ");
 
 			if (it->flags.isOperator)
-				names.append ("@ ");
-			else
-				names.append ("+ ");
+				names.append ("@");
+			else if (it->flags.hasVoicePriviledge)
+				names.append ("+");
 			
 			names.append (it->user->nickname);
 		}
