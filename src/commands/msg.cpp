@@ -1,17 +1,19 @@
 #include "Server.hpp"
 #include "Reply.hpp"
 
-void Server::privmsg (User &u, const Message &msg)
+void Server::messageBase (User &u, const Message &msg, bool isNotice)
 {
 	if (msg.argsCount () < 1)
 	{
-		reply (u, Reply::errNoRecipient (msg.command ()));
+		if (!isNotice)
+			reply (u, Reply::errNoRecipient (msg.command ()));
 		return;
 	}
 
 	if (msg.argsCount () < 2)
 	{
-		reply (u, Reply::errNoTextToSend ());
+		if (!isNotice)
+			reply (u, Reply::errNoTextToSend ());
 		return;
 	}
 
@@ -22,7 +24,8 @@ void Server::privmsg (User &u, const Message &msg)
 		Channel *chan = findChannelByName (target);
 		if (!chan)
 		{
-			reply (u, Reply::errNoSuchChannel (target));
+			if (!isNotice)
+				reply (u, Reply::errNoSuchChannel (target));
 			return;
 		}
 
@@ -33,7 +36,8 @@ void Server::privmsg (User &u, const Message &msg)
 		{
 			// If the user is not in the channel and it does not accept
 			// messages from outside or it is moderated, reply error
-			reply (u, Reply::errCannotSendToChan (target));
+			if (!isNotice)
+				reply (u, Reply::errCannotSendToChan (target));
 			return;
 		}
 
@@ -41,7 +45,8 @@ void Server::privmsg (User &u, const Message &msg)
 		{
 			// In a moderated channel, only operators and users
 			// who have the voice priviledge can speak
-			reply (u, Reply::errCannotSendToChan (target));
+			if (!isNotice)
+				reply (u, Reply::errCannotSendToChan (target));
 			return;
 		}
 
@@ -52,11 +57,22 @@ void Server::privmsg (User &u, const Message &msg)
 		User *user = findUserByNickname (target);
 		if (!user)
 		{
-			reply (u, Reply::errNoSuchNick (target));
+			if (!isNotice)
+				reply (u, Reply::errNoSuchNick (target));
 			return;
 		}
 
 		// @Todo: handle AWAY
 		forward (u, *user, msg, false);
 	}
+}
+
+void Server::privmsg (User &u, const Message &msg)
+{
+	messageBase (u, msg, false);
+}
+
+void Server::notice (User &u, const Message &msg)
+{
+	messageBase (u, msg, true);
 }
