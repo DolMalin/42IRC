@@ -157,4 +157,14 @@ namespace Reply
 	{
 		return Message ().setReplyCode (442).pushArg (channel_name).pushSuffix ("You're not on that channel");
 	}
+
+	Message errNoRecipient (const std::string &command)
+	{
+		return Message ().setReplyCode (411).pushSuffix (std::string ("No recipient given (") + command + ")");
+	}
+
+	Message errNoTextToSend ()
+	{
+		return Message ().setReplyCode (412).pushSuffix ("No text to send");
+	}
 }

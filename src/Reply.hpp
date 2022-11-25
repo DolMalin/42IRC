@@ -35,4 +35,6 @@ namespace Reply
 	Message errBadChannelKey (const std::string &channel_name);
 	Message errChannelIsFull (const std::string &channel_name);
 	Message errNotOnChannel (const std::string &channel_name);
+	Message errNoRecipient (const std::string &command);
+	Message errNoTextToSend ();
 }
