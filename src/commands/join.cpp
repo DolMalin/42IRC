@@ -56,6 +56,7 @@ void Server::join (User &u, const Message &msg)
 		}
 
 		chan->addUser (&u);	// This won't add the user if it already exists
+		forwardChannel(u.prefix(), *chan, msg);
 		reply (u, Reply::topic (u.nickname, name, chan->topic));
 		reply (u, Reply::namReply (*chan));
 	}

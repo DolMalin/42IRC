@@ -209,6 +209,24 @@ void Server::reply(User &user, const Message &msg)
 	user.sendBytes(str + "\r\n");
 }
 
+void Server::forward(const std::string &originPrefix, User &target, const Message &msg)
+{
+	Message newMsg;
+
+	newMsg = msg;
+	reply(target, newMsg.setPrefix(originPrefix));
+}
+
+void Server::forwardChannel(const std::string &originPrefix, Channel &channel, const Message &msg)
+{
+	Message newMsg;
+
+	newMsg = msg;
+	newMsg.setPrefix(originPrefix);
+	for (Channel::UserIt it = channel.joinedUsers.begin (); it != channel.joinedUsers.end (); it++)
+		reply(*(it->user), newMsg);
+}
+
 void Server::removeDisconnectedUsers ()
 {
 	for (ChannelIt it = _channels.begin (); it != _channels.end (); it++)

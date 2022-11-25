@@ -43,5 +43,6 @@ public:
 	void updateLastPing();
 	void updateLastPong();
 	std::string getAddressAsString () const;
+	std::string	prefix() const;
 
 };

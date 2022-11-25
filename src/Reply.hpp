@@ -12,9 +12,9 @@ namespace Reply
 	Message pong (const std::string &server);
 	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic);
 	Message kill(const std::string &msg);
+
 	Message namReply (const Channel &channel);
 	Message endOfNames (const std::string &nick, const std::string &channel);
-
 	Message rplList(const std::string &name, const std::string &topic);
 	Message rplListEnd();
 
@@ -30,7 +30,6 @@ namespace Reply
 	Message	errAlreadyRegistered ();
 	Message errNoOrigin ();
 	Message errPassWdMissMatch (const std::string &nickname);
-
 	Message errNoSuchChannel (const std::string &channel_name);
 	Message errBadChannelKey (const std::string &channel_name);
 	Message errChannelIsFull (const std::string &channel_name);
