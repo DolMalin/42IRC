@@ -1,5 +1,7 @@
 # Channels:
 * Check that the name is correct: max length of 50, cannot contain spaces, cannot contain commas, cannot contain ASCII 7
+* Handle secret channels in LIST, NAMES and TOPIC
+* Handle secret and private channels in WHOIS
 
 # Commands:
 * PASS [X]
