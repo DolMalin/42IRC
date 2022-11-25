@@ -3,16 +3,6 @@
 
 void Server::list(User &u, const Message &msg)
 {
-	// if (msg.argsCount() < 1)
-	// {
-	// 	reply(u, Reply::errNeedMoreParams(msg.command()));
-	// 	return;
-	// }
-	// if (!findUserByNickname(msg.arg(0)))
-	// {
-	// 	reply(u, Reply::errNoSuchNick(msg.arg(0)));
-	// 	return ;
-	// }
 	if (msg.argsCount() < 1)
 	{
 		for (ChannelIt it = _channels.begin(); it != _channels.end(); it++)
