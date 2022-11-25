@@ -228,10 +228,16 @@ void Server::forward(const User &origin, User &target, const Message &msg, bool 
 	reply(target, msg, origin.prefix ());
 }
 
-void Server::forwardChannel(const User &origin, Channel &channel, const Message &msg, bool toSelf)
+void Server::forwardToChannel(const User &origin, Channel &channel, const Message &msg, bool toSelf)
 {
 	for (Channel::UserIt it = channel.joinedUsers.begin (); it != channel.joinedUsers.end (); it++)
 		forward (origin, *(it->user), msg, toSelf);
+}
+
+void Server::forwardToAllUsers(const User &origin, const Message &msg, bool toSelf)
+{
+	for (UserIt it = _users.begin (); it != _users.end (); it++)
+		forward (origin, *it, msg, toSelf);
 }
 
 void Server::removeDisconnectedUsers ()

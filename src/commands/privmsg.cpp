@@ -45,7 +45,7 @@ void Server::privmsg (User &u, const Message &msg)
 			return;
 		}
 
-		forwardChannel (u, *chan, msg, false);
+		forwardToChannel (u, *chan, msg, false);
 	}
 	else	// Send to user
 	{
