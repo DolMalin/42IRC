@@ -16,6 +16,7 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isR
 	_commands["PASS"] = &Server::pass;
 	_commands["LIST"] = &Server::list;
 	_commands["NAMES"] = &Server::names;
+	_commands["PART"] = &Server::part;
 	// _commands["ERROR"] = &Server::error;
 }
 
@@ -242,6 +243,15 @@ Channel *Server::findChannelByName (const std::string &name)
 	}
 
 	return NULL;
+}
+
+void Server::removeEmptyChannels ()
+{
+	for (ChannelIt it = _channels.begin (); it != _channels.end (); it++)
+	{
+		if (it->joinedUsers.empty ())
+			it = _channels.erase (it);
+	}
 }
 
 User *Server::findUserByNickname(const std::string &nick)
