@@ -1,7 +1,7 @@
 #include "User.hpp"
 
 User::User () :
-	fd (0), addr (), isReadable (false), isWritable (false), isRegistered(false), isDisconnected (false),
+	fd (0), addr (), isReadable (false), isWritable (false), isDisconnected (false),
 	bytesToSend (), lastReceivedBytes (), nickname (), username (), realname (), lastPing ()
 {
 	this->updateLastPing();
@@ -10,7 +10,7 @@ User::User () :
 
 
 User::User (int fd, sockaddr_in addr) :
-	fd (fd), addr (addr), isReadable (false), isWritable (false), isRegistered(false), isDisconnected (false),
+	fd (fd), addr (addr), isReadable (false), isWritable (false), isDisconnected (false),
 	bytesToSend (), lastReceivedBytes (), nickname (), username (), realname (), lastPing ()
 {
 	this->updateLastPing();
@@ -111,4 +111,9 @@ std::string User::prefix() const
 
 	prefix = nickname + '!'+ username + "@" + getAddressAsString();
 	return prefix;
+}
+
+bool User::isRegistered () const
+{
+	return !nickname.empty () && !username.empty ();
 }

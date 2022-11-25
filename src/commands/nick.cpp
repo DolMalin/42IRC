@@ -21,6 +21,8 @@ void Server::nick(User &u, const Message &msg)
 	// @Todo: reply ERR_UNAVAILRESOURCE
 	// @Todo: reply ERR_RESTRICTED
 
+	bool wasRegistered = u.isRegistered ();
+
 	if (msg.argsCount() < 1)
 	{
 		reply(u, Reply::errNoNicknameGiven());
@@ -41,4 +43,6 @@ void Server::nick(User &u, const Message &msg)
 	}
 
 	u.nickname = nick;
+	if (!wasRegistered && u.isRegistered ())
+		reply (u, Reply::welcome (u.nickname, u.username, u.getAddressAsString ()));
 }
