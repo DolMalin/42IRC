@@ -55,7 +55,9 @@ namespace Reply
 
 			if (it->flags.isOperator)
 				names.append ("@ ");
-
+			else
+				names.append ("+ ");
+			
 			names.append (it->user->nickname);
 		}
 
@@ -149,5 +151,10 @@ namespace Reply
 	Message errChannelIsFull (const std::string &channel_name)
 	{
 		return Message ().setReplyCode (471).pushArg (channel_name).pushSuffix ("Cannot join channel (+l)");
+	}
+
+	Message errNotOnChannel (const std::string &channel_name)
+	{
+		return Message ().setReplyCode (442).pushArg (channel_name).pushSuffix ("You're not on that channel");
 	}
 }

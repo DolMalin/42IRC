@@ -61,6 +61,6 @@ public:
 	User *findUserByUsername (const std::string &name);
 
 	void addUser (User *user);
-	void removeUser (User *user);
+	bool removeUser (User *user);
 	void removeDisconnectedUsers ();
 };

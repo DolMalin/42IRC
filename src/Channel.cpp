@@ -60,11 +60,17 @@ void Channel::addUser (User *user)
 	joinedUsers.push_back (UserEntry (user));
 }
 
-void Channel::removeUser (User *user)
+bool Channel::removeUser (User *user)
 {
 	UserIt it = findUser (user);
 	if (it != joinedUsers.end ())
+	{
 		joinedUsers.erase (it);
+
+		return true;
+	}
+
+	return false;
 }
 
 void Channel::removeDisconnectedUsers ()
