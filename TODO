@@ -1,5 +1,5 @@
 # Channels:
-* Handle secret channels in LIST, NAMES and TOPIC
+* Handle secret channels in LIST [X], NAMES [X] and TOPIC
 * Handle secret and private channels in WHOIS
 
 # Commands:

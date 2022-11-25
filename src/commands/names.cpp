@@ -8,6 +8,9 @@ void Server::names(User &u, const Message &msg)
 		std::string result;
 		for (ChannelIt it = _channels.begin(); it != _channels.end(); it++)
 		{
+			if (it->modes.isSecret)
+				continue;
+
 			reply(u, Reply::namReply(*it));
 			if (it != _channels.begin())
 				result = result.append(",").append((*it).name);
@@ -22,7 +25,7 @@ void Server::names(User &u, const Message &msg)
 	for (std::vector<std::string>::iterator it = channels.begin (); it != channels.end (); it++)
 	{
 		Channel *c = Server::findChannelByName(*it);
-		if (!c)
+		if (!c || c->modes.isSecret)
 			reply(u, Reply::errNoSuchChannel(*it));
 		else
 		{
