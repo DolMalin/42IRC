@@ -54,7 +54,7 @@ public:
 	typedef std::list<UserEntry>::iterator UserIt;
 
 public:
-	explicit Channel (const std::string &name = "", const std::string &topic = "");
+	explicit Channel (const std::string &name = "", const std::string &topic = "", int userLimit = 150);
 	
 	UserIt findUser (User *user);
 	User *findUserByNickname (const std::string &name);

@@ -13,7 +13,8 @@ Channel::Modes::Modes () :
 	isInviteOnly (), isModerated (), acceptMessagesFromOutside (), isQuiet (), isPrivate (), isSecret (), hasTopic ()
 {}
 
-Channel::Channel (const std::string &name, const std::string &topic) : name (name), topic (topic), joinedUsers  ()
+Channel::Channel (const std::string &name, const std::string &topic, int userLimit) :
+	name (name), topic (topic), key (), userLimit (userLimit), modes (), joinedUsers  ()
 {}
 
 Channel::UserIt Channel::findUser (User *user)
