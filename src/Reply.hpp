@@ -11,6 +11,9 @@ namespace Reply
 	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic);
 	Message kill(const std::string &msg);
 
+	Message rplList(const std::string &name, const std::string &topic);
+	Message rplListEnd();
+
 	Message errUnknownCommand (const std::string &command);
 	Message	errNoNicknameGiven ();
 	Message	errErroneousNickname (const std::string &nick);

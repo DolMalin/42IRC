@@ -70,6 +70,7 @@ public:
 	void pong (User &u, const Message &msg);
 	void kill (User &u, const Message &msg);
 	void pass(User &u, const Message &msg);
+	void list(User &u, const Message &msg);
 
 private:
 	Server (const Server &);

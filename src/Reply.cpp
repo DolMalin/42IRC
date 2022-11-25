@@ -1,4 +1,5 @@
 #include "Reply.hpp"
+#include "Channel.hpp"
 
 namespace Reply
 {
@@ -36,6 +37,16 @@ namespace Reply
 		return Message ().setReplyCode (332).pushArg (nick).pushArg (channel_name).pushSuffix (topic);
 	}
 
+
+	Message rplList(const std::string &name, const std::string &topic)
+	{
+		return Message ().setReplyCode(322).pushArg("dolmalin").pushArg(name).pushSuffix(topic);
+	}
+
+	Message rplListEnd()
+	{
+		return Message ().setReplyCode(323).pushArg("dolmalin").pushSuffix("End of LIST");
+	}
 
 	Message errUnknownCommand (const std::string &command)
 	{

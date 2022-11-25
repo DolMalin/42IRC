@@ -14,6 +14,7 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isR
 	_commands["KILL"] = &Server::kill;
 	_commands["PONG"] = &Server::pong;
 	_commands["PASS"] = &Server::pass;
+	_commands["LIST"] = &Server::list;
 	// _commands["ERROR"] = &Server::error;
 }
 
