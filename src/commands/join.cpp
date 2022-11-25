@@ -23,11 +23,23 @@ static bool isValidChannelName (const std::string &name)
 void Server::join (User &u, const Message &msg)
 {
 	// @Todo: handle invite only channels
-	// @Todo: handle "0" argument
 
 	if (msg.argsCount () < 1)
 	{
 		reply (u, Reply::errNeedMoreParams (msg.command ()));
+		return;
+	}
+
+	if (msg.arg (0) == "0")
+	{
+		for (ChannelIt it = _channels.begin (); it != _channels.end (); it++)
+		{
+			if (it->removeUser (&u))
+			{
+				forwardToAllUsers (u, Message ().setIsRequest (true).setCommand ("PART").pushArg (it->name));
+			}
+		}
+
 		return;
 	}
 
