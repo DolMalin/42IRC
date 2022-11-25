@@ -19,6 +19,7 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isR
 	_commands["PART"] = &Server::part;
 	_commands["PRIVMSG"] = &Server::privmsg;
 	_commands["NOTICE"] = &Server::notice;
+	_commands["INVITE"] = &Server::invite;
 	// _commands["ERROR"] = &Server::error;
 }
 

@@ -14,7 +14,7 @@ Channel::Modes::Modes () :
 {}
 
 Channel::Channel (const std::string &name, const std::string &topic, int userLimit) :
-	name (name), topic (topic), key (), userLimit (userLimit), modes (), joinedUsers  ()
+	name (name), topic (topic), key (), userLimit (userLimit), modes (), joinedUsers  (), invites ()
 {}
 
 Channel::UserIt Channel::findUser (User *user)
@@ -84,3 +84,27 @@ void Channel::removeDisconnectedUsers ()
 			it = joinedUsers.erase (it);
 	}
 }
+
+bool Channel::isInvited (const std::string &nickname)
+{
+	return std::find (invites.begin (), invites.end (), nickname) != invites.end ();
+}
+
+void Channel::addInvite (const std::string &nickname)
+{
+	if (isInvited (nickname))
+		return;
+	invites.push_back (nickname);
+}
+
+bool Channel::useInvite (const std::string &nickname)
+{
+	std::list<std::string>::iterator it = std::find (invites.begin (), invites.end (), nickname);
+	if (it == invites.end ())
+		return false;
+	
+	invites.erase (it);
+
+	return true;
+}
+

@@ -12,6 +12,7 @@ namespace Reply
 	Message pong (const std::string &server);
 	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic);
 	Message kill(const std::string &msg);
+	Message inviting (const std::string &by, const std::string &nickname, const std::string &channelName);
 
 	Message nameReply (const Channel &channel);
 	Message endOfNames (const std::string &nick, const std::string &channel);
@@ -37,4 +38,5 @@ namespace Reply
 	Message errNoRecipient (const std::string &command);
 	Message errNoTextToSend ();
 	Message errCannotSendToChan (const std::string &channel);
+	Message errChanOpIsNeeded (const std::string &channel);
 }

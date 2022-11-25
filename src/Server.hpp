@@ -81,6 +81,7 @@ public:
 	void messageBase (User &u, const Message &msg, bool isNotice);
 	void privmsg (User &u, const Message &msg);
 	void notice (User &u, const Message &msg);
+	void invite (User &u, const Message &msg);
 
 private:
 	Server (const Server &);

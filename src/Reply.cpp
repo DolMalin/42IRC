@@ -37,6 +37,11 @@ namespace Reply
 		return Message ().setReplyCode (332).pushArg (nick).pushArg (channel_name).pushSuffix (topic);
 	}
 
+	Message inviting (const std::string &by, const std::string &nickname, const std::string &channelName)
+	{
+		return Message ().setReplyCode (341).pushArg (by).pushArg (nickname).pushArg (channelName);
+	}
+
 	Message nameReply (const Channel &chan)
 	{
 		std::string spec;
@@ -171,5 +176,10 @@ namespace Reply
 	Message errCannotSendToChan (const std::string &channel)
 	{
 		return Message ().setReplyCode (404).pushArg (channel).pushSuffix ("Cannot send to channel");
+	}
+
+	Message errChanOpIsNeeded (const std::string &channel)
+	{
+		return Message ().setReplyCode (482).pushArg (channel).pushSuffix ("You're not a channel operator");
 	}
 }

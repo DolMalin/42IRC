@@ -52,6 +52,7 @@ public:
 	Modes modes;
 
 	std::list<UserEntry> joinedUsers;
+	std::list<std::string> invites;
 
 	typedef std::list<UserEntry>::iterator UserIt;
 
@@ -65,4 +66,8 @@ public:
 	UserEntry *addUser (User *user);
 	bool removeUser (User *user);
 	void removeDisconnectedUsers ();
+
+	bool isInvited (const std::string &nickname);
+	void addInvite (const std::string &nickname);
+	bool useInvite (const std::string &nickname);
 };
