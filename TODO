@@ -10,18 +10,19 @@
 * PART [X]
 * QUIT [X]
 * PRIVMSG [X]
-* KICK
 * KILL [X]
-* OPER
-* MODE
 * PING [X]
 * PONG [X]
+* TOPIC [X]
+* NOTICE [X]
+* LIST [X]
+* NAMES [X]
+
+* KICK
+* OPER
+* MODE
 * WHO
 * WHOIS
-* WHOWAS
-* TOPIC [X]
-* NOTICE
-* LIST [X]
 * INVITE
-* NAMES [X]
+* WHOWAS
 * AWAY
