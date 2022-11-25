@@ -14,15 +14,14 @@ static std::string formatShort(unsigned short n)
 	return output;
 }
 
-Opt<Message> Message::parseRequest(const std::string &str)
+bool Message::parseRequest(const std::string &str)
 {
-	Message	message;
-	message._isRequest = true;
-	message._hasSuffix = false;
+	_isRequest = true;
+	_hasSuffix = false;
+	if (str.empty())
+		return false;
+
 	std::string output = str;
-	if (output.empty())
-		return make_opt(message, false);
-		
 	output += " ";
 
 	size_t	pos = 0;
@@ -36,28 +35,28 @@ Opt<Message> Message::parseRequest(const std::string &str)
 			output.erase(0, pos + 1);
 			continue;
 		}
-		if (message._argsCount >= 15)
-			return make_opt(message, false);
-		else if (token.at(0) == ':' && message._prefix.empty() && !commandSet)
-			message._prefix = token.substr(1);
+		if (_argsCount >= 15)
+			return false;
+		else if (token.at(0) == ':' && _prefix.empty() && !commandSet)
+			_prefix = token.substr(1);
 		else if (!commandSet)
 		{
-			message._command = token;
+			_command = token;
 			commandSet = true;
 		}
 		else if (token.at(0) == ':')
 		{
-			message.pushArg (output.substr(1));
-			message._hasSuffix = true;
+			pushArg (output.substr(1));
+			_hasSuffix = true;
 			break;
 		}
 		else
-			message.pushArg (token);
+			pushArg (token);
 		
 		output.erase(0, pos + 1);
 	}
 
-	return make_opt(message, true);
+	return true;
 }
 
 Message::Message () :

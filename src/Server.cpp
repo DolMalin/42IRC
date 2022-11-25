@@ -154,15 +154,14 @@ void Server::processReceivedMessages()
 			if (line.empty())
 				break;
 
-			Opt<Message> msgOpt = Message::parseRequest(line);
-			if (!msgOpt.ok)
+			Message msg;
+			if (!msg.parseRequest (line))
 			{
 				std::cerr << "Invalid message '" << line << "'" << std::endl;
 
 				continue;
 			}
 
-			Message msg = msgOpt.val;
 			std::cout << "Received '" << msg.stringify() << "'" << std::endl;
 
 			executeCommand(*it, msg);

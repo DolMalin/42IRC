@@ -39,5 +39,5 @@ public:
 	bool				hasSuffix () const;
 	uint16_t			replyCode () const;
 
-	static Opt<Message> parseRequest(const std::string &str);
+	bool parseRequest(const std::string &str);
 };
