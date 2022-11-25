@@ -89,6 +89,7 @@ void Server::join (User &u, const Message &msg)
 		else
 		{
 			chan->addUser (&u);	// This won't add the user if it already exists
+			chan->useInvite (u.nickname);
 		}
 
 		forwardToChannel (u, *chan, msg);
