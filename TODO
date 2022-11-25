@@ -10,7 +10,7 @@
 * JOIN [X]
 * PART [X]
 * QUIT [X]
-* PRIVMSG
+* PRIVMSG [X]
 * KICK
 * KILL [X]
 * OPER
@@ -18,11 +18,11 @@
 * PING [X]
 * PONG [X]
 * WHO
-* WHOIS 
+* WHOIS
 * WHOWAS
 * TOPIC [X]
 * NOTICE
 * LIST [X]
 * INVITE
-* NAMES
+* NAMES [X]
 * AWAY
