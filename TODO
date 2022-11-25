@@ -1,0 +1,26 @@
+# Channels:
+* Check that the name is correct: max length of 50, cannot contain spaces, cannot contain commas, cannot contain ASCII 7
+
+# Commands:
+* PASS
+* NICK
+* USER
+* JOIN
+* PART
+* QUIT
+* PRIVMSG
+* KICK
+* KILL
+* OPER
+* MODE
+* PING
+* PONG
+* WHO
+* WHOIS
+* WHOWAS
+* TOPIC
+* NOTICE
+* LIST
+* INVITE
+* NAMES
+* AWAY
