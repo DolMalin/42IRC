@@ -22,6 +22,7 @@ namespace Reply
 	Message	errNeedMoreParams (const std::string &command);
 	Message	errAlreadyRegistered ();
 	Message errNoOrigin ();
+	Message errPassWdMissMatch (const std::string &nickname);
 
 	Message errNoSuchChannel (const std::string &channel_name);
 }

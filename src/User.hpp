@@ -30,6 +30,7 @@ public:
 	std::string	realname;
 	std::time_t	lastPing;
 	std::time_t lastPong;
+	std::string givenPassword;
 
 public:
 	User ();
