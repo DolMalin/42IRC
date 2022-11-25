@@ -30,6 +30,9 @@ public:
 	std::time_t	lastPing;
 	std::time_t lastPong;
 	std::string givenPassword;
+	mode		mode;	
+
+
 
 public:
 	User ();
