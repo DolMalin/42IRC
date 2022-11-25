@@ -3,6 +3,10 @@
 
 void Server::user(User &u, const Message &msg)
 {
+	// @Todo: make sure username is valid
+	// @Todo: make sure realname is valid
+	// @Todo: handle modes
+
 	if (msg.argsCount() < 4)
 	{
 		reply(u, Reply::errNeedMoreParams(msg.command()));
