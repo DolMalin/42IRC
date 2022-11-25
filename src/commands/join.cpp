@@ -22,8 +22,6 @@ static bool isValidChannelName (const std::string &name)
 
 void Server::join (User &u, const Message &msg)
 {
-	// @Todo: handle invite only channels
-
 	if (msg.argsCount () < 1)
 	{
 		reply (u, Reply::errNeedMoreParams (msg.command ()));
@@ -72,6 +70,12 @@ void Server::join (User &u, const Message &msg)
 			if (chan->joinedUsers.size () >= (size_t)chan->userLimit)
 			{
 				reply (u, Reply::errChannelIsFull (name));
+				continue;
+			}
+
+			if (chan->modes.isInviteOnly && !chan->isInvited (u.nickname))
+			{
+				reply (u, Reply::errInviteOnlyChan (name));
 				continue;
 			}
 		}

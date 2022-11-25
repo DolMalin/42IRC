@@ -148,6 +148,11 @@ namespace Reply
 		return Message ().setReplyCode(464).pushArg(nickname).pushSuffix("Password incorrect");
 	}
 
+	Message errInviteOnlyChan (const std::string &channel_name)
+	{
+		return Message ().setReplyCode (473).pushArg (channel_name).pushSuffix ("Cannot join channel (+i)");
+	}
+
 	Message errBadChannelKey (const std::string &channel_name)
 	{
 		return Message ().setReplyCode (475).pushArg (channel_name).pushSuffix ("Cannot join channel (+k)");
