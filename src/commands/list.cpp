@@ -6,8 +6,8 @@ void Server::list(User &u, const Message &msg)
 	if (msg.argsCount() < 1)
 	{
 		for (ChannelIt it = _channels.begin(); it != _channels.end(); it++)
-			reply(u, Reply::rplList((*it).name, (*it).topic));
-		reply(u, Reply::rplListEnd());
+			reply(u, Reply::list((*it).name, (*it).topic));
+		reply(u, Reply::listEnd());
 		return ;
 	}
 
@@ -18,7 +18,7 @@ void Server::list(User &u, const Message &msg)
 		if (!c)
 			reply(u, Reply::errNoSuchChannel(*it));
 		else
-			reply(u, Reply::rplList(c->name, c->topic));
+			reply(u, Reply::list(c->name, c->topic));
 	}
-	reply(u, Reply::rplListEnd());
+	reply(u, Reply::listEnd());
 }

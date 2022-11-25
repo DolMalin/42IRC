@@ -15,8 +15,8 @@ namespace Reply
 
 	Message namReply (const Channel &channel);
 	Message endOfNames (const std::string &nick, const std::string &channel);
-	Message rplList(const std::string &name, const std::string &topic);
-	Message rplListEnd();
+	Message list(const std::string &name, const std::string &topic);
+	Message listEnd();
 
 	Message errUnknownCommand (const std::string &command);
 	Message	errNoNicknameGiven ();
