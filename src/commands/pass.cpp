@@ -8,7 +8,7 @@ void Server::pass(User &u, const Message &msg)
 		reply(u, Reply::errNeedMoreParams(msg.command()));
 		return;
 	}
-	if (u.isRegistered)
+	if (u.isRegistered ())
 	{
 		reply(u, Reply::errAlreadyRegistered());
 		return ;

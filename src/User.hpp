@@ -20,7 +20,6 @@ public:
 
 	bool	isReadable;
 	bool	isWritable;
-	bool	isRegistered;
 	bool	isDisconnected;
 	
 	std::string bytesToSend;
@@ -44,5 +43,5 @@ public:
 	void updateLastPong();
 	std::string getAddressAsString () const;
 	std::string	prefix() const;
-
+	bool isRegistered () const;
 };
