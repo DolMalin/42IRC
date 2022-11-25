@@ -93,7 +93,7 @@ void Server::join (User &u, const Message &msg)
 
 		forwardToChannel (u, *chan, msg);
 		reply (u, Reply::topic (u.nickname, name, chan->topic));
-		reply (u, Reply::namReply (*chan));
+		reply (u, Reply::nameReply (*chan));
 	}
 
 	reply (u, Reply::endOfNames (u.nickname, msg.arg (0)));

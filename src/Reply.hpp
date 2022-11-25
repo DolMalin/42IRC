@@ -13,7 +13,7 @@ namespace Reply
 	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic);
 	Message kill(const std::string &msg);
 
-	Message namReply (const Channel &channel);
+	Message nameReply (const Channel &channel);
 	Message endOfNames (const std::string &nick, const std::string &channel);
 	Message list(const std::string &name, const std::string &topic);
 	Message listEnd();

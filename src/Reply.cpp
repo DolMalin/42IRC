@@ -37,7 +37,7 @@ namespace Reply
 		return Message ().setReplyCode (332).pushArg (nick).pushArg (channel_name).pushSuffix (topic);
 	}
 
-	Message namReply (const Channel &chan)
+	Message nameReply (const Channel &chan)
 	{
 		std::string spec;
 		if (chan.modes.isPrivate)
