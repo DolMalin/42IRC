@@ -14,5 +14,5 @@ A C++98 implementation of a basic IRC server.
 
 ### Run
 ```bash
-make && ./42IRC <PORT> <PASSWORD>
+make && ./ircserv <PORT> <PASSWORD>
 ```
