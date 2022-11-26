@@ -67,6 +67,8 @@ public:
 	uint16_t getPort () const;
 
 	// Commands
+	void partUser (User &u, Channel &channel, User *target, const std::string &reason = "");
+
 	void nick (User &u, const Message &msg);
 	void user (User &u, const Message &msg);
 	void quit (User &u, const Message &msg);

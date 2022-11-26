@@ -48,9 +48,16 @@ void Server::kick (User &u, const Message &msg)
 		}
 	}
 
+	std::string kickMessage = "Kicked by " + u.nickname;
+	if (msg.argsCount () > 2)
+	{
+		kickMessage += ". Reason: ";
+		kickMessage += msg.arg (2);
+	}
+
 	for (size_t i = 0; i < nicknames.size (); i++)
 	{
-		if (channelNames.size () != 1)
+		if (channelNames.size () > 1)
 		{
 			chan = findChannelByName (channelNames[i]);
 			if (!chan)
@@ -74,27 +81,6 @@ void Server::kick (User &u, const Message &msg)
 		}
 
 		User *user = findUserByNickname (nicknames[i]);
-		
-		if (!user || !chan->removeUser (user))
-		{
-			reply (u, Reply::errUserNotInChannel (nicknames[i], chan->name));
-			continue;
-		}
-		else
-		{
-			Message replyMsg;
-			replyMsg.setIsRequest (true).setCommand ("PART").pushArg (chan->name);
-
-			std::string kickMessage = "Kicked by " + u.nickname; 
-			if (msg.argsCount () > 2)
-			{
-				kickMessage += ". Reason: ";
-				kickMessage += msg.arg (2);
-			}
-
-			replyMsg.pushSuffix (kickMessage);
-
-			forwardToAllUsers (*user, replyMsg);
-		}
+		partUser (u, *chan, user, kickMessage);
 	}
 }

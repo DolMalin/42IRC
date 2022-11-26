@@ -43,7 +43,20 @@ void Server::nick(User &u, const Message &msg)
 	}
 
 	if (wasRegistered)
-		forwardToAllUsers (u, msg);
+	{
+		// Send nick changes to all channels the user is in, except the quiet ones
+		for (ChannelIt it = _channels.begin (); it != _channels.end (); it++)
+		{
+			if (it->modes.isQuiet)
+				continue;
+			if (it->findUser (&u) == it->joinedUsers.end ())
+				continue;
+
+			forwardToChannel (u, *it, msg, false);
+		}
+	}
+
+	reply (u, msg);	// Make sure the user itself is notified of the nick change
 
 	u.nickname = nick;
 	if (!wasRegistered && u.isRegistered ())

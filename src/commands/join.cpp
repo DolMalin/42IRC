@@ -31,12 +31,7 @@ void Server::join (User &u, const Message &msg)
 	if (msg.arg (0) == "0")
 	{
 		for (ChannelIt it = _channels.begin (); it != _channels.end (); it++)
-		{
-			if (it->removeUser (&u))
-			{
-				forwardToAllUsers (u, Message ().setIsRequest (true).setCommand ("PART").pushArg (it->name));
-			}
-		}
+			partUser (u, *it, &u);
 
 		return;
 	}
@@ -99,14 +94,16 @@ void Server::join (User &u, const Message &msg)
 			chan->useInvite (u.nickname);
 		}
 
-		forwardToChannel (u, *chan, msg);
+		if (!chan->modes.isQuiet)
+			forwardToChannel (u, *chan, msg);
 
 		if (chan->topic.empty ())
 			reply (u, Reply::noTopic (u.nickname, name));
 		else
 			reply (u, Reply::topic (u.nickname, name, chan->topic));
 
-		reply (u, Reply::nameReply (*chan));
+		if (!chan->modes.isQuiet)
+			reply (u, Reply::nameReply (*chan));
 	}
 
 	reply (u, Reply::endOfNames (u.nickname, msg.arg (0)));
