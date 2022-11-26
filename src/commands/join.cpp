@@ -95,7 +95,10 @@ void Server::join (User &u, const Message &msg)
 		}
 
 		if (!chan->modes.isQuiet)
-			forwardToChannel (u, *chan, msg);
+		{
+			Message singleJoinMsg = Message ().setIsRequest (true).setCommand ("JOIN").pushArg (chan->name);
+			forwardToChannel (u, *chan, singleJoinMsg);
+		}
 
 		if (chan->topic.empty ())
 			reply (u, Reply::noTopic (u.nickname, name));
