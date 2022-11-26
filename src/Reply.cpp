@@ -74,6 +74,9 @@ namespace Reply
 		return Message ().setReplyCode (366).pushArg (nick).pushArg (channel).pushSuffix ("End of NAMES list");
 	}
 
+	/* 
+		@TODO: replace dolmalin with nickname
+	*/
 	Message list(const std::string &name, const std::string &topic)
 	{
 		return Message ().setReplyCode(322).pushArg("dolmalin").pushArg(name).pushSuffix(topic);
@@ -82,6 +85,19 @@ namespace Reply
 	Message listEnd()
 	{
 		return Message ().setReplyCode(323).pushArg("dolmalin").pushSuffix("End of LIST");
+	}
+
+	Message channelModeIs(const std::string &name, const std::string &modes)
+	{
+		if (!modes.empty())
+			return Message ().setReplyCode(324).pushArg("dolmalin").pushArg(name).pushArg(modes);
+		else
+			return Message ().setReplyCode(324).pushArg(name);
+	}
+
+	Message errUnknownMode(const std::string &channel, const std::string &mode)
+	{
+		return Message ().setReplyCode(472).pushArg(mode).pushSuffix(std::string("is unknown mode char to me for ") + channel);
 	}
 
 	Message errUnknownCommand (const std::string &command)

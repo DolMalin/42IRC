@@ -38,10 +38,8 @@ public:
 		bool isSecret : 1;	// s // @Todo
 		bool hasTopic : 1;	// t // @Todo
 
-		Modes ();
 
-		bool fromString (const std::string &str);	// @Todo
-		std::string toString () const;	// @Todo
+		Modes ();
 	};
 
 public:
@@ -70,4 +68,7 @@ public:
 	bool isInvited (const std::string &nickname);
 	void addInvite (const std::string &nickname);
 	bool useInvite (const std::string &nickname);
+	std::string modeToString();
+	void setMode(const char mode, bool val);
+
 };

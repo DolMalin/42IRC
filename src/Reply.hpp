@@ -18,7 +18,9 @@ namespace Reply
 	Message endOfNames (const std::string &nick, const std::string &channel);
 	Message list(const std::string &name, const std::string &topic);
 	Message listEnd();
-
+	Message channelModeIs(const std::string &name, const std::string &modes);
+	
+	Message errUnknownMode(const std::string &channel, const std::string &mode);
 	Message errUnknownCommand (const std::string &command);
 	Message	errNoNicknameGiven ();
 	Message	errErroneousNickname (const std::string &nick);

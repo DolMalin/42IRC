@@ -108,3 +108,56 @@ bool Channel::useInvite (const std::string &nickname)
 	return true;
 }
 
+void Channel::setMode(const char mode, bool val)
+{
+	switch(mode)
+	{
+		case 'i':
+			modes.isInviteOnly = val;
+			break;
+		case 'm':
+			modes.isModerated = val;
+			break;
+		case 'n':
+			modes.acceptMessagesFromOutside = val;
+			break;
+		case 'q':
+			modes.isQuiet = val;
+			break;
+		case 'p':
+			modes.isPrivate = val;
+			break;
+		case 's':
+			modes.isSecret = val;
+			break;
+		case 't':
+			modes.hasTopic = val;
+			break;
+		case 'k':
+			if (val == false)
+				key.clear();
+	}
+}
+
+std::string Channel::modeToString()
+{
+	std::string str;
+
+	if (modes.isInviteOnly)
+		str += 'i';
+	if (modes.isModerated)
+		str += 'm';
+	if (modes.acceptMessagesFromOutside)
+		str += 'n';
+	if (modes.isQuiet)
+		str += 'q';
+	if (modes.isPrivate)
+		str += 'p';
+	if (modes.isSecret)
+		str += 's';
+	if (modes.hasTopic)
+		str += 't';
+	if (!key.empty())
+		str += 'k';
+	return str;
+}
