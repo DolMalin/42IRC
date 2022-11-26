@@ -213,4 +213,9 @@ namespace Reply
 	{
 		return Message ().setReplyCode (482).pushArg (channel).pushSuffix ("You're not a channel operator");
 	}
+	
+	Message errUserNotInChannel (const std::string &nick, const std::string &channelName)
+	{
+		return Message ().setReplyCode (441).pushArg (nick).pushArg (channelName).pushSuffix ("They aren't on that channel");
+	}
 }

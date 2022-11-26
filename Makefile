@@ -6,7 +6,7 @@ SRC_FILES = Server.cpp Message.cpp User.cpp Channel.cpp Reply.cpp\
 	common.cpp\
 	commands/pass.cpp commands/nick.cpp commands/user.cpp\
 	commands/join.cpp commands/part.cpp commands/topic.cpp commands/ping_pong.cpp commands/quit.cpp commands/kill.cpp\
-	commands/list.cpp commands/names.cpp commands/msg.cpp commands/invite.cpp commands/away.cpp
+	commands/list.cpp commands/names.cpp commands/msg.cpp commands/invite.cpp commands/away.cpp commands/kick.cpp
 
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
 SRC_DIR = src

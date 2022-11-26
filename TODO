@@ -1,6 +1,6 @@
-# Channels:
 * Handle secret channels in LIST [X], NAMES [X] and TOPIC [X]
 * Handle secret and private channels in WHOIS
+* Server ends unexpectedly in some cases when clients disconnects
 
 # Commands:
 * PASS [X]
@@ -19,11 +19,10 @@
 * NAMES [X]
 * INVITE [X]
 * AWAY [X]
+* KICK [X]
 
 * MODE
 
-
-* KICK
 * WHO
 * WHOIS
 * WHOWAS

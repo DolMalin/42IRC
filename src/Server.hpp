@@ -84,6 +84,7 @@ public:
 	void invite (User &u, const Message &msg);
 	void topic (User &u, const Message &msg);
 	void away (User &u, const Message &msg);
+	void kick (User &u, const Message &msg);
 
 private:
 	Server (const Server &);

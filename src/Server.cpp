@@ -22,6 +22,7 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isR
 	_commands["INVITE"] = &Server::invite;
 	_commands["TOPIC"] = &Server::topic;
 	_commands["AWAY"] = &Server::away;
+	_commands["KICK"] = &Server::kick;
 	// _commands["ERROR"] = &Server::error;
 }
 
