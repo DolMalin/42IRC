@@ -1,6 +1,6 @@
 * Handle secret channels in LIST [X], NAMES [X] and TOPIC [X]
 * Handle secret and private channels in WHOIS
-* Bug: Server ends unexpectedly in some cases when clients disconnects
+* Bug: Server ends unexpectedly in some cases when clients disconnects [X?]
 
 # Commands:
 * PASS [X]
