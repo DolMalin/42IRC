@@ -131,7 +131,7 @@ void Channel::setMode(const char mode, bool val)
 			modes.isSecret = val;
 			break;
 		case 't':
-			modes.hasTopic = val;
+			modes.isTopicChangeable = val;
 			break;
 		case 'k':
 			if (val == false)
@@ -155,7 +155,7 @@ std::string Channel::modeToString()
 		str += 'p';
 	if (modes.isSecret)
 		str += 's';
-	if (modes.hasTopic)
+	if (modes.isTopicChangeable)
 		str += 't';
 	if (!key.empty())
 		str += 'k';
