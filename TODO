@@ -1,6 +1,6 @@
 * Handle secret channels in LIST [X], NAMES [X] and TOPIC [X]
 * Handle secret and private channels in WHOIS
-* Server ends unexpectedly in some cases when clients disconnects
+* Bug: Server ends unexpectedly in some cases when clients disconnects
 
 # Commands:
 * PASS [X]
@@ -10,7 +10,6 @@
 * PART [X]
 * QUIT [X]
 * PRIVMSG [X]
-* KILL [X]
 * PING [X]
 * PONG [X]
 * TOPIC [X]
@@ -27,4 +26,6 @@
 * WHOIS
 * WHOWAS
 
+Maybe:
 * OPER
+* KILL

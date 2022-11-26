@@ -75,7 +75,6 @@ public:
 	void join (User &u, const Message &msg);
 	void ping (User &u, const Message &msg);
 	void pong (User &u, const Message &msg);
-	void kill (User &u, const Message &msg);
 	void pass(User &u, const Message &msg);
 	void list(User &u, const Message &msg);
 	void part (User &u, const Message &msg);
