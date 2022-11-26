@@ -324,7 +324,7 @@ void	Server::testPings()
 
 		if (it->lastPong < it->lastPing && now - it->lastPing > PONG_DELAY)
 		{
-			//@TODO: Reply kill
+			reply (*it, Reply::kill ("PONG reply timeout"));
 			disconnect(*it);
 		}
 	}
