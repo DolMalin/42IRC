@@ -41,5 +41,8 @@ void Server::invite (User &u, const Message &msg)
 	}
 
 	channel->addInvite (nickname);
-	forward (u, *user, Reply::inviting (u.nickname, nickname, channelName));
+
+	Message inviting = Reply::inviting (u.nickname, nickname, channelName);
+	forward (u, *user, inviting);
+	reply (u, inviting);
 }
