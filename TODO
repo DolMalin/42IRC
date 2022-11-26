@@ -18,11 +18,14 @@
 * LIST [X]
 * NAMES [X]
 * INVITE [X]
+* AWAY [X]
+
+* MODE
+
 
 * KICK
-* OPER
-* MODE
 * WHO
 * WHOIS
 * WHOWAS
-* AWAY
+
+* OPER

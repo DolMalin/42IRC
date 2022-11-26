@@ -47,6 +47,27 @@ namespace Reply
 		return Message ().setReplyCode (341).pushArg (by).pushArg (nickname).pushArg (channelName);
 	}
 
+	Message away (const std::string &nick, const std::string &awayMessage)
+	{
+		Message msg;
+		msg.setReplyCode (301).pushArg (nick);
+
+		if (!awayMessage.empty ())
+			msg.pushSuffix (awayMessage);
+
+		return msg;
+	}
+
+	Message unaway ()
+	{
+		return Message ().setReplyCode (305).pushSuffix ("You are no longer marked as being away");
+	}
+
+	Message nowAway ()
+	{
+		return Message ().setReplyCode (306).pushSuffix ("You have been marked as being away");
+	}
+
 	Message nameReply (const Channel &chan)
 	{
 		std::string spec;

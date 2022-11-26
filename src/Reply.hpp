@@ -14,6 +14,9 @@ namespace Reply
 	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic);
 	Message kill(const std::string &msg);
 	Message inviting (const std::string &by, const std::string &nickname, const std::string &channelName);
+	Message away (const std::string &nick, const std::string &awayMessage);
+	Message unaway ();
+	Message nowAway ();
 
 	Message nameReply (const Channel &channel);
 	Message endOfNames (const std::string &nick, const std::string &channel);

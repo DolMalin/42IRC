@@ -62,7 +62,9 @@ void Server::messageBase (User &u, const Message &msg, bool isNotice)
 			return;
 		}
 
-		// @Todo: handle AWAY
+		if (!isNotice && user->isAway)
+			reply (u, Reply::away (user->nickname, user->awayMessage));
+
 		forward (u, *user, msg, false);
 	}
 }

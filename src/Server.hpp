@@ -83,6 +83,7 @@ public:
 	void notice (User &u, const Message &msg);
 	void invite (User &u, const Message &msg);
 	void topic (User &u, const Message &msg);
+	void away (User &u, const Message &msg);
 
 private:
 	Server (const Server &);
