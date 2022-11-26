@@ -10,9 +10,13 @@ namespace Reply
 	Message error (const std::string &msg);
 	Message ping (const std::string &server);
 	Message pong (const std::string &server);
+	Message noTopic (const std::string &nick, const std::string &channel_name);
 	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic);
 	Message kill(const std::string &msg);
 	Message inviting (const std::string &by, const std::string &nickname, const std::string &channelName);
+	Message away (const std::string &nick, const std::string &awayMessage);
+	Message unaway ();
+	Message nowAway ();
 
 	Message nameReply (const Channel &channel);
 	Message endOfNames (const std::string &nick, const std::string &channel);
@@ -42,4 +46,5 @@ namespace Reply
 	Message errNoTextToSend ();
 	Message errCannotSendToChan (const std::string &channel);
 	Message errChanOpIsNeeded (const std::string &channel);
+	Message errUserNotInChannel (const std::string &nick, const std::string &channelName);
 }

@@ -2,7 +2,8 @@
 
 User::User () :
 	fd (0), addr (), isReadable (false), isWritable (false), isDisconnected (false),
-	bytesToSend (), lastReceivedBytes (), nickname (), username (), realname (), lastPing ()
+	bytesToSend (), lastReceivedBytes (), nickname (), username (), realname (), lastPing (),
+	isAway (), awayMessage ()
 {
 	this->updateLastPing();
 	this->updateLastPong();
@@ -11,7 +12,8 @@ User::User () :
 
 User::User (int fd, sockaddr_in addr) :
 	fd (fd), addr (addr), isReadable (false), isWritable (false), isDisconnected (false),
-	bytesToSend (), lastReceivedBytes (), nickname (), username (), realname (), lastPing ()
+	bytesToSend (), lastReceivedBytes (), nickname (), username (), realname (), lastPing (),
+	isAway (), awayMessage ()
 {
 	this->updateLastPing();
 	this->updateLastPong();
@@ -31,7 +33,13 @@ ssize_t User::receiveBytes ()
 		if (bytesRead < 0 && (errno == EWOULDBLOCK || errno == EAGAIN))
 			break;
 
-		if (bytesRead <= 0)	// @Todo: this might be an error if bytesRead < 0
+		if (bytesRead < 0)
+		{
+			std::cerr << "recv error for " << getAddressAsString () << std::endl;
+			break;
+		}
+
+		if (bytesRead == 0)
 			break;
 
 		lastReceivedBytes.append (buffer, (size_t)bytesRead);

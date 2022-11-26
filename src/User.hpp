@@ -31,6 +31,9 @@ public:
 	std::time_t lastPong;
 	std::string givenPassword;
 
+	bool isAway;
+	std::string awayMessage;
+
 public:
 	User ();
 	User (int fd, sockaddr_in addr);

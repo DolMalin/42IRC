@@ -10,7 +10,7 @@ Channel::UserEntry::UserEntry (User *user) :
 {}
 
 Channel::Modes::Modes () :
-	isInviteOnly (), isModerated (), acceptMessagesFromOutside (), isQuiet (), isPrivate (), isSecret (), hasTopic ()
+	isInviteOnly (), isModerated (), acceptMessagesFromOutside (), isQuiet (), isPrivate (), isSecret (), isTopicChangeable ()
 {}
 
 Channel::Channel (const std::string &name, const std::string &topic, int userLimit) :

@@ -32,6 +32,11 @@ namespace Reply
 		return Message ().setIsRequest(true).setCommand("KILL").pushSuffix(msg);
 	}
 
+	Message noTopic (const std::string &nick, const std::string &channel_name)
+	{
+		return Message ().setReplyCode (331).pushArg (nick).pushArg (channel_name).pushSuffix ("No topic is set");
+	}
+
 	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic)
 	{
 		return Message ().setReplyCode (332).pushArg (nick).pushArg (channel_name).pushSuffix (topic);
@@ -40,6 +45,27 @@ namespace Reply
 	Message inviting (const std::string &by, const std::string &nickname, const std::string &channelName)
 	{
 		return Message ().setReplyCode (341).pushArg (by).pushArg (nickname).pushArg (channelName);
+	}
+
+	Message away (const std::string &nick, const std::string &awayMessage)
+	{
+		Message msg;
+		msg.setReplyCode (301).pushArg (nick);
+
+		if (!awayMessage.empty ())
+			msg.pushSuffix (awayMessage);
+
+		return msg;
+	}
+
+	Message unaway ()
+	{
+		return Message ().setReplyCode (305).pushSuffix ("You are no longer marked as being away");
+	}
+
+	Message nowAway ()
+	{
+		return Message ().setReplyCode (306).pushSuffix ("You have been marked as being away");
 	}
 
 	Message nameReply (const Channel &chan)
@@ -202,5 +228,10 @@ namespace Reply
 	Message errChanOpIsNeeded (const std::string &channel)
 	{
 		return Message ().setReplyCode (482).pushArg (channel).pushSuffix ("You're not a channel operator");
+	}
+	
+	Message errUserNotInChannel (const std::string &nick, const std::string &channelName)
+	{
+		return Message ().setReplyCode (441).pushArg (nick).pushArg (channelName).pushSuffix ("They aren't on that channel");
 	}
 }

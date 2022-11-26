@@ -67,13 +67,14 @@ public:
 	uint16_t getPort () const;
 
 	// Commands
+	void partUser (User &u, Channel &channel, User *target, const std::string &reason = "");
+
 	void nick (User &u, const Message &msg);
 	void user (User &u, const Message &msg);
 	void quit (User &u, const Message &msg);
 	void join (User &u, const Message &msg);
 	void ping (User &u, const Message &msg);
 	void pong (User &u, const Message &msg);
-	void kill (User &u, const Message &msg);
 	void pass(User &u, const Message &msg);
 	void list(User &u, const Message &msg);
 	void part (User &u, const Message &msg);
@@ -83,6 +84,9 @@ public:
 	void notice (User &u, const Message &msg);
 	void invite (User &u, const Message &msg);
 	void mode (User &u, const Message &msg);
+	void topic (User &u, const Message &msg);
+	void away (User &u, const Message &msg);
+	void kick (User &u, const Message &msg);
 
 private:
 	Server (const Server &);

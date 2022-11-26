@@ -2,6 +2,7 @@
 #include "Reply.hpp"
 
 #include <vector>
+#include <signal.h>
 
 Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isRunning(true), _users(), _channels (), _commands()
 {
@@ -11,7 +12,6 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isR
 	_commands["CAP"] = NULL;
 	_commands["JOIN"] = &Server::join;
 	_commands["PING"] = &Server::ping;
-	_commands["KILL"] = &Server::kill;
 	_commands["PONG"] = &Server::pong;
 	_commands["PASS"] = &Server::pass;
 	_commands["LIST"] = &Server::list;
@@ -21,6 +21,10 @@ Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isR
 	_commands["NOTICE"] = &Server::notice;
 	_commands["INVITE"] = &Server::invite;
 	_commands["MODE"] = &Server::mode;
+	_commands["TOPIC"] = &Server::topic;
+	_commands["AWAY"] = &Server::away;
+	_commands["KICK"] = &Server::kick;
+	// _commands["ERROR"] = &Server::error;
 }
 
 Server::Server(const Server &) {}
@@ -46,10 +50,11 @@ bool Server::init(uint16_t port, std::string password)
 
 	int opt_val = 1;
 	::setsockopt(_socketFd, SOL_SOCKET, SO_REUSEPORT, &opt_val, sizeof(opt_val));
-
 	_isRunning = true;
 
 	_password = password;
+	
+	::signal(SIGPIPE, SIG_IGN);	// Ignore sigpipes to prevent the server from quitting unexpectedly on connection close
 
 	return true;
 }
@@ -164,7 +169,7 @@ void Server::processReceivedMessages()
 				continue;
 			}
 
-			std::cout << "Received '" << msg.stringify() << "'" << std::endl;
+			std::cout << "Received from " << it->nickname << " '" << msg.stringify() << "'" << std::endl;
 
 			executeCommand(*it, msg);
 		}
@@ -322,7 +327,7 @@ void	Server::testPings()
 
 		if (it->lastPong < it->lastPing && now - it->lastPing > PONG_DELAY)
 		{
-			//@TODO: Reply kill
+			reply (*it, Reply::kill ("PONG reply timeout"));
 			disconnect(*it);
 		}
 	}

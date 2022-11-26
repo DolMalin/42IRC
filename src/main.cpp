@@ -37,8 +37,8 @@ int main (int argc, char **args)
 		server.pollUserEvents (POLL_TIMEOUT);
 		server.receiveDataFromUsers ();
 		server.processReceivedMessages ();
-		server.removeEmptyChannels ();
 		server.removeDisconnectedUsers ();
+		server.removeEmptyChannels ();
 		server.testPings();
 	}
 

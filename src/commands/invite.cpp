@@ -3,8 +3,6 @@
 
 void Server::invite (User &u, const Message &msg)
 {
-	// @Todo: RPL_AWAY
-
 	if (msg.argsCount () < 2)
 	{
 		reply (u, Reply::errNeedMoreParams (msg.command ()));
@@ -41,5 +39,11 @@ void Server::invite (User &u, const Message &msg)
 	}
 
 	channel->addInvite (nickname);
-	forward (u, *user, Reply::inviting (u.nickname, nickname, channelName));
+
+	Message inviting = Reply::inviting (u.nickname, nickname, channelName);
+	forward (u, *user, inviting);
+	reply (u, inviting);
+
+	if (user->isAway)
+		reply (u, Reply::away (user->nickname, user->awayMessage));
 }
