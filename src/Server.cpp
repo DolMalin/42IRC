@@ -2,6 +2,7 @@
 #include "Reply.hpp"
 
 #include <vector>
+#include <signal.h>
 
 Server::Server(int maxUsers) : _socketFd(-1), _addr(), _maxUsers(maxUsers), _isRunning(true), _users(), _channels (), _commands()
 {
@@ -48,10 +49,11 @@ bool Server::init(uint16_t port, std::string password)
 
 	int opt_val = 1;
 	::setsockopt(_socketFd, SOL_SOCKET, SO_REUSEPORT, &opt_val, sizeof(opt_val));
-
 	_isRunning = true;
 
 	_password = password;
+	
+	::signal(SIGPIPE, SIG_IGN);	// Ignore sigpipes to prevent the server from quitting unexpectedly on connection close
 
 	return true;
 }
