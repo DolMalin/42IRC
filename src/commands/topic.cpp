@@ -11,7 +11,7 @@ void Server::topic (User &u, const Message &msg)
 	
 	const std::string &channelName = msg.arg (0);
 	Channel *chan = findChannelByName (channelName);
-	if (!chan)
+	if (!chan || chan->modes.isSecret)
 	{
 		reply (u, Reply::errNoSuchChannel (channelName));
 		return;
