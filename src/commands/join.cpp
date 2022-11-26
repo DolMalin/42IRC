@@ -83,7 +83,7 @@ void Server::join (User &u, const Message &msg)
 		// Create channel if it does not exist
 		if (!chan)
 		{
-			chan = addChannel (name, "Newly created channel");
+			chan = addChannel (name, "");
 			if (i < keys.size ())
 				chan->key = keys[i];
 	
@@ -97,7 +97,12 @@ void Server::join (User &u, const Message &msg)
 		}
 
 		forwardToChannel (u, *chan, msg);
-		reply (u, Reply::topic (u.nickname, name, chan->topic));
+
+		if (chan->topic.empty ())
+			reply (u, Reply::noTopic (u.nickname, name));
+		else
+			reply (u, Reply::topic (u.nickname, name, chan->topic));
+
 		reply (u, Reply::nameReply (*chan));
 	}
 
