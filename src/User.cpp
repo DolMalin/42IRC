@@ -33,7 +33,13 @@ ssize_t User::receiveBytes ()
 		if (bytesRead < 0 && (errno == EWOULDBLOCK || errno == EAGAIN))
 			break;
 
-		if (bytesRead <= 0)	// @Todo: this might be an error if bytesRead < 0
+		if (bytesRead < 0)
+		{
+			std::cerr << "recv error for " << getAddressAsString () << std::endl;
+			break;
+		}
+
+		if (bytesRead == 0)
 			break;
 
 		lastReceivedBytes.append (buffer, (size_t)bytesRead);
