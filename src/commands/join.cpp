@@ -78,6 +78,9 @@ void Server::join (User &u, const Message &msg)
 				reply (u, Reply::errInviteOnlyChan (name));
 				continue;
 			}
+
+			if (chan->findUser (&u) != chan->joinedUsers.end ())
+				continue;
 		}
 
 		// Create channel if it does not exist
