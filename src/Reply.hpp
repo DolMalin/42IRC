@@ -10,6 +10,7 @@ namespace Reply
 	Message error (const std::string &msg);
 	Message ping (const std::string &server);
 	Message pong (const std::string &server);
+	Message noTopic (const std::string &nick, const std::string &channel_name);
 	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic);
 	Message kill(const std::string &msg);
 	Message inviting (const std::string &by, const std::string &nickname, const std::string &channelName);

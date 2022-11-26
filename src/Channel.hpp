@@ -36,7 +36,7 @@ public:
 		bool isQuiet : 1;	// q // @Todo
 		bool isPrivate : 1;	// p // @Todo
 		bool isSecret : 1;	// s // @Todo
-		bool hasTopic : 1;	// t // @Todo
+		bool isTopicChangeable : 1;	// t // @Todo
 
 		Modes ();
 

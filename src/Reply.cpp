@@ -32,6 +32,11 @@ namespace Reply
 		return Message ().setIsRequest(true).setCommand("KILL").pushSuffix(msg);
 	}
 
+	Message noTopic (const std::string &nick, const std::string &channel_name)
+	{
+		return Message ().setReplyCode (331).pushArg (nick).pushArg (channel_name).pushSuffix ("No topic is set");
+	}
+
 	Message topic (const std::string &nick, const std::string &channel_name, const std::string &topic)
 	{
 		return Message ().setReplyCode (332).pushArg (nick).pushArg (channel_name).pushSuffix (topic);
