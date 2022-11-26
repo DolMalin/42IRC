@@ -166,7 +166,7 @@ void Server::processReceivedMessages()
 				continue;
 			}
 
-			std::cout << "Received '" << msg.stringify() << "'" << std::endl;
+			std::cout << "Received from " << it->nickname << " '" << msg.stringify() << "'" << std::endl;
 
 			executeCommand(*it, msg);
 		}
