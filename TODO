@@ -1,6 +1,10 @@
 * Handle secret channels in LIST [X], NAMES [X] and TOPIC [X]
 * Handle secret and private channels in WHOIS
 * Bug: Server ends unexpectedly in some cases when clients disconnects [X?]
+* Server operators
+* Banning people
+* Handle other messages on registration
+* Timestamps in logs
 
 # Commands:
 * PASS [X]
@@ -21,11 +25,12 @@
 * KICK [X]
 
 * MODE
-
-* WHO
-* WHOIS
-* WHOWAS
+	- I -> RPL_INVITELIST
+	- User modes not necessary
 
 Maybe:
 * OPER
 * KILL
+* WHO
+* WHOIS
+* WHOWAS
