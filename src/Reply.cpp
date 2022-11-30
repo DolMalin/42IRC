@@ -100,19 +100,19 @@ namespace Reply
 		return Message ().setReplyCode (366).pushArg (nick).pushArg (channel).pushSuffix ("End of NAMES list");
 	}
 
+	Message list(const std::string &nickname, const std::string &name, const std::string &topic)
+	{
+		return Message ().setReplyCode(322).pushArg(nickname).pushArg(name).pushSuffix(topic);
+	}
+
+	Message listEnd(const std::string &nickname)
+	{
+		return Message ().setReplyCode(323).pushArg(nickname).pushSuffix("End of LIST");
+	}
+
 	/* 
 		@TODO: replace dolmalin with nickname
 	*/
-	Message list(const std::string &name, const std::string &topic)
-	{
-		return Message ().setReplyCode(322).pushArg("dolmalin").pushArg(name).pushSuffix(topic);
-	}
-
-	Message listEnd()
-	{
-		return Message ().setReplyCode(323).pushArg("dolmalin").pushSuffix("End of LIST");
-	}
-
 	Message channelModeIs(const std::string &name, const std::string &modes)
 	{
 		if (!modes.empty())

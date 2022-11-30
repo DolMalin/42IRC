@@ -20,8 +20,8 @@ namespace Reply
 
 	Message nameReply (const Channel &channel);
 	Message endOfNames (const std::string &nick, const std::string &channel);
-	Message list(const std::string &name, const std::string &topic);
-	Message listEnd();
+	Message list(const std::string &nickname, const std::string &name, const std::string &topic);
+	Message listEnd(const std::string &nickname);
 	Message channelModeIs(const std::string &name, const std::string &modes);
 	
 	Message errUnknownMode(const std::string &channel, const std::string &mode);
