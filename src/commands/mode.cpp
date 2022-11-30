@@ -4,16 +4,9 @@
 
 void Server::mode(User &u, const Message &msg)
 {
-	Channel *c = findChannelByName(msg.arg(0));
-	Channel::UserIt it = c->findUser(&u);
 	std::string channelModesCharset = "imnqpstk";
-	std::string userModesCharset = "oktl";
-
-	if (msg.argsCount() < 1)
-	{
-		reply(u, Reply::errNeedMoreParams(msg.command()));
-		return;
-	}
+	std::string userModesCharset = "oktlav";
+	Channel *chan = findChannelByName(msg.arg(0));
 
 	if (!findChannelByName(msg.arg(0)))
 	{
@@ -21,15 +14,23 @@ void Server::mode(User &u, const Message &msg)
 		return ;
 	}
 
-	if (it == c->joinedUsers.end())
+	Channel::UserIt it = chan->findUser(&u);
+
+	if (msg.argsCount() < 1)
 	{
-		reply(u, Reply::errUserNotInChannel(u.nickname, c->name));
+		reply(u, Reply::errNeedMoreParams(msg.command()));
+		return;
+	}
+
+	if (it == chan->joinedUsers.end())
+	{
+		reply(u, Reply::errUserNotInChannel(u.nickname, chan->name));
 		return ;
 	}
 
 	if (!(*it).flags.isOperator)
 	{
-		reply(u, Reply::errChanOpIsNeeded(c->name));
+		reply(u, Reply::errChanOpIsNeeded(chan->name));
 		return ;
 	}
 
@@ -38,33 +39,43 @@ void Server::mode(User &u, const Message &msg)
 		if (msg.arg(i).at(0) != '+' && msg.arg(i).at(0) != '-')
 			return ;
 		char lastOperator = msg.arg(i).at(0);
+
 		for (size_t j = 1; j < msg.arg(i).length(); j++)
 		{
-			if (msg.arg(i).at(j) == '+' || msg.arg(i).at(j) == '-')
+			const char c = msg.arg(i).at(j);
+
+			if (c == '+' || c == '-')
 			{
-				lastOperator = msg.arg(i).at(j);
+				lastOperator = c;
 				continue;
 			}
-			if ((userModesCharset + channelModesCharset).find(msg.arg(i).at(j)) == std::string::npos)
+			
+			if ((userModesCharset + channelModesCharset).find(c) == std::string::npos)
 			{
-				reply(u, Reply::errUnknownMode(c->name, std::string(&msg.arg(i).at(j), 1)));
+				reply(u, Reply::errUnknownMode(chan->name, std::string(&c, 1)));
 				continue ;
 			}
 
-			if (channelModesCharset.find(msg.arg(i).at(j)) != std::string::npos)
-				c->setMode(msg.arg(i).at(j), lastOperator);
+			if (channelModesCharset.find(c) != std::string::npos)
+				chan->setMode(c, lastOperator);
 			else
 			{
 				if (i + 1 >= msg.argsCount())
+				{
 					reply(u, Reply::errNeedMoreParams(msg.command()));
-				else if (!findUserByNickname(msg.arg(i + 1)))
-					reply(u, Reply::errUserNotInChannel(c->name, msg.arg(i + 1)));
+					return ;
+				}
+				else if (std::string("ktl").find(c) == std::string::npos && !findUserByNickname(msg.arg(i + 1)))
+					reply(u, Reply::errUserNotInChannel(chan->name, msg.arg(i + 1)));
 				else
-					c->setMode(msg.arg(i).at(j), lastOperator, msg.arg(i + 1));
+				{
+					chan->setMode(c, lastOperator, msg.arg(i + 1));
+					forwardToChannel(u, *chan, Reply::updateUserMode(chan->name, msg.arg(i + 1),  std::string(&lastOperator, 1) + c));
+				}
 			}
 		}
 	}
-	forwardToChannel(u, *c, Reply::channelModeIs(c->name, c->modeToString()));
+	forwardToChannel(u, *chan, Reply::channelModeIs(chan->name, chan->modeToString()));
 }
-// if (msg.arg(i).at(j) == 'k' && !c->key.empty())
+// if (c == 'k' && !c->key.empty())
 // 	reply(u, Reply::errKeyset(c->name));

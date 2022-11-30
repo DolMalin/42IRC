@@ -38,7 +38,6 @@ public:
 		bool isSecret : 1;	// s
 		bool isTopicChangeable : 1;	// t
 
-	//+l
 		Modes ();
 	};
 

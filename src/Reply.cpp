@@ -32,6 +32,12 @@ namespace Reply
 		return Message ().setIsRequest(true).setCommand("KILL").pushSuffix(msg);
 	}
 
+	Message updateUserMode(const std::string &channel, const std::string &nickname, const std::string update)
+	{
+		return Message ().setIsRequest(true).setCommand("MODE").pushArg(channel).pushArg(update).pushArg(nickname);
+	}
+
+
 	Message noTopic (const std::string &nick, const std::string &channel_name)
 	{
 		return Message ().setReplyCode (331).pushArg (nick).pushArg (channel_name).pushSuffix ("No topic is set");
@@ -102,7 +108,10 @@ namespace Reply
 
 	Message list(const std::string &nickname, const std::string &name, const std::string &topic)
 	{
-		return Message ().setReplyCode(322).pushArg(nickname).pushArg(name).pushSuffix(topic);
+		if (!topic.empty())
+			return Message ().setReplyCode(322).pushArg(nickname).pushArg(name).pushSuffix(topic);
+		else
+			return Message ().setReplyCode(322).pushArg(nickname).pushArg(name).pushSuffix("No topic set");
 	}
 
 	Message listEnd(const std::string &nickname)
