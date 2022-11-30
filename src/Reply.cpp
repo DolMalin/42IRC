@@ -115,7 +115,7 @@ namespace Reply
 		if (!modes.empty())
 			return Message ().setReplyCode(324).pushArg("dolmalin").pushArg(name).pushArg(modes);
 		else
-			return Message ().setReplyCode(324).pushArg(name);
+			return Message ().setReplyCode(324).pushArg("dolmalin").pushArg(name);
 	}
 
 	Message errUnknownMode(const std::string &channel, const std::string &mode)
