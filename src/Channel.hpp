@@ -8,10 +8,9 @@ class Channel
 public:
 	struct UserFlags
 	{
-		bool isAway : 1; // a // @odo
-		bool isOperator : 1;	// o // @Todo
-		bool hasVoicePriviledge : 1;	// v // @Todo
-
+		bool isAway : 1; // a
+		bool isOperator : 1;	// o
+		bool hasVoicePriviledge : 1;	// v
 	
 		UserFlags ();
 	
@@ -30,13 +29,13 @@ public:
 	struct Modes
 	{
 		//bool isAnonymous : 1;	// Not handled for # channels
-		bool isInviteOnly : 1;	// i // @Todo
-		bool isModerated : 1;	// m // @Todo
-		bool acceptMessagesFromOutside : 1;	// n // @Todo
-		bool isQuiet : 1;	// q // @Todo
-		bool isPrivate : 1;	// p // @Todo
-		bool isSecret : 1;	// s // @Todo
-		bool isTopicChangeable : 1;	// t // @Todo
+		bool isInviteOnly : 1;	// i
+		bool isModerated : 1;	// m
+		bool acceptMessagesFromOutside : 1;	// n
+		bool isQuiet : 1;	// q
+		bool isPrivate : 1;	// p
+		bool isSecret : 1;	// s
+		bool isTopicChangeable : 1;	// t
 
 
 		Modes ();

@@ -17,10 +17,6 @@ static bool isValidNickname(const std::string &nick)
 
 void Server::nick(User &u, const Message &msg)
 {
-	// @Todo: reply ERR_NICKCOLLISION
-	// @Todo: reply ERR_UNAVAILRESOURCE
-	// @Todo: reply ERR_RESTRICTED
-
 	bool wasRegistered = u.isRegistered ();
 
 	if (msg.argsCount() < 1)

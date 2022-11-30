@@ -10,9 +10,9 @@ void Server::list(User &u, const Message &msg)
 			if (it->modes.isSecret)
 				continue;
 
-			reply(u, Reply::list((*it).name, (*it).topic));
+			reply(u, Reply::list(u.nickname, (*it).name, (*it).topic));
 		}
-		reply(u, Reply::listEnd());
+		reply(u, Reply::listEnd(u.nickname));
 		return ;
 	}
 
@@ -23,7 +23,7 @@ void Server::list(User &u, const Message &msg)
 		if (!c || c->modes.isSecret)
 			reply(u, Reply::errNoSuchChannel(*it));
 		else
-			reply(u, Reply::list(c->name, c->topic));
+			reply(u, Reply::list(u.nickname, c->name, c->topic));
 	}
-	reply(u, Reply::listEnd());
+	reply(u, Reply::listEnd(u.nickname));
 }
