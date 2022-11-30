@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include "User.hpp"
+#include <string>
 
 class Channel
 {
@@ -12,7 +13,6 @@ public:
 		bool isOperator : 1;	// o // @Todo
 		bool hasVoicePriviledge : 1;	// v // @Todo
 
-	
 		UserFlags ();
 	
 		bool fromString (const std::string &str);	// @Todo
@@ -38,7 +38,7 @@ public:
 		bool isSecret : 1;	// s // @Todo
 		bool isTopicChangeable : 1;	// t // @Todo
 
-
+	//+l
 		Modes ();
 	};
 
@@ -69,6 +69,7 @@ public:
 	void addInvite (const std::string &nickname);
 	bool useInvite (const std::string &nickname);
 	std::string modeToString();
-	void setMode(const char mode, bool val);
+	void setMode(const char mode, char c);
+	void setMode(const char mode, char c, const std::string &arg);
 
 };

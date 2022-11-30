@@ -47,4 +47,6 @@ namespace Reply
 	Message errCannotSendToChan (const std::string &channel);
 	Message errChanOpIsNeeded (const std::string &channel);
 	Message errUserNotInChannel (const std::string &nick, const std::string &channelName);
+	Message errKeyset(const std::string &channel);
+	Message errUserNotInChannel(const std::string &nick, const std::string &channel);
 }

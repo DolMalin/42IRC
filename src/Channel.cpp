@@ -108,8 +108,10 @@ bool Channel::useInvite (const std::string &nickname)
 	return true;
 }
 
-void Channel::setMode(const char mode, bool val)
+void Channel::setMode(const char mode, char c)
 {
+	bool val = c == '+' ? true : false;
+
 	switch(mode)
 	{
 		case 'i':
@@ -133,9 +135,36 @@ void Channel::setMode(const char mode, bool val)
 		case 't':
 			modes.isTopicChangeable = val;
 			break;
+	}
+}
+
+void Channel::setMode(const char mode, char c, const std::string &arg)
+{
+	User *u = findUserByNickname(arg);
+	UserIt it = findUser(u);
+	bool val = c == '+' ? true : false;
+
+	switch(mode)
+	{
+		case 'a':
+			(*it).flags.isAway = val;
+			break;
+		case 'o':
+			(*it).flags.isOperator = val;
+			break;
+		case 'v':
+			(*it).flags.hasVoicePriviledge = val;
+			break;
+		// @TODO: code stoi LOL
+		// case 'l':
+		// 	userLimit = std::stoi(arg);
+		// 	break;
 		case 'k':
-			if (val == false)
+			if (val)
+				key = arg;
+			else
 				key.clear();
+			break;
 	}
 }
 

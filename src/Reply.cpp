@@ -105,7 +105,10 @@ namespace Reply
 	*/
 	Message list(const std::string &name, const std::string &topic)
 	{
-		return Message ().setReplyCode(322).pushArg("dolmalin").pushArg(name).pushSuffix(topic);
+		if (!topic.empty())
+			return Message ().setReplyCode(322).pushArg("dolmalin").pushArg(name).pushSuffix(topic);
+		else
+			return Message ().setReplyCode(322).pushArg("dolmalin").pushArg(name).pushSuffix("No topic is set");
 	}
 
 	Message listEnd()
@@ -234,4 +237,10 @@ namespace Reply
 	{
 		return Message ().setReplyCode (441).pushArg (nick).pushArg (channelName).pushSuffix ("They aren't on that channel");
 	}
+
+	Message errKeyset(const std::string &channel)
+	{
+		return Message ().setReplyCode(467).pushArg(channel).pushSuffix("Channel key already set");
+	}
+
 }
