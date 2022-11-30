@@ -100,20 +100,14 @@ namespace Reply
 		return Message ().setReplyCode (366).pushArg (nick).pushArg (channel).pushSuffix ("End of NAMES list");
 	}
 
-	/* 
-		@TODO: replace dolmalin with nickname
-	*/
-	Message list(const std::string &name, const std::string &topic)
+	Message list(const std::string &nickname, const std::string &name, const std::string &topic)
 	{
-		if (!topic.empty())
-			return Message ().setReplyCode(322).pushArg("dolmalin").pushArg(name).pushSuffix(topic);
-		else
-			return Message ().setReplyCode(322).pushArg("dolmalin").pushArg(name).pushSuffix("No topic is set");
+		return Message ().setReplyCode(322).pushArg(nickname).pushArg(name).pushSuffix(topic);
 	}
 
-	Message listEnd()
+	Message listEnd(const std::string &nickname)
 	{
-		return Message ().setReplyCode(323).pushArg("dolmalin").pushSuffix("End of LIST");
+		return Message ().setReplyCode(323).pushArg(nickname).pushSuffix("End of LIST");
 	}
 
 	Message channelModeIs(const std::string &name, const std::string &modes)
