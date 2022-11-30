@@ -52,9 +52,9 @@ void Server::nick(User &u, const Message &msg)
 		}
 	}
 
-	reply (u, msg);	// Make sure the user itself is notified of the nick change
 
 	u.nickname = nick;
+	reply (u, msg);	// Make sure the user itself is notified of the nick change
 	if (!wasRegistered && u.isRegistered ())
 		reply (u, Reply::welcome (u.nickname, u.username, u.getAddressAsString ()));
 }
