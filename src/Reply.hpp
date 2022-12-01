@@ -17,7 +17,7 @@ namespace Reply
 	Message away (const std::string &nick, const std::string &awayMessage);
 	Message unaway ();
 	Message nowAway ();
-	Message updateUserMode(const std::string &channel, const std::string &nickname, const std::string update);
+	Message updateMode(const std::string &channel, const std::string &nickname, const std::string update);
 
 	Message nameReply (const Channel &channel);
 	Message endOfNames (const std::string &nick, const std::string &channel);

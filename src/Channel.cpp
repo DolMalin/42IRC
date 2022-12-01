@@ -135,6 +135,11 @@ void Channel::setMode(const char mode, char c)
 		case 't':
 			modes.isTopicChangeable = val;
 			break;
+		case 'k':
+			if (!val)
+				key.clear();
+			break;
+
 	}
 }
 

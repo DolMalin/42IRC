@@ -32,7 +32,7 @@ namespace Reply
 		return Message ().setIsRequest(true).setCommand("KILL").pushSuffix(msg);
 	}
 
-	Message updateUserMode(const std::string &channel, const std::string &nickname, const std::string update)
+	Message updateMode(const std::string &channel, const std::string &nickname, const std::string update)
 	{
 		return Message ().setIsRequest(true).setCommand("MODE").pushArg(channel).pushArg(update).pushArg(nickname);
 	}
