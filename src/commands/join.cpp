@@ -96,7 +96,7 @@ void Server::join (User &u, const Message &msg)
 
 		if (!chan->modes.isQuiet)
 		{
-			Message singleJoinMsg = Message ().setIsRequest (true).setCommand ("JOIN").pushArg (chan->name);
+			Message singleJoinMsg = Message ().setCommand ("JOIN").pushArg (chan->name);
 			forwardToChannel (u, *chan, singleJoinMsg);
 		}
 

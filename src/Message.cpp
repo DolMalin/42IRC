@@ -98,6 +98,7 @@ Message &Message::setReplyCode(uint16_t replyCode)
 {
 	assert (replyCode <= 502);
 
+	this->_isRequest = false;
 	this->_replyCode = replyCode;
 	return *this;
 }
@@ -105,6 +106,7 @@ Message &Message::setReplyCode(uint16_t replyCode)
 Message	&Message::pushArg(const std::string &arg)
 {
 	assert (!arg.empty (), "Argument is empty.");
+	assert (!_hasSuffix, "Message has a suffix, no argument can be pushed after a suffix.");
 	assert (_argsCount < 15, "Message cannot have more than 15 arguments.");
 
 	this->_args[this->_argsCount] = arg;
@@ -127,13 +129,8 @@ Message	&Message::setCommand(const std::string &command)
 {
 	assert (!this->_command.empty() || !command.empty());
 
+	this->_isRequest = true;
 	this->_command = command;
-	return *this;
-}
-
-Message &Message::setIsRequest(bool isRequest)
-{
-	this->_isRequest = isRequest;
 	return *this;
 }
 

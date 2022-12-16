@@ -11,30 +11,30 @@ namespace Reply
 	Message error(const std::string &msg)
 	{
 		if (!msg.empty())
-			return Message ().setIsRequest(true).setCommand("ERROR").pushSuffix(msg);
+			return Message ().setCommand("ERROR").pushSuffix(msg);
 		else 
-			return Message ().setIsRequest(true).setCommand("ERROR");
+			return Message ().setCommand("ERROR");
 	}
 
 	Message ping(const std::string &server)
 	{
-		return Message ().setIsRequest(true).setCommand("PING").pushArg(server);
+		return Message ().setCommand("PING").pushArg(server);
 	}
 
 	Message pong(const std::string &server)
 	{
-		return Message ().setIsRequest(true).setCommand("PONG").pushArg(server);
+		return Message ().setCommand("PONG").pushArg(server);
 	}
 
 
 	Message kill (const std::string &msg)
 	{
-		return Message ().setIsRequest(true).setCommand("KILL").pushSuffix(msg);
+		return Message ().setCommand("KILL").pushSuffix(msg);
 	}
 
 	Message updateMode(const std::string &channel, const std::string &nickname, const std::string update)
 	{
-		return Message ().setIsRequest(true).setCommand("MODE").pushArg(channel).pushArg(update).pushArg(nickname);
+		return Message ().setCommand("MODE").pushArg(channel).pushArg(update).pushArg(nickname);
 	}
 
 

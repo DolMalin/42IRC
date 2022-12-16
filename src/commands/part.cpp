@@ -7,7 +7,7 @@ void Server::partUser (User &u, Channel &channel, User *target, const std::strin
 
 	if (channel.removeUser (target))
 	{
-		Message partMsg = Message ().setIsRequest (true).setCommand ("PART").pushArg (channel.name);
+		Message partMsg = Message ().setCommand ("PART").pushArg (channel.name);
 		if (!reason.empty ())
 			partMsg.pushSuffix (reason);
 
