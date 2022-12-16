@@ -14,15 +14,13 @@
 # define debugBreak() asm ("int3")
 #endif
 
-#ifndef assert
+#undef assert
 
-# define assert(expr, ...) {\
+#define assert(expr, ...) {\
 	if (!(expr)) {\
 		std::cout << "Assertion failed at file " << __FILE__ << ", line " << __LINE__ << ": (" #expr ")\n";\
 		std::cout << "" __VA_ARGS__ << std::endl;\
 		debugBreak ();\
 	} }
-	
-#endif
 
 std::vector<std::string> splitString (const std::string &str, const std::string &delim);
