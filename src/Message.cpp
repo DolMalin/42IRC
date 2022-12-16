@@ -22,36 +22,45 @@ bool Message::parseRequest(const std::string &str)
 		return false;
 
 	std::string output = str;
-	output += " ";
 
-	size_t	pos = 0;
-	bool	commandSet = false;
-	while ((pos = output.find(" ")) != std::string::npos)
+	bool commandSet = false;
+	while (!output.empty ())
 	{
-		std::string token = output.substr(0, pos);
-
-		if (token.empty())
+		size_t pos = output.find (" ");
+		if (pos == 0)
 		{
-			output.erase(0, pos + 1);
+			output.erase (0, 1);
 			continue;
 		}
+
 		if (_argsCount >= 15)
 			return false;
-		else if (token.at(0) == ':' && _prefix.empty() && !commandSet)
-			_prefix = token.substr(1);
+
+		if (pos == std::string::npos)
+			pos = output.size ();
+		
+		if (output.at(0) == ':' && _prefix.empty() && !commandSet)
+		{
+			_prefix.assign (output, 1, pos - 1);
+		}
 		else if (!commandSet)
 		{
-			_command = token;
+			_command.assign (output, 0, pos);
 			commandSet = true;
 		}
-		else if (token.at(0) == ':')
+		else if (output.at(0) == ':')
 		{
-			pushArg (output.substr(1));
+			_args[_argsCount].assign (output, 1);
+			_argsCount += 1;
 			_hasSuffix = true;
+
 			break;
 		}
 		else
-			pushArg (token);
+		{
+			_args[_argsCount].assign (output, 0, pos);
+			_argsCount += 1;
+		}
 		
 		output.erase(0, pos + 1);
 	}
