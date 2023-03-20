@@ -50,11 +50,12 @@ void Server::nick(User &u, const Message &msg)
 
 			forwardToChannel (u, *it, msg, false);
 		}
+
+		// Make sure the user itself is notified of the nick change
+		reply (u, msg);
 	}
 
-
 	u.nickname = nick;
-	reply (u, msg);	// Make sure the user itself is notified of the nick change
 	if (!wasRegistered && u.isRegistered ())
 		reply (u, Reply::welcome (u.nickname, u.username, u.getAddressAsString ()));
 }
