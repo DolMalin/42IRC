@@ -36,6 +36,9 @@ bool Server::init(uint16_t port, std::string password)
 	if (_socketFd < 0)
 		return false;
 
+	int opt_val = 1;
+	::setsockopt(_socketFd, SOL_SOCKET, SO_REUSEADDR, &opt_val, sizeof(opt_val));
+
 	_addr.sin_family = AF_INET;
 	_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	_addr.sin_port = htons(port);
@@ -48,12 +51,10 @@ bool Server::init(uint16_t port, std::string password)
 
 	::listen(_socketFd, _maxUsers);
 
-	int opt_val = 1;
-	::setsockopt(_socketFd, SOL_SOCKET, SO_REUSEPORT, &opt_val, sizeof(opt_val));
 	_isRunning = true;
 
 	_password = password;
-	
+
 	::signal(SIGPIPE, SIG_IGN);	// Ignore sigpipes to prevent the server from quitting unexpectedly on connection close
 
 	return true;
@@ -220,7 +221,7 @@ void Server::reply(User &user, const Message &msg, const std::string &prefix)
 	str.append (msg.stringify());
 
 	std::cout << "Replying to " << user.nickname << " '" << str << "'" << std::endl;
-	
+
 	str.append ("\r\n");
 
 	user.sendBytes (str);
