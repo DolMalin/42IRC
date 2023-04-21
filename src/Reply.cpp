@@ -106,17 +106,19 @@ namespace Reply
 		return Message ().setReplyCode (366).pushArg (nick).pushArg (channel).pushSuffix ("End of NAMES list");
 	}
 
-	Message list(const std::string &nickname, const std::string &name, const std::string &topic)
+	Message list(const std::string &nickname, const std::string &name, const std::string n_users, const std::string &topic)
 	{
 		if (!topic.empty())
-			return Message ().setReplyCode(322).pushArg(nickname).pushArg(name).pushSuffix(topic);
+			return Message ().setReplyCode(322).pushArg(nickname).pushArg(name).pushArg(n_users).pushSuffix(topic);
 		else
-			return Message ().setReplyCode(322).pushArg(nickname).pushArg(name).pushSuffix("No topic set");
+			return Message ().setReplyCode(322).pushArg(nickname).pushArg(name).pushArg(n_users).pushSuffix("No topic set");
 	}
 
 	Message listEnd(const std::string &nickname)
 	{
 		return Message ().setReplyCode(323).pushArg(nickname).pushSuffix("End of LIST");
+		// (void)nickname;
+		// return Message ().setReplyCode(323).pushSuffix("End of /LIST");
 	}
 
 	Message channelModeIs(const std::string &name, const std::string &modes)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Message.hpp"
+#include "common.hpp"
 
 class Channel;
 
@@ -21,7 +22,7 @@ namespace Reply
 
 	Message nameReply (const Channel &channel);
 	Message endOfNames (const std::string &nick, const std::string &channel);
-	Message list(const std::string &nickname, const std::string &name, const std::string &topic);
+	Message list(const std::string &nickname, const std::string &name, const std::string n_users, const std::string &topic);
 	Message listEnd(const std::string &nickname);
 	Message channelModeIs(const std::string &name, const std::string &modes);
 	
