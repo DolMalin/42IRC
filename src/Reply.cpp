@@ -120,11 +120,14 @@ namespace Reply
 	}
 
 	Message channelModeIs(const std::string &name, const std::string &modes)
+	Message channelModeIs(const std::string &nickname, const std::string &name, const std::string &modes)
 	{
 		if (!modes.empty())
-			return Message ().setReplyCode(324).pushArg("dolmalin").pushArg(name).pushArg(modes);
+			return Message ().setReplyCode(324).pushArg(nickname).pushArg(name).pushArg(modes);
 		else
-			return Message ().setReplyCode(324).pushArg("dolmalin").pushArg(name);
+			return Message ().setReplyCode(324).pushArg(nickname).pushArg(name);
+	}
+
 	}
 
 	Message errUnknownMode(const std::string &channel, const std::string &mode)

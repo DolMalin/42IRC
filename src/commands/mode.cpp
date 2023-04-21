@@ -51,7 +51,7 @@ void Server::mode(User &u, const Message &msg)
 				lastOperator = c;
 				continue;
 			}
-			
+
 			if ((userModesArgs + channelModes + channelModesArgs).find(c) == std::string::npos)
 			{
 				reply(u, Reply::errUnknownMode(chan->name, std::string(&c, 1)));
@@ -80,5 +80,5 @@ void Server::mode(User &u, const Message &msg)
 			}
 		}
 	}
-	forwardToChannel(u, *chan, Reply::channelModeIs(chan->name, chan->modeToString()));
+	forwardToChannel(u, *chan, Reply::channelModeIs(u.nickname, chan->name, chan->modeToString()));
 }
