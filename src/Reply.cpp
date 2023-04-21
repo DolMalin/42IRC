@@ -12,7 +12,7 @@ namespace Reply
 	{
 		if (!msg.empty())
 			return Message ().setCommand("ERROR").pushSuffix(msg);
-		else 
+		else
 			return Message ().setCommand("ERROR");
 	}
 
@@ -74,7 +74,7 @@ namespace Reply
 		return Message ().setReplyCode (306).pushSuffix ("You have been marked as being away");
 	}
 
-	Message nameReply (const Channel &chan)
+	Message nameReply (const std::string &nickname, const Channel &chan)
 	{
 		std::string spec;
 		if (chan.modes.isPrivate)
@@ -94,11 +94,11 @@ namespace Reply
 				names.append ("@");
 			else if (it->flags.hasVoicePriviledge)
 				names.append ("+");
-			
+
 			names.append (it->user->nickname);
 		}
 
-		return Message ().setReplyCode (353).pushArg (spec).pushArg (chan.name).pushSuffix (names);
+		return Message ().setReplyCode (353).pushArg (nickname).pushArg (spec).pushArg (chan.name).pushSuffix (names);
 	}
 
 	Message endOfNames (const std::string &nick, const std::string &channel)
@@ -119,7 +119,6 @@ namespace Reply
 		return Message ().setReplyCode(323).pushArg(nickname).pushSuffix("End of LIST");
 	}
 
-	Message channelModeIs(const std::string &name, const std::string &modes)
 	Message channelModeIs(const std::string &nickname, const std::string &name, const std::string &modes)
 	{
 		if (!modes.empty())
@@ -144,7 +143,7 @@ namespace Reply
 	{
 		return Message ().setReplyCode (431).pushSuffix ("No nickname given");
 	}
-	
+
 	Message	errErroneousNickname (const std::string &nick)
 	{
 		return Message ().setReplyCode (432).pushArg (nick).pushSuffix ("Erroneous nickname");
@@ -238,7 +237,7 @@ namespace Reply
 	{
 		return Message ().setReplyCode (482).pushArg (channel).pushSuffix ("You're not a channel operator");
 	}
-	
+
 	Message errUserNotInChannel (const std::string &nick, const std::string &channelName)
 	{
 		return Message ().setReplyCode (441).pushArg (nick).pushArg (channelName).pushSuffix ("They aren't on that channel");
