@@ -11,7 +11,7 @@ void Server::names(User &u, const Message &msg)
 			if (it->modes.isSecret)
 				continue;
 
-			reply(u, Reply::nameReply(*it));
+			reply(u, Reply::nameReply(u.nickname, *it));
 			if (it != _channels.begin())
 				result = result.append(",").append((*it).name);
 			else
@@ -31,7 +31,7 @@ void Server::names(User &u, const Message &msg)
 		{
 			std::string result;
 
-			reply(u, Reply::nameReply(*c));
+			reply(u, Reply::nameReply(u.nickname, *c));
 			if (it != channels.begin())
 				result = result.append(",").append((*c).name);
 			else

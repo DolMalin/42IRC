@@ -49,6 +49,9 @@ void Server::mode(User &u, const Message &msg)
 			if (c == '+' || c == '-')
 				lastOperator = c;
 			else if ((userModesArgs + channelModes + channelModesArgs).find(c) == std::string::npos)
+				continue;
+
+			if ((userModesArgs + channelModes + channelModesArgs).find(c) == std::string::npos)
 				reply(u, Reply::errUnknownMode(chan->name, std::string(&c, 1)));
 			else if (channelModes.find(c) != std::string::npos || (c == 'k' && lastOperator == '-'))
 				chan->setMode(c, lastOperator);
@@ -70,5 +73,5 @@ void Server::mode(User &u, const Message &msg)
 			}
 		}
 	}
-	forwardToChannel(u, *chan, Reply::channelModeIs(chan->name, chan->modeToString()));
+	forwardToChannel(u, *chan, Reply::channelModeIs(u.nickname, chan->name, chan->modeToString()));
 }

@@ -106,7 +106,7 @@ void Server::join (User &u, const Message &msg)
 			reply (u, Reply::topic (u.nickname, name, chan->topic));
 
 		if (!chan->modes.isQuiet)
-			reply (u, Reply::nameReply (*chan));
+			reply (u, Reply::nameReply (u.nickname, *chan));
 	}
 
 	reply (u, Reply::endOfNames (u.nickname, msg.arg (0)));

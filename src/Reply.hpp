@@ -20,13 +20,15 @@ namespace Reply
 	Message nowAway ();
 	Message updateMode(const std::string &channel, const std::string &nickname, const std::string update);
 
-	Message nameReply (const Channel &channel);
+	Message nameReply (const std::string &nickname, const Channel &channel);
 	Message endOfNames (const std::string &nick, const std::string &channel);
 	Message list(const std::string &nickname, const std::string &name, const std::string n_users, const std::string &topic);
 	Message listEnd(const std::string &nickname);
-	Message channelModeIs(const std::string &name, const std::string &modes);
-	
-	
+	Message channelModeIs(const std::string &nickname, const std::string &name, const std::string &modes);
+
+	Message whoReply (const std::string &channelName, const std::string &userName, const std::string &nickname, const std::string &flags);
+	Message endOfWho (const std::string &nickname, const std::string &channelName);
+
 	Message errUnknownMode(const std::string &channel, const std::string &mode);
 	Message errUnknownCommand (const std::string &command);
 	Message	errNoNicknameGiven ();
