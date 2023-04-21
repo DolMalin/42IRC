@@ -176,6 +176,13 @@ void Server::processReceivedMessages()
 			executeCommand(*it, msg);
 		}
 	}
+
+	// Flush every user
+	for (UserIt it = _users.begin (); it != _users.end (); it++)
+	{
+		if (!it->isDisconnected)
+			it->flush ();
+	}
 }
 
 void Server::disconnect(User &user)
