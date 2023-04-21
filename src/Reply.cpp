@@ -127,6 +127,14 @@ namespace Reply
 			return Message ().setReplyCode(324).pushArg(nickname).pushArg(name);
 	}
 
+	Message whoReply (const std::string &channelName, const std::string &userName, const std::string &nickname, const std::string &flags)
+	{
+		return Message ().setReplyCode (352).pushArg (channelName).pushArg (userName).pushArg ("ircserv").pushArg ("serv").pushArg (nickname).pushArg (flags).pushSuffix ("0 realname");
+	}
+
+	Message endOfWho (const std::string &nickname, const std::string &channelName)
+	{
+		return Message ().setReplyCode (315).pushArg (nickname).pushArg (channelName).pushSuffix ("End of WHO list");
 	}
 
 	Message errUnknownMode(const std::string &channel, const std::string &mode)

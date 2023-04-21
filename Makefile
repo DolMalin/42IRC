@@ -5,7 +5,7 @@ INCLUDE_DIRS = src
 SRC_FILES = Server.cpp Message.cpp User.cpp Channel.cpp Reply.cpp\
 	common.cpp\
 	commands/pass.cpp commands/nick.cpp commands/user.cpp\
-	commands/join.cpp commands/part.cpp commands/topic.cpp commands/ping_pong.cpp commands/quit.cpp\
+	commands/join.cpp commands/part.cpp commands/topic.cpp commands/ping_pong.cpp commands/quit.cpp commands/who.cpp\
 	commands/list.cpp commands/names.cpp commands/msg.cpp commands/invite.cpp commands/away.cpp commands/kick.cpp commands/mode.cpp
 
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
@@ -20,9 +20,9 @@ all: $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(DEPENDENCIES)
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXX_FLAGS) -c $< -o $@ 
+	$(CXX) $(CXX_FLAGS) -c $< -o $@
 
-$(NAME): obj/main.o $(addprefix $(OBJ_DIR)/,$(OBJ_FILES)) 
+$(NAME): obj/main.o $(addprefix $(OBJ_DIR)/,$(OBJ_FILES))
 	$(CXX) $^ -o $@
 
 test_client: obj/test_client.o $(addprefix $(OBJ_DIR)/,$(OBJ_FILES))
