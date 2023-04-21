@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <vector>
+#include <sstream>
 
 #ifndef debugBreak
 # define debugBreak() asm ("int3")
@@ -24,3 +25,4 @@
 	} }
 
 std::vector<std::string> splitString (const std::string &str, const std::string &delim);
+std::string itos(int n);

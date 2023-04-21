@@ -22,3 +22,10 @@ std::vector<std::string> splitString (const std::string &str, const std::string 
 
 	return result;
 }
+
+std::string itos(int n)
+{
+	std::stringstream ss;
+	ss << n;
+	return ss.str();
+}
