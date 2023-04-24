@@ -9,9 +9,9 @@ class Channel
 public:
 	struct UserFlags
 	{
-		bool isAway : 1; // a // @odo
-		bool isOperator : 1;	// o // @Todo
-		bool hasVoicePriviledge : 1;	// v // @Todo
+		// bool isAway : 1;
+		bool isOperator : 1;
+		bool hasVoicePriviledge : 1;
 
 		UserFlags ();
 	

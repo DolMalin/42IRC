@@ -94,11 +94,11 @@ void Server::join (User &u, const Message &msg)
 			chan->useInvite (u.nickname);
 		}
 
+		Message singleJoinMsg = Message ().setCommand ("JOIN").pushArg (chan->name);
 		if (!chan->modes.isQuiet)
-		{
-			Message singleJoinMsg = Message ().setCommand ("JOIN").pushArg (chan->name);
 			forwardToChannel (u, *chan, singleJoinMsg);
-		}
+		else
+			reply (u, singleJoinMsg);
 
 		if (chan->topic.empty ())
 			reply (u, Reply::noTopic (u.nickname, name));

@@ -7,7 +7,7 @@ void Server::list(User &u, const Message &msg)
 	{
 		for (ChannelIt it = _channels.begin(); it != _channels.end(); it++)
 		{
-			if (it->modes.isSecret)
+			if (it->modes.isSecret || it->modes.isPrivate)
 				continue;
 
 			reply(u, Reply::list(u.nickname, (*it).name, itos((*it).joinedUsers.size()) ,(*it).topic));
@@ -20,7 +20,7 @@ void Server::list(User &u, const Message &msg)
 	for (std::vector<std::string>::iterator it = channels.begin (); it != channels.end (); it++)
 	{
 		Channel *c = Server::findChannelByName(*it);
-		if (!c || c->modes.isSecret)
+		if (!c || c->modes.isSecret || c->modes.isPrivate)
 			reply(u, Reply::errNoSuchChannel(*it));
 		else
 			reply(u, Reply::list(u.nickname, c->name, itos((*c).joinedUsers.size()), c->topic));

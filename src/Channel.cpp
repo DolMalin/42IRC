@@ -151,19 +151,13 @@ void Channel::setMode(const char mode, char c, const std::string &arg)
 
 	switch(mode)
 	{
-		case 'a':
-			(*it).flags.isAway = val;
-			break;
 		case 'o':
 			(*it).flags.isOperator = val;
 			break;
 		case 'v':
 			(*it).flags.hasVoicePriviledge = val;
 			break;
-		// @TODO: code stoi LOL
-		// case 'l':
-		// 	userLimit = std::stoi(arg);
-		// 	break;
+
 		case 'k':
 			if (val)
 				key = arg;

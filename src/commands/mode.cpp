@@ -5,12 +5,12 @@
 void Server::mode(User &u, const Message &msg)
 {
 	std::string channelModes = "imnqpst";
-	std::string channelModesArgs = "ktl";
-	std::string userModesArgs = "ova";
+	std::string channelModesArgs = "k";
+	std::string userModesArgs = "ov";
 
 	Channel *chan = findChannelByName(msg.arg(0));
 
-	if (!findChannelByName(msg.arg(0)))
+	if (!chan)
 	{
 		reply(u, Reply::errNoSuchChannel(msg.arg(0)));
 		return ;
@@ -48,8 +48,6 @@ void Server::mode(User &u, const Message &msg)
 
 			if (c == '+' || c == '-')
 				lastOperator = c;
-			else if ((userModesArgs + channelModes + channelModesArgs).find(c) == std::string::npos)
-				continue;
 
 			if ((userModesArgs + channelModes + channelModesArgs).find(c) == std::string::npos)
 				reply(u, Reply::errUnknownMode(chan->name, std::string(&c, 1)));
@@ -62,14 +60,23 @@ void Server::mode(User &u, const Message &msg)
 					reply(u, Reply::errNeedMoreParams(msg.command()));
 					return ;
 				}
-				else if (userModesArgs.find(c) != std::string::npos && !findUserByNickname(msg.arg(i + 1)))
-					reply(u, Reply::errUserNotInChannel(chan->name, msg.arg(i + 1)));
-				else if (c == 'k' && lastOperator == '+' && !chan->key.empty())
+
+				if ((userModesArgs + channelModes + channelModesArgs).find(c) == std::string::npos)
+				{
+					reply(u, Reply::errUnknownMode(chan->name, std::string(&c, 1)));
+					return ;
+				}
+
+				if (c == 'k' && lastOperator == '+' && !chan->key.empty())
 					reply(u, Reply::errKeyset(chan->name));
-				else if (c != 'k')
-						forwardToChannel(u, *chan, Reply::updateMode(chan->name, msg.arg(i + 1),  std::string(&lastOperator, 1) + c));
-				else
+				else if (c == 'k')
 					chan->setMode(c, lastOperator, msg.arg(i + 1));
+				else
+				{
+					forwardToChannel(u, *chan, Reply::updateMode(chan->name, msg.arg(i + 1),  std::string(&lastOperator, 1) + c));
+					chan->setMode(c, lastOperator, msg.arg(i + 1));
+				}
+
 			}
 		}
 	}
