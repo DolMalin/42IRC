@@ -5,7 +5,7 @@ namespace Reply
 {
 	Message welcome (const std::string &nick, const std::string &user, const std::string &host)
 	{
-		return Message ().setReplyCode (1).pushArg (nick).pushSuffix (std::string ("Welcome to the Internet Relay Network ") + nick + "!" + user + "@" + host);
+		return Message ().setReplyCode (1).pushArg (nick).pushSuffix (std::string ("Welcome ") + nick + "!" + user + "@" + host);
 	}
 
 	Message error(const std::string &msg)

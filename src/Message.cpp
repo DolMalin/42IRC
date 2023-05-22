@@ -38,7 +38,7 @@ bool Message::parseRequest(const std::string &str)
 
 		if (pos == std::string::npos)
 			pos = output.size ();
-		
+
 		if (output.at(0) == ':' && _prefix.empty() && !commandSet)
 		{
 			_prefix.assign (output, 1, pos - 1);
@@ -61,7 +61,7 @@ bool Message::parseRequest(const std::string &str)
 			_args[_argsCount].assign (output, 0, pos);
 			_argsCount += 1;
 		}
-		
+
 		output.erase(0, pos + 1);
 	}
 
@@ -114,12 +114,20 @@ Message &Message::setReplyCode(uint16_t replyCode)
 
 Message	&Message::pushArg(const std::string &arg)
 {
-	assert (!arg.empty (), "Argument is empty.");
+	//assert (!arg.empty (), "Argument is empty.");
 	assert (!_hasSuffix, "Message has a suffix, no argument can be pushed after a suffix.");
 	assert (_argsCount < 15, "Message cannot have more than 15 arguments.");
 
-	this->_args[this->_argsCount] = arg;
-	this->_argsCount++;
+    if (arg.empty ())
+    {
+        this->_args[this->argsCount] = "empty";
+    	this->_argsCount++;
+    }
+    else
+    {
+    	this->_args[this->_argsCount] = arg;
+    	this->_argsCount++;
+    }
 
 	return *this;
 }
@@ -130,7 +138,7 @@ Message	&Message::pushSuffix(const std::string &arg)
 
 	pushArg (arg);
 	_hasSuffix = true;
-	
+
 	return *this;
 }
 

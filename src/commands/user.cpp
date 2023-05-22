@@ -9,6 +9,12 @@ void Server::user(User &u, const Message &msg)
 		return;
 	}
 
+    if (u.nickname.empty ())
+    {
+		reply(u, Reply::errNoNicknameGiven ());
+		return;
+    }
+
 	if (u.isRegistered ())
 	{
 		reply(u, Reply::errAlreadyRegistered());
@@ -18,11 +24,11 @@ void Server::user(User &u, const Message &msg)
 	if (u.givenPassword != _password)
 	{
 		reply(u, Reply::errPassWdMissMatch(u.nickname));
+		disconnect(u);
 		return ;
 	}
 
 	u.username = msg.arg (0);
-	// @Todo: handle mode (numeric bitmask parameter: bit-2 is user mode w and bit-3 is user mode i)
 	u.realname = msg.arg (3);
 
 	if (u.isRegistered ())
