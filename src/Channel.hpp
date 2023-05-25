@@ -14,16 +14,16 @@ public:
 		bool hasVoicePriviledge : 1;
 
 		UserFlags ();
-	
-		bool fromString (const std::string &str);	// @Todo
-		std::string toString () const;	// @Todo
+
+		bool fromString (const std::string &str);
+		std::string toString () const;
 	};
 
 	struct UserEntry
 	{
 		User *user;
 		UserFlags flags;
-	
+
 		UserEntry (User *user);
 	};
 
@@ -55,7 +55,7 @@ public:
 
 public:
 	explicit Channel (const std::string &name = "", const std::string &topic = "", int userLimit = 150);
-	
+
 	UserIt findUser (User *user);
 	User *findUserByNickname (const std::string &name);
 	User *findUserByUsername (const std::string &name);

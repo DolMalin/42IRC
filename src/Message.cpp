@@ -97,7 +97,7 @@ std::string Message::stringify(void) const
 
 Message	&Message::setPrefix(const std::string &prefix)
 {
-	assert (prefix.length() >= 3 || prefix.at(0) == ':')
+	assert (prefix.length() >= 3 || prefix.at(0) == ':', "Invalid prefix");
 	this->_prefix = prefix;
 
 	return *this;
@@ -105,8 +105,6 @@ Message	&Message::setPrefix(const std::string &prefix)
 
 Message &Message::setReplyCode(uint16_t replyCode)
 {
-	assert (replyCode <= 502);
-
 	this->_isRequest = false;
 	this->_replyCode = replyCode;
 	return *this;
@@ -120,7 +118,7 @@ Message	&Message::pushArg(const std::string &arg)
 
     if (arg.empty ())
     {
-        this->_args[this->argsCount] = "empty";
+        this->_args[this->_argsCount] = "empty";
     	this->_argsCount++;
     }
     else
@@ -144,7 +142,7 @@ Message	&Message::pushSuffix(const std::string &arg)
 
 Message	&Message::setCommand(const std::string &command)
 {
-	assert (!this->_command.empty() || !command.empty());
+	assert (!this->_command.empty() || !command.empty(), "Command is empty");
 
 	this->_isRequest = true;
 	this->_command = command;
@@ -153,9 +151,9 @@ Message	&Message::setCommand(const std::string &command)
 
 const std::string &Message::prefix () const { return _prefix; }
 const std::string &Message::command () const { return _command; }
-const std::string &Message::arg (size_t index) const { assert (index < _argsCount); return _args[index]; }
+const std::string &Message::arg (size_t index) const { assert (index < _argsCount, "Index out of bounds"); return _args[index]; }
 size_t Message::argsCount () const { return _argsCount; }
-const std::string &Message::suffix () const { assert (_hasSuffix && _argsCount > 0); return _args[_argsCount - 1]; }
+const std::string &Message::suffix () const { assert (_hasSuffix && _argsCount > 0, "Suffix already present"); return _args[_argsCount - 1]; }
 bool Message::isRequest () const { return _isRequest; }
 bool Message::hasSuffix () const {return _hasSuffix; }
 uint16_t Message::replyCode () const { return _replyCode; }

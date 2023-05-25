@@ -12,8 +12,8 @@ OBJ_FILES = $(SRC_FILES:.cpp=.o)
 SRC_DIR = src
 OBJ_DIR = obj
 CXX = c++
-CXX_FLAGS = -Wall -Wextra -Werror -std=c++98 -I$(INCLUDE_DIRS)
-CXX_FLAGS += -g3
+CXX_FLAGS = -Wall -Wextra -Werror -std=c++98 -I$(INCLUDE_DIRS) -pedantic
+#CXX_FLAGS += -g3
 DEPENDENCIES = $(INCLUDE_FILES) Makefile
 
 all: $(NAME)

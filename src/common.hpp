@@ -17,10 +17,10 @@
 
 #undef assert
 
-#define assert(expr, ...) {\
+#define assert(expr, msg) {\
 	if (!(expr)) {\
 		std::cout << "Assertion failed at file " << __FILE__ << ", line " << __LINE__ << ": (" #expr ")\n";\
-		std::cout << "" __VA_ARGS__ << std::endl;\
+		std::cout << msg << std::endl;\
 		debugBreak ();\
 	} }
 

@@ -171,7 +171,8 @@ void Server::processReceivedMessages()
 				continue;
 			}
 
-			std::cout << "Received from " << it->nickname << " '" << msg.stringify() << "'" << std::endl;
+			std::string nick = it->nickname.empty () ? "anonymous" : it->nickname;
+			std::cout << "<<<<< Received from " << nick << " '" << msg.stringify() << "'" << std::endl;
 
 			executeCommand(*it, msg);
 		}
@@ -228,7 +229,8 @@ void Server::reply(User &user, const Message &msg, const std::string &prefix)
 	str.append (" ");
 	str.append (msg.stringify());
 
-	std::cout << "Replying to " << user.nickname << " '" << str << "'" << std::endl;
+	std::string nick = user.nickname.empty () ? "anonymous" : user.nickname;
+	std::cout << ">>>>> Replying to " << nick << " '" << str << "'" << std::endl;
 
 	str.append ("\r\n");
 

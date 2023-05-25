@@ -52,7 +52,7 @@ User *Channel::findUserByUsername (const std::string &name)
 
 Channel::UserEntry *Channel::addUser (User *user)
 {
-	assert (user != NULL);
+	assert (user != NULL, "User is null");
 
 	UserIt it = findUser (user);
 	if (it != joinedUsers.end ())
@@ -102,7 +102,7 @@ bool Channel::useInvite (const std::string &nickname)
 	std::list<std::string>::iterator it = std::find (invites.begin (), invites.end (), nickname);
 	if (it == invites.end ())
 		return false;
-	
+
 	invites.erase (it);
 
 	return true;
